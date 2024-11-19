@@ -1,3 +1,11 @@
+## Copyright Notice
+
+This website was developed as part of an academic project and uses a pre-existing design template. I would like to clarify that the template used is not my creation. It was created by [Owais](https://github.com/owaiswiz) and can be accessed [here](https://treact.owaiskhan.me/).
+
+All additional content, such as functionalities, customizations, and specific information, was developed by me.
+
+If you have any questions about the template or the project, feel free to reach out.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Script
