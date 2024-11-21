@@ -17,15 +17,15 @@ module.exports = {
       white: '#fff',
 
       primary: {
-        100: '#a273ff',
-        200: '#935bff',
-        300: '#8344ff',
-        400: '#742cff',
-        500: '#6415FF',
-        600: '#5a13e6',
-        700: '#5011cc',
-        800: '#460fb3',
-        900: '#3c0d99',
+        100: '#ffb273',  // Variação clara de laranja
+        200: '#ff9b57',  // Laranja claro
+        300: '#ff853a',  // Laranja médio
+        400: '#ff6e1d',  // Laranja intenso
+        500: '#ff5a00',  // Laranja padrão
+        600: '#e64d00',  // Laranja escuro
+        700: '#cc4100',  // Laranja mais escuro
+        800: '#b33600',  // Laranja muito escuro
+        900: '#992a00',  // Laranja quase marrom
       },
 
       secondary: {

@@ -52,17 +52,17 @@ export default ({
   ],
   heading = (
     <>
-      Find Perfect Hotels
+      Praias Privadas
       <wbr />
       <br />
-      <span tw="text-primary-500">anywhere you go.</span>
+      <span tw="text-primary-500">no mundo inteiro!</span>
     </>
   ),
-  description = "We've been in the hotels business across the world for 5 years now. We assure you that you will always enjoy your stay with us.",
+  description = "Temos estado no negócio de Praias Privadas durante 5 anos. Nós lhe garantimos que irá sempre adorar estar connosco e escolher os nossos serviços.",
   primaryActionUrl = "#",
-  primaryActionText = "Sign Up",
+  primaryActionText = "Faz Login",
   secondaryActionUrl = "#",
-  secondaryActionText = "Search Hotels"
+  secondaryActionText = "Pesquisa Hotéis"
 }) => {
   return (
     <Container>
