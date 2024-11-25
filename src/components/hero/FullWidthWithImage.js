@@ -47,7 +47,7 @@ export default ({
       <NavLink href="#">About</NavLink>
       <NavLink href="#">Blog</NavLink>
       <NavLink href="#">Pricing</NavLink>
-      <NavLink href="#">Login</NavLink>
+      <NavLink href="/pages/Login.js">Login</NavLink>
     </NavLinks>
   ],
   heading = (

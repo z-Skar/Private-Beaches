@@ -16,7 +16,7 @@ const MainContainer = tw.div`lg:w-1/2 xl:w-5/12 p-6 sm:p-12`;
 const LogoLink = tw.a``;
 const LogoImage = tw.img`h-12 mx-auto`;
 const MainContent = tw.div`mt-12 flex flex-col items-center`;
-const Heading = tw.h1`text-2xl xl:text-3xl font-extrabold`;
+const Heading = tw.h1`text-2xl xl:text-3xl font-extrabold text-center`;
 const FormContainer = tw.div`w-full flex-1 mt-8`;
 
 const SocialButtonsContainer = tw.div`flex flex-col items-center`;
@@ -56,23 +56,18 @@ const IllustrationImage = styled.div`
 export default ({
   logoLinkUrl = "#",
   illustrationImageSrc = illustration,
-  headingText = "Sign In To Treact",
+  headingText = "Faz Login no Paraíso Reservado",
   socialButtons = [
     {
       iconImageSrc: googleIconImageSrc,
-      text: "Sign In With Google",
+      text: "Login com o Google",
       url: "https://google.com"
     },
-    {
-      iconImageSrc: twitterIconImageSrc,
-      text: "Sign In With Twitter",
-      url: "https://twitter.com"
-    }
   ],
-  submitButtonText = "Sign In",
+  submitButtonText = "Login",
   SubmitButtonIcon = LoginIcon,
   forgotPasswordUrl = "#",
-  signupUrl = "#",
+  signupUrl = "/pages/Signup.js",
 
 }) => (
   <AnimationRevealPage>
@@ -96,7 +91,7 @@ export default ({
                 ))}
               </SocialButtonsContainer>
               <DividerTextContainer>
-                <DividerText>Or Sign in with your e-mail</DividerText>
+                <DividerText>Ou faz login com o teu e-mail</DividerText>
               </DividerTextContainer>
               <Form>
                 <Input type="email" placeholder="Email" />
@@ -108,13 +103,13 @@ export default ({
               </Form>
               <p tw="mt-6 text-xs text-gray-600 text-center">
                 <a href={forgotPasswordUrl} tw="border-b border-gray-500 border-dotted">
-                  Forgot Password ?
+                  Esqueceste da Password ?
                 </a>
               </p>
               <p tw="mt-8 text-sm text-gray-600 text-center">
-                Dont have an account?{" "}
+                Não tens uma conta?{" "}
                 <a href={signupUrl} tw="border-b border-gray-500 border-dotted">
-                  Sign Up
+                  Registar
                 </a>
               </p>
             </FormContainer>

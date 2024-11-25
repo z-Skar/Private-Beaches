@@ -61,27 +61,27 @@ export default () => {
                 <Link href="#">FAQs</Link>
               </LinkListItem>
               <LinkListItem>
-                <Link href="#">Support</Link>
+                <Link href="#">Suporte</Link>
               </LinkListItem>
               <LinkListItem>
-                <Link href="#">About Us</Link>
+                <Link href="#">Sobre Nós</Link>
               </LinkListItem>
             </LinkList>
           </Column>
           <Column>
-            <ColumnHeading>Product</ColumnHeading>
+            <ColumnHeading>Produto</ColumnHeading>
             <LinkList>
               <LinkListItem>
                 <Link href="#">Log In</Link>
               </LinkListItem>
               <LinkListItem>
-                <Link href="#">Personal</Link>
+                <Link href="#">Pessoal</Link>
               </LinkListItem>
               <LinkListItem>
-                <Link href="#">Business</Link>
+                <Link href="#">Negócio</Link>
               </LinkListItem>
               <LinkListItem>
-                <Link href="#">Team</Link>
+                <Link href="#">Equipa</Link>
               </LinkListItem>
             </LinkList>
           </Column>
@@ -92,13 +92,13 @@ export default () => {
                 <Link href="#">Logos</Link>
               </LinkListItem>
               <LinkListItem>
-                <Link href="#">Events</Link>
+                <Link href="#">Eventos</Link>
               </LinkListItem>
               <LinkListItem>
-                <Link href="#">Stories</Link>
+                <Link href="#">Histórias</Link>
               </LinkListItem>
               <LinkListItem>
-                <Link href="#">Office</Link>
+                <Link href="#">Escritório</Link>
               </LinkListItem>
             </LinkList>
           </Column>
@@ -109,25 +109,25 @@ export default () => {
                 <Link href="#">GDPR</Link>
               </LinkListItem>
               <LinkListItem>
-                <Link href="#">Privacy Policy</Link>
+                <Link href="#">Política de Privacidade</Link>
               </LinkListItem>
               <LinkListItem>
-                <Link href="#">Terms of Service</Link>
+                <Link href="#">Termos de Serviço</Link>
               </LinkListItem>
               <LinkListItem>
-                <Link href="#">Disclaimer</Link>
+                <Link href="#">Esclarecimentos</Link>
               </LinkListItem>
             </LinkList>
           </Column>
           <SubscribeNewsletterColumn>
             <SubscribeNewsletterContainer>
-              <ColumnHeading>Subscribe to our Newsletter</ColumnHeading>
+              <ColumnHeading>Inscreve-te na nossa página de notícias</ColumnHeading>
               <SubscribeText>
-                We deliver high quality blog posts written by professionals weekly. And we promise no spam.
+                Entregamos postagens de blog de alta qualidade escritas por profissionais semanalmente. E prometemos não enviar Spam.
               </SubscribeText>
               <SubscribeForm method="get" action="#">
-                <Input type="email" placeholder="Your Email Address" />
-                <SubscribeButton type="submit">Subscribe</SubscribeButton>
+                <Input type="email" placeholder="O teu endereço de E-mail" />
+                <SubscribeButton type="submit">Inscreve-te</SubscribeButton>
               </SubscribeForm>
             </SubscribeNewsletterContainer>
           </SubscribeNewsletterColumn>

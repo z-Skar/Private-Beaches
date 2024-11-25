@@ -16,7 +16,7 @@ const MainContainer = tw.div`lg:w-1/2 xl:w-5/12 p-6 sm:p-12`;
 const LogoLink = tw.a``;
 const LogoImage = tw.img`h-12 mx-auto`;
 const MainContent = tw.div`mt-12 flex flex-col items-center`;
-const Heading = tw.h1`text-2xl xl:text-3xl font-extrabold`;
+const Heading = tw.h1`text-2xl xl:text-3xl font-extrabold text-center`;
 const FormContainer = tw.div`w-full flex-1 mt-8`;
 
 const SocialButtonsContainer = tw.div`flex flex-col items-center`;
@@ -56,24 +56,19 @@ const IllustrationImage = styled.div`
 export default ({
   logoLinkUrl = "#",
   illustrationImageSrc = illustration,
-  headingText = "Sign Up For Treact",
+  headingText = "Regista-te no Paraíso Reservado",
   socialButtons = [
     {
       iconImageSrc: googleIconImageSrc,
-      text: "Sign Up With Google",
+      text: "Registar com o Google",
       url: "https://google.com"
-    },
-    {
-      iconImageSrc: twitterIconImageSrc,
-      text: "Sign Up With Twitter",
-      url: "https://twitter.com"
     }
   ],
-  submitButtonText = "Sign Up",
+  submitButtonText = "Registar",
   SubmitButtonIcon = SignUpIcon,
-  tosUrl = "#",
-  privacyPolicyUrl = "#",
-  signInUrl = "#"
+  termsOfServiceUrl = "/pages/TermsOfService.js",
+  privacyPolicyUrl = "/pages/PrivacyPolicy.js",
+  signInUrl = "/pages/Login.js"
 }) => (
   <AnimationRevealPage>
     <Container>
@@ -96,7 +91,7 @@ export default ({
                 ))}
               </SocialButtonsContainer>
               <DividerTextContainer>
-                <DividerText>Or Sign up with your e-mail</DividerText>
+                <DividerText>Ou regista-te com o teu e-mail</DividerText>
               </DividerTextContainer>
               <Form>
                 <Input type="email" placeholder="Email" />
@@ -106,20 +101,21 @@ export default ({
                   <span className="text">{submitButtonText}</span>
                 </SubmitButton>
                 <p tw="mt-6 text-xs text-gray-600 text-center">
-                  I agree to abide by treact's{" "}
-                  <a href={tosUrl} tw="border-b border-gray-500 border-dotted">
-                    Terms of Service
+                  Concordo em cumprir os {" "}
+                  <a href={termsOfServiceUrl} tw="border-b border-gray-500 border-dotted">
+                    Termos de Serviço
                   </a>{" "}
-                  and its{" "}
+                  e a{" "}
                   <a href={privacyPolicyUrl} tw="border-b border-gray-500 border-dotted">
-                    Privacy Policy
-                  </a>
+                    Política de Privacidade
+                  </a>{" "}
+                  do Paraíso Reservado
                 </p>
 
                 <p tw="mt-8 text-sm text-gray-600 text-center">
-                  Already have an account?{" "}
+                  Já tens uma conta?{" "}
                   <a href={signInUrl} tw="border-b border-gray-500 border-dotted">
-                    Sign In
+                    Entrar
                   </a>
                 </p>
               </Form>
