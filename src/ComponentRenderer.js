@@ -429,7 +429,7 @@ export const components = {
       type: "Forms Section",
       elements: {
         SimpleContactUs: {
-          name: "Simple Contact Us",
+          name: "Simple Contacte-nos",
           component: SimpleContactUsForm,
           url: "/components/blocks/Form/SimpleContactUs",
         },
@@ -439,12 +439,12 @@ export const components = {
           url: "/components/blocks/Form/SimpleSubscribeNewsletter",
         },
         TwoColContactUs: {
-          name: "Two Column Contact Us",
+          name: "Two Column Contacte-nos",
           component: TwoColContactUsForm,
           url: "/components/blocks/Form/TwoColContactUs",
         },
         TwoColContactUsFull: {
-          name: "Two Column Contact Us - Full Form",
+          name: "Two Column Contacte-nos - Full Form",
           component: TwoColContactUsFullForm,
           url: "/components/blocks/Form/TwoColContactUsFull",
         },

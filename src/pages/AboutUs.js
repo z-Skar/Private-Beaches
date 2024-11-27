@@ -22,7 +22,7 @@ export default () => {
     <AnimationRevealPage>
       <Header />
       <MainFeature1
-        subheading={<Subheading>About Treact</Subheading>}
+        subheading={<Subheading>About Tropical Dreams</Subheading>}
         heading="We are a modern design agency."
         buttonRounded={false}
         primaryButtonText="See Portfolio"
@@ -32,7 +32,7 @@ export default () => {
         subheading={<Subheading>Our Vision</Subheading>}
         heading="We aim to disrupt the design space."
         buttonRounded={false}
-        primaryButtonText="Contact Us"
+        primaryButtonText="Contacte-nos"
         imageSrc="https://images.unsplash.com/3/doctype-hi-res.jpg?ixlib=rb-1.2.1&auto=format&fit=crop&w=768&q=80"
         textOnLeft={false}
       />

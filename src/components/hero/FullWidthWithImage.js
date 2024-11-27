@@ -44,9 +44,9 @@ const Actions = styled.div`
 export default ({
   navLinks = [
     <NavLinks key={1}>
-      <NavLink href="#">About</NavLink>
+      <NavLink href="#">Sobre</NavLink>
       <NavLink href="#">Blog</NavLink>
-      <NavLink href="#">Pricing</NavLink>
+      <NavLink href="#">Preços</NavLink>
       <NavLink href="/pages/Login.js">Login</NavLink>
     </NavLinks>
   ],
@@ -59,7 +59,7 @@ export default ({
     </>
   ),
   description = "Temos estado no negócio de Praias Privadas durante 5 anos. Nós lhe garantimos que irá sempre adorar estar connosco e escolher os nossos serviços.",
-  primaryActionUrl = "#",
+  primaryActionUrl = "/pages/Login.js",
   primaryActionText = "Faz Login",
   secondaryActionUrl = "#",
   secondaryActionText = "Pesquisa Hotéis"

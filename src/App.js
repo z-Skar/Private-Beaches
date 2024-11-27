@@ -10,7 +10,7 @@ import { css } from "styled-components/macro"; //eslint-disable-line
  * disable the animation by using the disabled prop.
  *
  * The App component below is using React router to render the landing page that you see on the live demo website
- * and the component previews.
+ * and the component pAvaliações.
  *
  */
 

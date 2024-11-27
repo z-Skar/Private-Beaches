@@ -36,14 +36,14 @@ export default () => {
         <Row>
           <LogoContainer>
             <LogoImg src={logo} />
-            <LogoText>Treact</LogoText>
+            <LogoText>Tropical Dreams</LogoText>
           </LogoContainer>
           <LinksContainer>
             <Link href="#">Home</Link>
-            <Link href="#">About</Link>
-            <Link href="#">Contact Us</Link>
+            <Link href="#">Sobre</Link>
+            <Link href="#">Contacte-nos</Link>
             <Link href="#">Blog</Link>
-            <Link href="#">Reviews</Link>
+            <Link href="#">Avaliações</Link>
           </LinksContainer>
           <SocialLinksContainer>
             <SocialLink href="https://facebook.com">
@@ -57,7 +57,7 @@ export default () => {
             </SocialLink>
           </SocialLinksContainer>
           <CopyrightText>
-            &copy; Copyright 2020, Treact Inc. All Rights Reserved.
+            &copy; Copyright 2020, Tropical Dreams Inc. All Rights Reserved.
           </CopyrightText>
         </Row>
       </Content>

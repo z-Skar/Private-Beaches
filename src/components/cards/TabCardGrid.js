@@ -69,7 +69,7 @@ export default ({
         content: "Tomato Salad & Carrot",
         price: "$5.99",
         rating: "5.0",
-        reviews: "87",
+        Avaliações: "87",
         url: "#"
       },
       {
@@ -79,7 +79,7 @@ export default ({
         content: "Cheese Pizza",
         price: "$2.99",
         rating: "4.8",
-        reviews: "32",
+        Avaliações: "32",
         url: "#"
       },
       {
@@ -89,7 +89,7 @@ export default ({
         content: "Hamburger & Fries",
         price: "$7.99",
         rating: "4.9",
-        reviews: "89",
+        Avaliações: "89",
         url: "#"
       },
       {
@@ -99,7 +99,7 @@ export default ({
         content: "Crispy Soyabeans",
         price: "$8.99",
         rating: "4.6",
-        reviews: "12",
+        Avaliações: "12",
         url: "#"
       },
       {
@@ -109,7 +109,7 @@ export default ({
         content: "Roasted Chicken & Egg",
         price: "$7.99",
         rating: "4.2",
-        reviews: "19",
+        Avaliações: "19",
         url: "#"
       },
       {
@@ -119,7 +119,7 @@ export default ({
         content: "Deepfried Chicken",
         price: "$2.99",
         rating: "5.0",
-        reviews: "61",
+        Avaliações: "61",
         url: "#"
       },
       {
@@ -129,7 +129,7 @@ export default ({
         content: "Mexican Chilli",
         price: "$3.99",
         rating: "4.2",
-        reviews: "95",
+        Avaliações: "95",
         url: "#"
       },
       {
@@ -139,7 +139,7 @@ export default ({
         content: "Chilli Crispy Nachos",
         price: "$3.99",
         rating: "3.9",
-        reviews: "26",
+        Avaliações: "26",
         url: "#"
       }
     ],
@@ -198,7 +198,7 @@ export default ({
                         <StarIcon />
                         {card.rating}
                       </CardRating>
-                      <CardReview>({card.reviews})</CardReview>
+                      <CardReview>({card.Avaliações})</CardReview>
                     </CardRatingContainer>
                     <CardHoverOverlay
                       variants={{
@@ -243,7 +243,7 @@ const getRandomCards = () => {
       content: "Chicken Main Course",
       price: "$5.99",
       rating: "5.0",
-      reviews: "87",
+      Avaliações: "87",
       url: "#"
     },
     {
@@ -253,7 +253,7 @@ const getRandomCards = () => {
       content: "Fried Mexican Beef",
       price: "$3.99",
       rating: "4.5",
-      reviews: "34",
+      Avaliações: "34",
       url: "#"
     },
     {
@@ -263,7 +263,7 @@ const getRandomCards = () => {
       content: "Chilli Crispy Nachos",
       price: "$3.99",
       rating: "3.9",
-      reviews: "26",
+      Avaliações: "26",
       url: "#"
     },
     {
@@ -273,7 +273,7 @@ const getRandomCards = () => {
       content: "Mexican Chilli",
       price: "$3.99",
       rating: "4.2",
-      reviews: "95",
+      Avaliações: "95",
       url: "#"
     },
     {
@@ -283,7 +283,7 @@ const getRandomCards = () => {
       content: "Deepfried Chicken",
       price: "$2.99",
       rating: "5.0",
-      reviews: "61",
+      Avaliações: "61",
       url: "#"
     },
     {
@@ -293,7 +293,7 @@ const getRandomCards = () => {
       content: "Hamburger & Fries",
       price: "$7.99",
       rating: "4.9",
-      reviews: "89",
+      Avaliações: "89",
       url: "#"
     },
     {
@@ -303,7 +303,7 @@ const getRandomCards = () => {
       content: "Crispy Soyabeans",
       price: "$8.99",
       rating: "4.6",
-      reviews: "12",
+      Avaliações: "12",
       url: "#"
     },
     {
@@ -313,7 +313,7 @@ const getRandomCards = () => {
       content: "Roasted Chicken & Egg",
       price: "$7.99",
       rating: "4.2",
-      reviews: "19",
+      Avaliações: "19",
       url: "#"
     }
   ];

@@ -69,7 +69,7 @@ export default ({ headingText = "Termos e Condições" }) => {
               </li>
               <li>
                 <strong>Empresa</strong> (referida como "a Empresa", "Nós", "Nos" ou "Nosso" neste Acordo)
-                refere-se à Treact Inc., Navi Mumbai.
+                refere-se à Tropical Dreams Inc., Navi Mumbai.
               </li>
               <li>
                 <strong>País</strong> refere-se a: Maharashtra, Índia
@@ -86,7 +86,7 @@ export default ({ headingText = "Termos e Condições" }) => {
                 informações, produtos ou serviços) fornecidos por terceiros que possam ser exibidos, incluídos ou disponibilizados pelo Serviço.
               </li>
               <li>
-                <strong>Website</strong> refere-se ao Treact, acessível através de https://treact.com
+                <strong>Website</strong> refere-se ao Tropical Dreams, acessível através de https://Tropical Dreams.com
               </li>
               <li>
                 <strong>Utilizador</strong> significa o indivíduo que acede ou utiliza o Serviço, ou a empresa, ou outra entidade legal em nome da qual

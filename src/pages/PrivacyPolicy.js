@@ -78,7 +78,7 @@ export default ({ headingText = "Privacy Policy" }) => {
               <li>
                 <p>
                   <strong>Company</strong> (referred to as either "the Company", "We", "Us" or "Our" in this Agreement)
-                  refers to Treact.
+                  refers to Tropical Dreams.
                 </p>
               </li>
               <li>
@@ -91,7 +91,7 @@ export default ({ headingText = "Privacy Policy" }) => {
                 Service.
               </li>
               <li>
-                <strong>Website</strong> refers to Treact, accessible from https://treact.com
+                <strong>Website</strong> refers to Tropical Dreams, accessible from https://Tropical Dreams.com
               </li>{" "}
               <li>
                 <strong>Service</strong> refers to the Website.
@@ -349,7 +349,7 @@ export default ({ headingText = "Privacy Policy" }) => {
             <p>
               Our Service does not address anyone under the age of 13. We do not knowingly collect personally
               identifiable information from anyone under the age of 13. If You are a parent or guardian and You are
-              aware that Your child has provided Us with Personal Data, please contact Us. If We become aware that We
+              aware that Your child has provided Us with Personal Data, please Contacte-nos. If We become aware that We
               have collected Personal Data from anyone under the age of 13 without verification of parental consent, We
               take steps to remove that information from Our servers.
             </p>

@@ -41,7 +41,7 @@ export default () => {
     {
       imageSrc:
         "https://images.unsplash.com/photo-1543365067-fa127bcb2303?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=80",
-      category: "Reviews",
+      category: "Avaliações",
       title: "The Top Rated Musical Concerts Worldwide in 2019",
       url: "https://reddit.com"
     },

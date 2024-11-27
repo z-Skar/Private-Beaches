@@ -57,7 +57,7 @@ export default ({
       <NavLink href="/#">About</NavLink>
       <NavLink href="/#">Blog</NavLink>
       <NavLink href="/#">Pricing</NavLink>
-      <NavLink href="/#">Contact Us</NavLink>
+      <NavLink href="/#">Contacte-nos</NavLink>
       <NavLink href="/#">Testimonials</NavLink>
     </NavLinks>,
     <NavLinks key={2}>
