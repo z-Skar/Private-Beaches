@@ -14,7 +14,6 @@ import Footer from "components/footers/MiniCenteredFooter.js";
 export default () => (
   <AnimationRevealPage>
     <Hero />
-    <Features />
     <SliderCard />
     <TrendingCard />
     <MainFeature />

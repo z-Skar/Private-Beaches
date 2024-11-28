@@ -124,7 +124,6 @@ export default function App() {
           <Route path="/pages/Signup.js" element={<SignupPage />} />
           <Route path="/pages/TermsOfService.js" element={<TermsOfServicePage />} />
           <Route path="pages/PrivacyPolicy.js" element={<PrivacyPolicyPage />} />
-          
         </Routes>
       </Router>
     </>

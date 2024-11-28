@@ -95,7 +95,7 @@ export default () => {
       title: "Wyatt Residency",
       description: "Lorem ipsum dolor sit amet, consectur dolori adipiscing elit, sed do eiusmod tempor nova incididunt ut labore et dolore magna aliqua.",
       locationText: "Rome, Italy",
-      pricingText: "USD 39/Day",
+      pricingText: "EUR 39/",
       rating: "4.8",
     },
     {
@@ -103,7 +103,7 @@ export default () => {
       title: "Soho Paradise",
       description: "Lorem ipsum dolor sit amet, consectur dolori adipiscing elit, sed do eiusmod tempor nova incididunt ut labore et dolore magna aliqua.",
       locationText: "Ibiza, Spain",
-      pricingText: "USD 50/Day",
+      pricingText: "EUR 50/Dia",
       rating: 4.9,
     },
     {
@@ -111,7 +111,7 @@ export default () => {
       title: "Hotel Baja",
       description: "Lorem ipsum dolor sit amet, consectur dolori adipiscing elit, sed do eiusmod tempor nova incididunt ut labore et dolore magna aliqua.",
       locationText: "Palo Alto, CA",
-      pricingText: "USD 19/Day",
+      pricingText: "EUR 19/Dia",
       rating: "5.0",
     },
     {
@@ -119,7 +119,7 @@ export default () => {
       title: "Hudak Homes",
       description: "Lorem ipsum dolor sit amet, consectur dolori adipiscing elit, sed do eiusmod tempor nova incididunt ut labore et dolore magna aliqua.",
       locationText: "Arizona, RAK",
-      pricingText: "USD 99/Day",
+      pricingText: "EUR 99/Dia",
       rating: 4.5,
     },
   ]

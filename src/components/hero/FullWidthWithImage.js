@@ -55,14 +55,15 @@ export default ({
       Praias Privadas
       <wbr />
       <br />
-      <span tw="text-primary-500">no mundo inteiro!</span>
+      <span>{' no '}</span>
+      <span tw="text-primary-500">mundo inteiro!</span>
     </>
   ),
-  description = "Temos estado no negócio de Praias Privadas durante 5 anos. Nós lhe garantimos que irá sempre adorar estar connosco e escolher os nossos serviços.",
+  description = "Temos estado no negócio de Praias Privadas durante 5 anos. Nós lhe garantimos que irá adorar estar connosco e escolher os nossos serviços.",
   primaryActionUrl = "/pages/Login.js",
   primaryActionText = "Faz Login",
   secondaryActionUrl = "#",
-  secondaryActionText = "Pesquisa Hotéis"
+  secondaryActionText = "Pesquisa Hotéis",
 }) => {
   return (
     <Container>
