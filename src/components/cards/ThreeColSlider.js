@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
 import tw from "twin.macro";
 import styled from "styled-components";
@@ -88,11 +88,27 @@ export default () => {
     ]
   };
 
+  const [beaches, setBeaches] = useState([{}]);
+
+  useEffect(() => {
+    const getBeaches = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/beaches')
+        const data = await response.json();
+        setBeaches(data);
+      } catch (error) {
+        console.log('Fetch Error: ', error);
+      };
+    };
+    getBeaches();
+  }, []);
+
+  console.log()
   /* Change this according to your needs */
   const cards = [
     {
       imageSrc: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&h=1024&w=768&q=80",
-      title: "Wyatt Residency",
+      title: beaches[0].LOCATION,
       description: "Lorem ipsum dolor sit amet, consectur dolori adipiscing elit, sed do eiusmod tempor nova incididunt ut labore et dolore magna aliqua.",
       locationText: "Rome, Italy",
       pricingText: "EUR 39/",
@@ -162,7 +178,7 @@ export default () => {
                 </SecondaryInfoContainer>
                 <Description>{card.description}</Description>
               </TextInfo>
-              <PrimaryButton>Book Now</PrimaryButton>
+              <PrimaryButton>Reserve Agora</PrimaryButton>
             </Card>
           ))}
         </CardSlider>

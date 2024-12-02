@@ -65,22 +65,13 @@ export default ({
   secondaryActionUrl = "#",
   secondaryActionText = "Pesquisa Hotéis",
 }) => {
-  const [data, setData] = useState([{}]);
-
-  useEffect(() => {
-    fetch('http://localhost:5000/beaches')
-    .then(res => res.json())
-    .then(data => setData(data))
-    .catch(err => console.log('Fetch Error: ', err));
-  }, []);
-  console.log(data);
   return (
     <Container>
       <TwoColumn>
         <LeftColumn>
           <StyledHeader links={navLinks} collapseBreakpointClass="sm" />
           <Content>
-            <Heading>{data[0].LOCATION}</Heading>
+            <Heading>{heading}</Heading>
             <Paragraph>{description}</Paragraph>
             <Actions>
               <a href={primaryActionUrl} className="action primaryAction">

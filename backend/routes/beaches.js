@@ -1,5 +1,5 @@
 const EXPRESS = require('express');
-const ROUTER = EXPRESS.Router(); //
+const ROUTER = EXPRESS.Router();
 const DATABASE = require('../database/db-connection')
 
 ROUTER.get('/', (req, res) => {
