@@ -109,13 +109,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 export default function App() {
   // If you want to disable the animation just use the disabled `prop` like below on your page's component
   // return <AnimationRevealPage disabled>xxxxxxxxxx</AnimationRevealPage>;
-  
-  useEffect(() => {
-    fetch('http://localhost:5000/clients')
-    .then(res => res.json())
-    .then(data => console.table(data))
-    .catch(err => console.log('Fetch Error: ', err));
-  }, []);
 
   return (
     <>
