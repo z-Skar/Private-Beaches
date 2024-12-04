@@ -96,6 +96,7 @@ export default () => {
         const response = await fetch('http://localhost:5000/beaches')
         const data = await response.json();
         setBeaches(data);
+        console.log(data);
       } catch (error) {
         console.log('Fetch Error: ', error);
       };
@@ -103,7 +104,6 @@ export default () => {
     getBeaches();
   }, []);
 
-  console.log()
   /* Change this according to your needs */
   const cards = [
     {
@@ -144,7 +144,7 @@ export default () => {
     <Container>
       <Content>
         <HeadingWithControl>
-          <Heading>Popular Hotels</Heading>
+          <Heading>Praias Populares</Heading>
           <Controls>
             <PrevButton onClick={sliderRef?.slickPrev}><ChevronLeftIcon/></PrevButton>
             <NextButton onClick={sliderRef?.slickNext}><ChevronRightIcon/></NextButton>

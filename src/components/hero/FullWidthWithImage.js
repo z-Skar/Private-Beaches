@@ -45,7 +45,7 @@ export default ({
   navLinks = [
     <NavLinks key={1}>
       <NavLink href="#">Sobre</NavLink>
-      <NavLink href="#">Blog</NavLink>
+      <NavLink href="#">Admin</NavLink>
       <NavLink href="#">Preços</NavLink>
       <NavLink href="/pages/Login.js">Login</NavLink>
     </NavLinks>
@@ -63,7 +63,7 @@ export default ({
   primaryActionUrl = "/pages/Login.js",
   primaryActionText = "Faz Login",
   secondaryActionUrl = "#",
-  secondaryActionText = "Pesquisa Hotéis",
+  secondaryActionText = "Pesquisa Praias",
 }) => {
   return (
     <Container>

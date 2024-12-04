@@ -84,13 +84,13 @@ export default () => {
         <ThreeColumn>
           <HeadingColumn>
             <HeadingInfoContainer>
-              <HeadingTitle>Trending Tours</HeadingTitle>
+              <HeadingTitle>Viagens de Luxo</HeadingTitle>
               <HeadingDescription>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-                dolore magna aliqua enim ad minim veniam.
+              Vive uma experiência inesquecível, com cada detalhe pensado para oferecer luxo e exclusividade. <br /><br />
+              Descubre destinos deslumbrantes, acomodações impecáveis e serviços personalizados que superam as tuas expectativas.
               </HeadingDescription>
               <PrimaryLink>
-                View All Tours <ArrowRightIcon />
+                Vê Todas as Praias <ArrowRightIcon />
               </PrimaryLink>
             </HeadingInfoContainer>
           </HeadingColumn>
@@ -117,7 +117,7 @@ export default () => {
                       <LocationIcon /> {card.locationText}
                     </CardMetaFeature>
                   </CardMeta>
-                  <CardAction>Book Now</CardAction>
+                  <CardAction>Reserva Agora</CardAction>
                 </CardText>
               </Card>
             </CardColumn>

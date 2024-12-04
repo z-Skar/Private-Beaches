@@ -57,8 +57,8 @@ export default ({textOnLeft = false}) => {
         </ImageColumn>
         <TextColumn textOnLeft={textOnLeft}>
           <TextContent>
-            <Heading>We have the best service.</Heading>
-            <Description>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</Description>
+            <Heading>Nós temos o melhor serviço.</Heading>
+            <Description>Com dedicação e excelência, oferecemos o melhor serviço para transformar as tuas experiências em algo extraordinário. Cada detalhe é pensado para atender suas necessidades com perfeição, garantindo qualidade, confiança e satisfação em cada momento.</Description>
             <Statistics>
               {statistics.map((statistic, index) => (
               <Statistic key={index}>

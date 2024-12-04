@@ -17,10 +17,10 @@ export default () => (
     <SliderCard />
     <TrendingCard />
     <MainFeature />
-    <Blog />
+    {/*<Blog />*/}
     <Testimonial textOnLeft={true}/>
     <FAQ />
-    <SubscribeNewsLetterForm />
+    {/*<SubscribeNewsLetterForm />*/}
     <Footer />
   </AnimationRevealPage>
 );
