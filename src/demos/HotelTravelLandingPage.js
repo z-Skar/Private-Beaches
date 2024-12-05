@@ -18,7 +18,7 @@ export default () => (
     <TrendingCard />
     <MainFeature />
     {/*<Blog />*/}
-    <Testimonial textOnLeft={true}/>
+    {/*<Testimonial textOnLeft={true}/>*/}
     <FAQ />
     {/*<SubscribeNewsLetterForm />*/}
     <Footer />

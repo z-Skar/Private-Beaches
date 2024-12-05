@@ -44,343 +44,256 @@ export default ({ headingText = "Privacy Policy" }) => {
             <Heading>{headingText}</Heading>
           </HeadingRow>
           <Text>
-            <p>Last updated: April 21, 2048</p>
+            <p>Última atualização: 21 de abril de 2023</p>
 
             <p>
-              This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your
-              information when You use the Service and tells You about Your privacy rights and how the law protects You.
+              Esta Política de Privacidade descreve as nossas políticas e procedimentos sobre a recolha, utilização e divulgação das suas informações quando utiliza o Serviço e informa-o sobre os seus direitos de privacidade e como a lei o protege.
             </p>
 
             <p>
-              We use Your Personal data to provide and improve the Service. By using the Service, You agree to the
-              collection and use of information in accordance with this Privacy Policy.
+              Utilizamos os seus dados pessoais para fornecer e melhorar o Serviço. Ao utilizar o Serviço, concorda com a recolha e utilização das informações de acordo com esta Política de Privacidade.
             </p>
 
-            <h1>Interpretation and Definitions</h1>
-            <h2>Interpretation</h2>
+            <h1>Interpretação e Definições</h1>
+            <h2>Interpretação</h2>
             <p>
-              The words of which the initial letter is capitalized have meanings defined under the following conditions.
+              As palavras cuja inicial é maiúscula têm significados definidos nas condições seguintes.
             </p>
             <p>
-              The following definitions shall have the same meaning regardless of whether they appear in singular or in
-              plural.
+              As definições seguintes terão o mesmo significado, independentemente de aparecerem no singular ou no plural.
             </p>
 
-            <h2>Definitions</h2>
-            <p>For the purposes of this Privacy Policy:</p>
+            <h2>Definições</h2>
+            <p>Para os fins desta Política de Privacidade:</p>
             <ul>
               <li>
                 <p>
-                  <strong>You</strong> means the individual accessing or using the Service, or the company, or other
-                  legal entity on behalf of which such individual is accessing or using the Service, as applicable.
+                  <strong>Você</strong> refere-se ao indivíduo que acede ou utiliza o Serviço, ou à empresa ou outra entidade legal em nome da qual esse indivíduo está a aceder ou a utilizar o Serviço, conforme aplicável.
                 </p>
               </li>
               <li>
                 <p>
-                  <strong>Company</strong> (referred to as either "the Company", "We", "Us" or "Our" in this Agreement)
-                  refers to Tropical Dreams.
+                  <strong>Empresa</strong> (referida como "a Empresa", "Nós", "Nos" ou "Nosso" neste Acordo) refere-se a Tropical Dreams.
                 </p>
               </li>
               <li>
-                <strong>Affiliate</strong> means an entity that controls, is controlled by or is under common control
-                with a party, where "control" means ownership of 50% or more of the shares, equity interest or other
-                securities entitled to vote for election of directors or other managing authority.
+                <strong>Afiliada</strong> significa uma entidade que controla, é controlada por ou está sob controlo comum com uma parte, onde "controlo" significa a propriedade de 50% ou mais das ações, participações ou outros títulos com direito de voto na eleição de diretores ou outra autoridade de gestão.
               </li>
               <li>
-                <strong>Account</strong> means a unique account created for You to access our Service or parts of our
-                Service.
+                <strong>Conta</strong> refere-se a uma conta única criada para si para aceder ao nosso Serviço ou partes do nosso Serviço.
               </li>
               <li>
-                <strong>Website</strong> refers to Tropical Dreams, accessible from https://Tropical Dreams.com
-              </li>{" "}
-              <li>
-                <strong>Service</strong> refers to the Website.
+                <strong>Website</strong> refere-se a Tropical Dreams, acessível em https://TropicalDreams.com
               </li>
               <li>
-                <strong>Country</strong> refers to: Maharashtra, India
+                <strong>Serviço</strong> refere-se ao Website.
+              </li>
+              <li>
+                <strong>País</strong> refere-se a: Maharashtra, Índia.
               </li>
               <li>
                 <p>
-                  <strong>Service Provider</strong> means any natural or legal person who processes the data on behalf
-                  of the Company. It refers to third-party companies or individuals employed by the Company to
-                  facilitate the Service, to provide the Service on behalf of the Company, to perform services related
-                  to the Service or to assist the Company in analyzing how the Service is used.
+                  <strong>Fornecedor de Serviços</strong> significa qualquer pessoa física ou jurídica que processe os dados em nome da Empresa. Refere-se a empresas ou indivíduos terceiros contratados pela Empresa para facilitar o Serviço, fornecer o Serviço em nome da Empresa, realizar serviços relacionados com o Serviço ou ajudar a Empresa a analisar como o Serviço é utilizado.
                 </p>
               </li>
               <li>
-                <strong>Third-party Social Media Service</strong> refers to any website or any social network website
-                through which a User can log in or create an account to use the Service.
+                <strong>Serviço de Redes Sociais de Terceiros</strong> refere-se a qualquer website ou rede social através do qual um utilizador pode iniciar sessão ou criar uma conta para usar o Serviço.
               </li>
               <li>
                 <p>
-                  <strong>Personal Data</strong> is any information that relates to an identified or identifiable
-                  individual.
+                  <strong>Dados Pessoais</strong> refere-se a qualquer informação relacionada com uma pessoa identificada ou identificável.
                 </p>
               </li>
               <li>
-                <strong>Cookies</strong> are small files that are placed on Your computer, mobile device or any other
-                device by a website, containing the details of Your browsing history on that website among its many
-                uses.
-              </li>{" "}
+                <strong>Cookies</strong> são pequenos ficheiros colocados no seu computador, dispositivo móvel ou qualquer outro dispositivo por um website, contendo detalhes do seu histórico de navegação nesse website, entre outras utilizações.
+              </li>
               <li>
-                <strong>Usage Data</strong> refers to data collected automatically, either generated by the use of the
-                Service or from the Service infrastructure itself (for example, the duration of a page visit).
+                <strong>Dados de Utilização</strong> refere-se aos dados recolhidos automaticamente, gerados pelo uso do Serviço ou pela própria infraestrutura do Serviço (por exemplo, a duração de uma visita a uma página).
               </li>
             </ul>
 
-            <h1>Collecting and Using Your Personal Data</h1>
-            <h2>Types of Data Collected</h2>
+            <h1>Recolha e Utilização dos seus Dados Pessoais</h1>
+            <h2>Tipos de Dados Recolhidos</h2>
 
-            <h3>Personal Data</h3>
+            <h3>Dados Pessoais</h3>
             <p>
-              While using Our Service, We may ask You to provide Us with certain personally identifiable information
-              that can be used to contact or identify You. Personally identifiable information may include, but is not
-              limited to:
+              Durante a utilização do nosso Serviço, podemos pedir-lhe que nos forneça certas informações pessoais identificáveis que podem ser utilizadas para o contactar ou identificar. As informações pessoais identificáveis podem incluir, mas não estão limitadas a:
             </p>
             <ul>
-              <li>Email address</li> <li>First name and last name</li> <li>Phone number</li>{" "}
-              <li>Address, State, Province, ZIP/Postal code, City</li> <li>Usage Data</li>
+              <li>Endereço de email</li>
+              <li>Nome próprio e apelido</li>
+              <li>Número de telefone</li>
+              <li>Endereço, Estado, Província, Código Postal, Cidade</li>
+              <li>Dados de Utilização</li>
             </ul>
-
-            <h3>Usage Data</h3>
-            <p>Usage Data is collected automatically when using the Service.</p>
+            <h3>Dados de Utilização</h3>
+            <p>Os Dados de Utilização são recolhidos automaticamente durante a utilização do Serviço.</p>
             <p>
-              Usage Data may include information such as Your Device's Internet Protocol address (e.g. IP address),
-              browser type, browser version, the pages of our Service that You visit, the time and date of Your visit,
-              the time spent on those pages, unique device identifiers and other diagnostic data.
+              Os Dados de Utilização podem incluir informações como o endereço IP do seu dispositivo (por exemplo, endereço IP), tipo de navegador, versão do navegador, as páginas do nosso Serviço que visita, a data e hora da sua visita, o tempo despendido nessas páginas, identificadores únicos de dispositivos e outros dados de diagnóstico.
             </p>
             <p>
-              When You access the Service by or through a mobile device, We may collect certain information
-              automatically, including, but not limited to, the type of mobile device You use, Your mobile device unique
-              ID, the IP address of Your mobile device, Your mobile operating system, the type of mobile Internet
-              browser You use, unique device identifiers and other diagnostic data.
+              Quando acede ao Serviço através de um dispositivo móvel, podemos recolher automaticamente certas informações, incluindo, mas não limitado a, o tipo de dispositivo móvel que utiliza, o ID exclusivo do seu dispositivo móvel, o endereço IP do seu dispositivo móvel, o sistema operativo do seu dispositivo móvel, o tipo de navegador de Internet móvel que utiliza, identificadores exclusivos de dispositivos e outros dados de diagnóstico.
             </p>
             <p>
-              We may also collect information that Your browser sends whenever You visit our Service or when You access
-              the Service by or through a mobile device.
+              Podemos também recolher informações que o seu navegador envia sempre que visita o nosso Serviço ou quando acede ao Serviço através de um dispositivo móvel.
             </p>
 
-            <h3>Tracking Technologies and Cookies</h3>
+            <h3>Tecnologias de Rastreamento e Cookies</h3>
             <p>
-              We use Cookies and similar tracking technologies to track the activity on Our Service and store certain
-              information. Tracking technologies used are beacons, tags, and scripts to collect and track information
-              and to improve and analyze Our Service.
+              Utilizamos Cookies e tecnologias de rastreamento semelhantes para monitorizar a atividade no nosso Serviço e armazenar certas informações. As tecnologias de rastreamento utilizadas incluem beacons, tags e scripts para recolher e rastrear informações e melhorar e analisar o nosso Serviço.
             </p>
             <p>
-              You can instruct Your browser to refuse all Cookies or to indicate when a Cookie is being sent. However,
-              if You do not accept Cookies, You may not be able to use some parts of our Service.
+              Pode configurar o seu navegador para recusar todos os Cookies ou para indicar quando um Cookie está a ser enviado. No entanto, se não aceitar Cookies, poderá não conseguir usar algumas partes do nosso Serviço.
             </p>
             <p>
-              Cookies can be "Persistent" or "Session" Cookies. Persistent Cookies remain on your personal computer or
-              mobile device when You go offline, while Session Cookies are deleted as soon as You close your web
-              browser. Learn more about cookies: <a href="https://www.termsfeed.com/blog/cookies/">All About Cookies</a>
-              .
+              Os Cookies podem ser "Persistentes" ou "de Sessão". Cookies persistentes permanecem no seu computador ou dispositivo móvel quando está offline, enquanto Cookies de sessão são apagados assim que fecha o seu navegador. Saiba mais sobre cookies: <a href="https://www.termsfeed.com/blog/cookies/">Tudo Sobre Cookies</a>.
             </p>
-            <p>We use both session and persistent Cookies for the purposes set out below:</p>
+            <p>Usamos tanto Cookies de sessão como Cookies persistentes para os fins descritos abaixo:</p>
             <ul>
               <li>
                 <p>
-                  <strong>Necessary / Essential Cookies</strong>
+                  <strong>Cookies Necessários / Essenciais</strong>
                 </p>
-                <p>Type: Session Cookies</p>
-                <p>Administered by: Us</p>
+                <p>Tipo: Cookies de Sessão</p>
+                <p>Administrados por: Nós</p>
                 <p>
-                  Purpose: These Cookies are essential to provide You with services available through the Website and to
-                  enable You to use some of its features. They help to authenticate users and prevent fraudulent use of
-                  user accounts. Without these Cookies, the services that You have asked for cannot be provided, and We
-                  only use these Cookies to provide You with those services.
+                  Finalidade: Estes Cookies são essenciais para lhe fornecer serviços disponíveis através do Website e permitir que utilize algumas das suas funcionalidades. Ajudam a autenticar utilizadores e prevenir o uso fraudulento de contas de utilizadores. Sem estes Cookies, os serviços que solicitou não podem ser fornecidos, e só utilizamos estes Cookies para lhe fornecer esses serviços.
                 </p>
               </li>
               <li>
                 <p>
-                  <strong>Cookies Policy / Notice Acceptance Cookies</strong>
+                  <strong>Cookies de Aceitação da Política de Cookies</strong>
                 </p>
-                <p>Type: Persistent Cookies</p>
-                <p>Administered by: Us</p>
-                <p>Purpose: These Cookies identify if users have accepted the use of cookies on the Website.</p>
+                <p>Tipo: Cookies Persistentes</p>
+                <p>Administrados por: Nós</p>
+                <p>Finalidade: Estes Cookies identificam se os utilizadores aceitaram o uso de cookies no Website.</p>
               </li>
               <li>
                 <p>
-                  <strong>Functionality Cookies</strong>
+                  <strong>Cookies de Funcionalidade</strong>
                 </p>
-                <p>Type: Persistent Cookies</p>
-                <p>Administered by: Us</p>
+                <p>Tipo: Cookies Persistentes</p>
+                <p>Administrados por: Nós</p>
                 <p>
-                  Purpose: These Cookies allow us to remember choices You make when You use the Website, such as
-                  remembering your login details or language preference. The purpose of these Cookies is to provide You
-                  with a more personal experience and to avoid You having to re-enter your preferences every time You
-                  use the Website.
+                  Finalidade: Estes Cookies permitem-nos lembrar as escolhas que faz ao utilizar o Website, como lembrar os seus detalhes de login ou a sua preferência de idioma. O objetivo destes Cookies é proporcionar-lhe uma experiência mais personalizada e evitar que tenha de reinserir as suas preferências cada vez que utiliza o Website.
                 </p>
               </li>
             </ul>
             <p>
-              For more information about the cookies we use and your choices regarding cookies, please visit our Cookies
-              Policy.
+              Para mais informações sobre os cookies que utilizamos e as suas escolhas em relação a cookies, consulte a nossa Política de Cookies.
             </p>
 
-            <h2>Use of Your Personal Data</h2>
-            <p>The Company may use Personal Data for the following purposes:</p>
+            <h2>Utilização dos Seus Dados Pessoais</h2>
+            <p>A Empresa pode utilizar os Dados Pessoais para os seguintes fins:</p>
             <ul>
               <li>
-                <strong>To provide and maintain our Service</strong>, including to monitor the usage of our Service.
+                <strong>Para fornecer e manter o nosso Serviço</strong>, incluindo para monitorizar a utilização do nosso Serviço.
               </li>
               <li>
-                <strong>To manage Your Account:</strong> to manage Your registration as a user of the Service. The
-                Personal Data You provide can give You access to different functionalities of the Service that are
-                available to You as a registered user.
+                <strong>Para gerir a sua Conta:</strong> para gerir o seu registo como utilizador do Serviço. Os Dados Pessoais que fornecer podem dar-lhe acesso a diferentes funcionalidades do Serviço disponíveis para si como utilizador registado.
               </li>
               <li>
-                <strong>For the performance of a contract:</strong> the development, compliance and undertaking of the
-                purchase contract for the products, items or services You have purchased or of any other contract with
-                Us through the Service.
+                <strong>Para a execução de um contrato:</strong> o desenvolvimento, cumprimento e execução do contrato de compra dos produtos, itens ou serviços que adquiriu ou de qualquer outro contrato connosco através do Serviço.
               </li>
               <li>
-                <strong>To contact You:</strong> To contact You by email, telephone calls, SMS, or other equivalent
-                forms of electronic communication, such as a mobile application's push notifications regarding updates
-                or informative communications related to the functionalities, products or contracted services, including
-                the security updates, when necessary or reasonable for their implementation.
+                <strong>Para o contactar:</strong> Para o contactar por email, chamadas telefónicas, SMS ou outras formas equivalentes de comunicação eletrónica, como notificações push de aplicações móveis sobre atualizações ou comunicações informativas relacionadas com as funcionalidades, produtos ou serviços contratados, incluindo atualizações de segurança, quando necessário ou razoável para a sua implementação.
               </li>
               <li>
-                <strong>To provide You</strong> with news, special offers and general information about other goods,
-                services and events which we offer that are similar to those that you have already purchased or enquired
-                about unless You have opted not to receive such information.
+                <strong>Para lhe fornecer</strong> notícias, ofertas especiais e informações gerais sobre outros bens, serviços e eventos que oferecemos, semelhantes aos que já adquiriu ou sobre os quais se informou, a menos que tenha optado por não receber essas informações.
               </li>
               <li>
-                <strong>To manage Your requests:</strong> To attend and manage Your requests to Us.
+                <strong>Para gerir os seus pedidos:</strong> Para atender e gerir os seus pedidos feitos a nós.
               </li>
             </ul>
 
-            <p>We may share your personal information in the following situations:</p>
-
+            <p>Podemos partilhar as suas informações pessoais nas seguintes situações:</p>
             <ul>
               <li>
-                <strong>With Service Providers:</strong> We may share Your personal information with Service Providers
-                to monitor and analyze the use of our Service, to contact You.
+                <strong>Com Fornecedores de Serviços:</strong> Podemos partilhar as suas informações pessoais com Fornecedores de Serviços para monitorizar e analisar a utilização do nosso Serviço, para o contactar.
               </li>
               <li>
-                <strong>For Business transfers:</strong> We may share or transfer Your personal information in
-                connection with, or during negotiations of, any merger, sale of Company assets, financing, or
-                acquisition of all or a portion of our business to another company.
+                <strong>Para Transferências de Negócios:</strong> Podemos partilhar ou transferir as suas informações pessoais em conexão com, ou durante negociações de, qualquer fusão, venda de ativos da Empresa, financiamento ou aquisição de toda ou parte do nosso negócio por outra empresa.
               </li>
               <li>
-                <strong>With Affiliates:</strong> We may share Your information with Our affiliates, in which case we
-                will require those affiliates to honor this Privacy Policy. Affiliates include Our parent company and
-                any other subsidiaries, joint venture partners or other companies that We control or that are under
-                common control with Us.
+                <strong>Com Afiliadas:</strong> Podemos partilhar as suas informações com as nossas afiliadas, caso em que exigiremos que essas afiliadas cumpram esta Política de Privacidade. As afiliadas incluem a nossa empresa-mãe e quaisquer outras subsidiárias, parceiros de joint venture ou outras empresas que controlamos ou que estão sob controlo comum connosco.
               </li>
               <li>
-                <strong>With Business partners:</strong> We may share Your information with Our business partners to
-                offer You certain products, services or promotions.
+                <strong>Com Parceiros de Negócio:</strong> Podemos partilhar as suas informações com os nossos parceiros de negócios para lhe oferecer determinados produtos, serviços ou promoções.
               </li>
               <li>
-                <strong>With other users:</strong> when You share personal information or otherwise interact in the
-                public areas with other users, such information may be viewed by all users and may be publicly
-                distributed outside. If You interact with other users or register through a Third-Party Social Media
-                Service, Your contacts on the Third-Party Social Media Service may see Your name, profile, pictures and
-                description of Your activity. Similarly, other users will be able to view descriptions of Your activity,
-                communicate with You and view Your profile.
+                <strong>Com outros utilizadores:</strong> Quando partilha informações pessoais ou interage nas áreas públicas com outros utilizadores, essas informações podem ser vistas por todos os utilizadores e podem ser distribuídas publicamente fora. Se interagir com outros utilizadores ou se registar através de um Serviço de Redes Sociais de Terceiros, os seus contactos nesse serviço poderão ver o seu nome, perfil, fotografias e descrição da sua atividade. Da mesma forma, outros utilizadores poderão ver descrições da sua atividade, comunicar consigo e visualizar o seu perfil.
               </li>
             </ul>
-
-            <h2>Retention of Your Personal Data</h2>
+            <h2>Retenção dos Seus Dados Pessoais</h2>
             <p>
-              The Company will retain Your Personal Data only for as long as is necessary for the purposes set out in
-              this Privacy Policy. We will retain and use Your Personal Data to the extent necessary to comply with our
-              legal obligations (for example, if we are required to retain your data to comply with applicable laws),
-              resolve disputes, and enforce our legal agreements and policies.
+              A Empresa reterá seus Dados Pessoais apenas pelo tempo necessário para os fins estabelecidos nesta Política de Privacidade. Reteremos e utilizaremos seus Dados Pessoais na medida necessária para cumprir nossas obrigações legais (por exemplo, se formos obrigados a reter seus dados para cumprir leis aplicáveis), resolver disputas e fazer cumprir nossos acordos e políticas legais.
             </p>
             <p>
-              The Company will also retain Usage Data for internal analysis purposes. Usage Data is generally retained
-              for a shorter period of time, except when this data is used to strengthen the security or to improve the
-              functionality of Our Service, or We are legally obligated to retain this data for longer time periods.
+              A Empresa também reterá Dados de Uso para fins de análise interna. Os Dados de Uso geralmente são mantidos por um período mais curto, exceto quando esses dados são usados para fortalecer a segurança ou melhorar a funcionalidade do Nosso Serviço, ou quando somos legalmente obrigados a reter esses dados por períodos mais longos.
             </p>
 
-            <h2>Transfer of Your Personal Data</h2>
+            <h2>Transferência dos Seus Dados Pessoais</h2>
             <p>
-              Your information, including Personal Data, is processed at the Company's operating offices and in any
-              other places where the parties involved in the processing are located. It means that this information may
-              be transferred to — and maintained on — computers located outside of Your state, province, country or
-              other governmental jurisdiction where the data protection laws may differ than those from Your
-              jurisdiction.
+              Suas informações, incluindo Dados Pessoais, são processadas nos escritórios operacionais da Empresa e em qualquer outro lugar onde as partes envolvidas no processamento estejam localizadas. Isso significa que essas informações podem ser transferidas para — e mantidas em — computadores localizados fora do seu estado, província, país ou outra jurisdição governamental onde as leis de proteção de dados podem diferir das da sua jurisdição.
             </p>
             <p>
-              Your consent to this Privacy Policy followed by Your submission of such information represents Your
-              agreement to that transfer.
+              Seu consentimento com esta Política de Privacidade, seguido pelo envio de tais informações, representa seu acordo com essa transferência.
             </p>
             <p>
-              The Company will take all steps reasonably necessary to ensure that Your data is treated securely and in
-              accordance with this Privacy Policy and no transfer of Your Personal Data will take place to an
-              organization or a country unless there are adequate controls in place including the security of Your data
-              and other personal information.
+              A Empresa tomará todas as medidas razoavelmente necessárias para garantir que seus dados sejam tratados de forma segura e de acordo com esta Política de Privacidade, e nenhuma transferência dos seus Dados Pessoais ocorrerá para uma organização ou país, a menos que haja controles adequados em vigor, incluindo a segurança de seus dados e outras informações pessoais.
             </p>
 
-            <h2>Disclosure of Your Personal Data</h2>
-            <h3>Business Transactions</h3>
+            <h2>Divulgação dos Seus Dados Pessoais</h2>
+            <h3>Transações Comerciais</h3>
             <p>
-              If the Company is involved in a merger, acquisition or asset sale, Your Personal Data may be transferred.
-              We will provide notice before Your Personal Data is transferred and becomes subject to a different Privacy
-              Policy.
+              Se a Empresa estiver envolvida em uma fusão, aquisição ou venda de ativos, seus Dados Pessoais poderão ser transferidos. Forneceremos um aviso antes que seus Dados Pessoais sejam transferidos e fiquem sujeitos a uma Política de Privacidade diferente.
             </p>
-            <h3>Law enforcement</h3>
+            <h3>Cumprimento da Lei</h3>
             <p>
-              Under certain circumstances, the Company may be required to disclose Your Personal Data if required to do
-              so by law or in response to valid requests by public authorities (e.g. a court or a government agency).
+              Em determinadas circunstâncias, a Empresa pode ser obrigada a divulgar seus Dados Pessoais se exigido por lei ou em resposta a solicitações válidas de autoridades públicas (por exemplo, um tribunal ou agência governamental).
             </p>
-            <h3>Other legal requirements</h3>
+            <h3>Outros Requisitos Legais</h3>
             <p>
-              The Company may disclose Your Personal Data in the good faith belief that such action is necessary to:
+              A Empresa pode divulgar seus Dados Pessoais na crença de boa-fé de que tal ação é necessária para:
             </p>
             <ul>
-              <li>Comply with a legal obligation</li>
-              <li>Protect and defend the rights or property of the Company</li>
-              <li>Prevent or investigate possible wrongdoing in connection with the Service</li>
-              <li>Protect the personal safety of Users of the Service or the public</li>
-              <li>Protect against legal liability</li>
+              <li>Cumprir uma obrigação legal</li>
+              <li>Proteger e defender os direitos ou propriedade da Empresa</li>
+              <li>Prevenir ou investigar possíveis irregularidades relacionadas ao Serviço</li>
+              <li>Proteger a segurança pessoal dos Usuários do Serviço ou do público</li>
+              <li>Proteger contra responsabilidade legal</li>
             </ul>
 
-            <h2>Security of Your Personal Data</h2>
+            <h2>Segurança dos Seus Dados Pessoais</h2>
             <p>
-              The security of Your Personal Data is important to Us, but remember that no method of transmission over
-              the Internet, or method of electronic storage is 100% secure. While We strive to use commercially
-              acceptable means to protect Your Personal Data, We cannot guarantee its absolute security.
+              A segurança dos seus Dados Pessoais é importante para nós, mas lembre-se de que nenhum método de transmissão pela Internet ou método de armazenamento eletrônico é 100% seguro. Embora nos esforcemos para usar meios comercialmente aceitáveis para proteger seus Dados Pessoais, não podemos garantir sua segurança absoluta.
             </p>
 
-            <h1>Children's Privacy</h1>
+            <h1>Privacidade de Crianças</h1>
             <p>
-              Our Service does not address anyone under the age of 13. We do not knowingly collect personally
-              identifiable information from anyone under the age of 13. If You are a parent or guardian and You are
-              aware that Your child has provided Us with Personal Data, please Contacte-nos. If We become aware that We
-              have collected Personal Data from anyone under the age of 13 without verification of parental consent, We
-              take steps to remove that information from Our servers.
+              Nosso Serviço não se destina a menores de 13 anos. Não coletamos intencionalmente informações pessoalmente identificáveis de menores de 13 anos. Se você for pai, mãe ou responsável e souber que seu filho nos forneceu Dados Pessoais, entre em contato conosco. Se tomarmos conhecimento de que coletamos Dados Pessoais de menores de 13 anos sem a verificação do consentimento dos pais, tomaremos medidas para remover essas informações de nossos servidores.
             </p>
             <p>
-              If We need to rely on consent as a legal basis for processing Your information and Your country requires
-              consent from a parent, We may require Your parent's consent before We collect and use that information.
+              Se precisarmos confiar no consentimento como base legal para processar suas informações e seu país exigir o consentimento de um responsável, poderemos exigir o consentimento dos pais antes de coletar e usar essas informações.
             </p>
 
-            <h1>Links to Other Websites</h1>
+            <h1>Links para Outros Sites</h1>
             <p>
-              Our Service may contain links to other websites that are not operated by Us. If You click on a third party
-              link, You will be directed to that third party's site. We strongly advise You to review the Privacy Policy
-              of every site You visit.
+              Nosso Serviço pode conter links para outros sites que não são operados por nós. Se você clicar em um link de terceiros, será direcionado para o site desse terceiro. Recomendamos fortemente que você revise a Política de Privacidade de cada site que visitar.
             </p>
             <p>
-              We have no control over and assume no responsibility for the content, privacy policies or practices of any
-              third party sites or services.
+              Não temos controle nem assumimos responsabilidade pelo conteúdo, políticas de privacidade ou práticas de sites ou serviços de terceiros.
             </p>
 
-            <h1>Changes to this Privacy Policy</h1>
+            <h1>Alterações a Esta Política de Privacidade</h1>
             <p>
-              We may update our Privacy Policy from time to time. We will notify You of any changes by posting the new
-              Privacy Policy on this page.
+              Podemos atualizar nossa Política de Privacidade de tempos em tempos. Notificaremos você sobre quaisquer alterações publicando a nova Política de Privacidade nesta página.
             </p>
             <p>
-              We will let You know via email and/or a prominent notice on Our Service, prior to the change becoming
-              effective and update the "Last updated" date at the top of this Privacy Policy.
+              Avisaremos você por e-mail e/ou por meio de um aviso destacado em nosso Serviço antes que a alteração se torne efetiva e atualizaremos a data de "Última atualização" no topo desta Política de Privacidade.
             </p>
             <p>
-              You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy
-              are effective when they are posted on this page.
+              Recomendamos que você revise esta Política de Privacidade periodicamente para verificar quaisquer alterações. As alterações nesta Política de Privacidade são efetivas quando publicadas nesta página.
             </p>
           </Text>
         </ContentWithPaddingXl>

@@ -60,22 +60,22 @@ export default () => {
     {
       imageSrc:
         "https://images.unsplash.com/photo-1553194587-b010d08c6c56?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=768&q=80",
-      type: "Beachfront",
-      pricePerDay: "$99",
-      title: "A Trip to the Bahamas and the Carribean Ocean",
-      trendingText: "Trending",
-      durationText: "7 Days Tour",
-      locationText: "Africa"
+      type: "Beira-Mar",
+      pricePerDay: "€99",
+      title: "Uma viagem às Bahamas e ao Mar das Caraíbas",
+      trendingText: "Premium",
+      durationText: "7 Dias",
+      locationText: "África"
     },
     {
       imageSrc:
         "https://images.unsplash.com/photo-1584200186925-87fa8f93be9b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=768&q=80",
-      type: "Cruise",
-      pricePerDay: "$169",
-      title: "Cruise to the Mariana Trench and the Phillipines",
-      trendingText: "Trending",
-      durationText: "15 Days Tour",
-      locationText: "Australia"
+      type: "Cruzeiro",
+      pricePerDay: "€169",
+      title: "Cruzeiro pela Fossa das Marianas e as Filipinas",
+      trendingText: "Premium",
+      durationText: "15 dias",
+      locationText: "Austrália"
     }
   ];
   return (
@@ -102,7 +102,7 @@ export default () => {
                   <CardHeader>
                     <CardType>{card.type}</CardType>
                     <CardPrice>
-                      <CardPriceAmount>{card.pricePerDay}</CardPriceAmount> per day
+                      <CardPriceAmount>{card.pricePerDay}</CardPriceAmount> por dia
                     </CardPrice>
                   </CardHeader>
                   <CardTitle>{card.title}</CardTitle>

@@ -39,8 +39,8 @@ const Answer = motion(tw.dd`pointer-events-none text-sm sm:text-base leading-rel
 
 export default ({
   subheading = "",
-  heading = "Questions",
-  description = "Here are some frequently asked questions about our hotels from our loving customers. Should you have any other questions, feel free to reach out via the contact form below.",
+  heading = "Perguntas e respostas",
+  description = "Aqui estão algumas perguntas frequentes sobre as nossas praias feitas pelos nossos clientes amorosos. Caso tenhas outras dúvidas, sente-te à vontade para entrar em contato através do formulário de contato abaixo.",
   imageSrc = "https://images.unsplash.com/photo-1579427421635-a0015b804b2e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1024&q=80",
   imageContain = false,
   imageShadow = true,
@@ -52,24 +52,24 @@ export default ({
    */
   const defaultFaqs = [
     {
-      question: "Is lunch provided free of cost ?",
+      question: "O que está incluso na reserva?",
       answer:
-        "Yes, it is, if you have a membership with us. Otherwise it is charged as per the menu. Some limits do apply as to how much items can be included in your lunch. This limit is enough for any one person and merely exists to discourage abusal of the system."
+        `Depende do tipo de serviço escolhido, em reservas comuns estão incluídas cadeiras, guarda-sóis, toalhas, mesas, uma quantidade limitada de petiscos e um salva-vidas de confiança. Reservas Premium costumam incluir tudo que foi mencionado e qualuqer serviço condizente ao mesmo, geralmente viagens planejadas e guidas por um guia de confiança em diversos tipos de transporte.`
     },
     {
-      question: "Do you have 2 Bedroom suites ?",
+      question: "Preciso pagar antecipadamente?",
       answer:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        "Sim, o pagamento é feito no momento da reserva para garantir a tua vaga. Oferecemos várias formas de pagamento."
     },
     {
-      question: "Are Wi-Fi costs included in the price ?",
+      question: "O que acontece em caso de mau tempo?",
       answer:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        "Se houver previsão de chuva forte ou condições inseguras, entraremos em contato para reagendar a tua reserva ou oferecer reembolso."
     },
     {
-      question: "Where can I reach you for support ?",
+      question: "Como faço uma reserva?",
       answer:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        "Basta aceder o nosso site ou aplicação, selecionar a praia desejada, escolher o dia e o horário. Depois, finalize o pagamento e recebe a tua confirmação."
     }
   ];
 

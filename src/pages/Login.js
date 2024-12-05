@@ -54,9 +54,9 @@ const IllustrationImage = styled.div`
 `;
 
 export default ({
-  logoLinkUrl = "#",
+  logoLinkUrl = "/",
   illustrationImageSrc = illustration,
-  headingText = "Faz Login no Paraíso Reservado",
+  headingText = "Faz Login na Tropical Dreams",
   socialButtons = [
     {
       iconImageSrc: googleIconImageSrc,

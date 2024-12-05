@@ -54,9 +54,9 @@ const IllustrationImage = styled.div`
 `;
 
 export default ({
-  logoLinkUrl = "#",
+  logoLinkUrl = "/",
   illustrationImageSrc = illustration,
-  headingText = "Regista-te no Paraíso Reservado",
+  headingText = "Regista-te na Tropical Dreams",
   socialButtons = [
     {
       iconImageSrc: googleIconImageSrc,
@@ -109,7 +109,7 @@ export default ({
                   <a href={privacyPolicyUrl} tw="border-b border-gray-500 border-dotted">
                     Política de Privacidade
                   </a>{" "}
-                  do Paraíso Reservado
+                  da Tropical Dreams
                 </p>
 
                 <p tw="mt-8 text-sm text-gray-600 text-center">
