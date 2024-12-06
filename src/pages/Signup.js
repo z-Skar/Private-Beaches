@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import AnimationRevealPage from "helpers/AnimationRevealPage.js";
 import { Container as ContainerBase } from "components/misc/Layouts";
 import tw from "twin.macro";
@@ -53,79 +53,116 @@ const IllustrationImage = styled.div`
   ${tw`m-12 xl:m-16 w-full max-w-lg bg-contain bg-center bg-no-repeat`}
 `;
 
-export default ({
-  logoLinkUrl = "/",
-  illustrationImageSrc = illustration,
-  headingText = "Regista-te na Tropical Dreams",
-  socialButtons = [
-    {
-      iconImageSrc: googleIconImageSrc,
-      text: "Registar com o Google",
-      url: "https://google.com"
-    }
-  ],
-  submitButtonText = "Registar",
-  SubmitButtonIcon = SignUpIcon,
-  termsOfServiceUrl = "/pages/TermsOfService.js",
-  privacyPolicyUrl = "/pages/PrivacyPolicy.js",
-  signInUrl = "/pages/Login.js"
-}) => (
-  <AnimationRevealPage>
-    <Container>
-      <Content>
-        <MainContainer>
-          <LogoLink href={logoLinkUrl}>
-            <LogoImage src={logo} />
-          </LogoLink>
-          <MainContent>
-            <Heading>{headingText}</Heading>
-            <FormContainer>
-              <SocialButtonsContainer>
-                {socialButtons.map((socialButton, index) => (
-                  <SocialButton key={index} href={socialButton.url}>
-                    <span className="iconContainer">
-                      <img src={socialButton.iconImageSrc} className="icon" alt="" />
-                    </span>
-                    <span className="text">{socialButton.text}</span>
-                  </SocialButton>
-                ))}
-              </SocialButtonsContainer>
-              <DividerTextContainer>
-                <DividerText>Ou regista-te com o teu e-mail</DividerText>
-              </DividerTextContainer>
-              <Form>
-                <Input type="email" placeholder="Email" />
-                <Input type="password" placeholder="Password" />
-                <SubmitButton type="submit">
-                  <SubmitButtonIcon className="icon" />
-                  <span className="text">{submitButtonText}</span>
-                </SubmitButton>
-                <p tw="mt-6 text-xs text-gray-600 text-center">
-                  Concordo em cumprir os {" "}
-                  <a href={termsOfServiceUrl} tw="border-b border-gray-500 border-dotted">
-                    Termos de Serviço
-                  </a>{" "}
-                  e a{" "}
-                  <a href={privacyPolicyUrl} tw="border-b border-gray-500 border-dotted">
-                    Política de Privacidade
-                  </a>{" "}
-                  da Tropical Dreams
-                </p>
+export default (props) => {
+  const {
+    logoLinkUrl = "/",
+    illustrationImageSrc = illustration,
+    headingText = "Regista-te na Tropical Dreams",
+    socialButtons = [
+      {
+        iconImageSrc: googleIconImageSrc,
+        text: "Registar com o Google",
+        url: "https://google.com"
+      }
+    ],
+    submitButtonText = "Registar",
+    SubmitButtonIcon = SignUpIcon,
+    termsOfServiceUrl = "/pages/TermsOfService.js",
+    privacyPolicyUrl = "/pages/PrivacyPolicy.js",
+    signInUrl = "/pages/Login.js"
+  } = props;
 
-                <p tw="mt-8 text-sm text-gray-600 text-center">
-                  Já tens uma conta?{" "}
-                  <a href={signInUrl} tw="border-b border-gray-500 border-dotted">
-                    Entrar
-                  </a>
-                </p>
-              </Form>
-            </FormContainer>
-          </MainContent>
-        </MainContainer>
-        <IllustrationContainer>
-          <IllustrationImage imageSrc={illustrationImageSrc} />
-        </IllustrationContainer>
-      </Content>
-    </Container>
-  </AnimationRevealPage>
-);
+  const [clientData, setClientData] = useState({ NIF: "", NAME: "Pedro", YEAR_OF_BIRTH: "2007-01-01", EMAIL: "", CONTACT: "913403100"});
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setClientData({
+      ...clientData,
+      [name]: value
+    });
+  };
+
+  const addClient = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/clients/add',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(clientData)
+        }
+      );
+      console.log(response.json());
+    } catch (error) {
+      throw new Error(error);
+    };
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    addClient();
+  };
+
+  return (
+    <AnimationRevealPage>
+      <Container>
+        <Content>
+          <MainContainer>
+            <LogoLink href={logoLinkUrl}>
+              <LogoImage src={logo} />
+            </LogoLink>
+            <MainContent>
+              <Heading>{headingText}</Heading>
+              <FormContainer>
+                <SocialButtonsContainer>
+                  {socialButtons.map((socialButton, index) => (
+                    <SocialButton key={index} href={socialButton.url}>
+                      <span className="iconContainer">
+                        <img src={socialButton.iconImageSrc} className="icon" alt="" />
+                      </span>
+                      <span className="text">{socialButton.text}</span>
+                    </SocialButton>
+                  ))}
+                </SocialButtonsContainer>
+                <DividerTextContainer>
+                  <DividerText>Ou regista-te com o teu e-mail</DividerText>
+                </DividerTextContainer>
+                <Form onSubmit={handleSubmit}>
+                  <Input type="text" name='NIF' placeholder="NIF" maxLength="9" onChange={handleInputChange}/>
+                  <Input type="email" name='EMAIL' placeholder="Email" onChange={handleInputChange}/>
+                  <Input type="password" name='PASSWORD' placeholder="Password" />
+                  <SubmitButton type="submit">
+                    <SubmitButtonIcon className="icon" />
+                    <span className="text">{submitButtonText}</span>
+                  </SubmitButton>
+                  <p tw="mt-6 text-xs text-gray-600 text-center">
+                    Concordo em cumprir os {" "}
+                    <a href={termsOfServiceUrl} tw="border-b border-gray-500 border-dotted">
+                      Termos de Serviço
+                    </a>{" "}
+                    e a{" "}
+                    <a href={privacyPolicyUrl} tw="border-b border-gray-500 border-dotted">
+                      Política de Privacidade
+                    </a>{" "}
+                    da Tropical Dreams
+                  </p>
+
+                  <p tw="mt-8 text-sm text-gray-600 text-center">
+                    Já tens uma conta?{" "}
+                    <a href={signInUrl} tw="border-b border-gray-500 border-dotted">
+                      Entrar
+                    </a>
+                  </p>
+                </Form>
+              </FormContainer>
+            </MainContent>
+          </MainContainer>
+          <IllustrationContainer>
+            <IllustrationImage imageSrc={illustrationImageSrc} />
+          </IllustrationContainer>
+        </Content>
+      </Container>
+    </AnimationRevealPage>
+  );
+};
