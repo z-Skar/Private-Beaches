@@ -1,5 +1,6 @@
 const EXPRESS = require('express');
 const CORS = require('cors');
+const PATH = require('path');
 
 const APP = EXPRESS();
 
@@ -17,5 +18,7 @@ APP.use('/bills', BILLS_ROUTE);
 APP.use('/clients', CLIENTS_ROUTE); // Associa a rota "clients" ao caminho "/clients".
 APP.use('/lifeguards', LIFEGUARDS_ROUTE);
 APP.use('/reservations', RESERVATIONS_ROUTE);
+APP.use('/images', EXPRESS.static(PATH.join(__dirname, 'images')));
+// Uma rota especial que irá permitir o acesso a imagens do servidor através do caminhio direto delas.
 
 module.exports = APP;
