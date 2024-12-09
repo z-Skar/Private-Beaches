@@ -72,7 +72,14 @@ export default (props) => {
     signInUrl = "/pages/Login.js"
   } = props;
 
-  const [clientData, setClientData] = useState({ NIF: "", NAME: "Pedro", YEAR_OF_BIRTH: "2007-01-01", EMAIL: "", CONTACT: "913403100"});
+  const [clientData, setClientData] = useState({
+    NIF: "",
+    NAME: "",
+    YEAR_OF_BIRTH: "",
+    EMAIL: "",
+    CONTACT: "",
+    PROFILE_PICTURE: ""
+  });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
