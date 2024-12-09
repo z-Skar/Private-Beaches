@@ -100,17 +100,16 @@ export default () => {
           PICTURE: `http://localhost:5000${beach.PICTURE}`
         }));
         setBeaches(updatedBeaches);
-        console.log(beaches);
-        console.log(beaches[0]);
       } catch (error) {
         console.log('Fetch Error: ', error);
       };
     };
     getBeaches();
   }, []);
+  console.log(beaches);
 
   /* Change this according to your needs */
-  const cards = [
+  /* const cards = beaches.length > 1 ? [
     {
       imageSrc: "https://images.unsplash.com/photo-1549294413-26f195200c16?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&h=1024&w=768&q=80",
       title: beaches[0].BEACH_NAME,
@@ -121,11 +120,11 @@ export default () => {
     },
     {
       imageSrc: "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&h=1024&w=768&q=80",
-      title: beaches[0].BEACH_NAME,
-      description: beaches[0].DESCRIPTION,
-      locationText: `${beaches[0].CITY_LOCATION}, ${beaches[0].COUNTRY_LOCATION}`,
-      pricingText: `EUR ${beaches[0].RESERVATION_COST}`,
-      rating: beaches[0].SCORE,
+      title: beaches[1].BEACH_NAME,
+      description: beaches[1].DESCRIPTION,
+      locationText: `${beaches[1].CITY_LOCATION}, ${beaches[1].COUNTRY_LOCATION}`,
+      pricingText: `EUR ${beaches[1].RESERVATION_COST}`,
+      rating: beaches[1].SCORE,
     },
     {
       imageSrc: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&h=1024&w=768&q=80",
@@ -143,7 +142,17 @@ export default () => {
       pricingText: "EUR 99/Dia",
       rating: 4.5,
     },
-  ]
+  ] : []; */
+
+  const NUMBER_OF_CARDS = 4;
+  const cards = beaches.length > 1 ? beaches.slice(0, NUMBER_OF_CARDS).map(beach => ({
+    imageSrc: beach.PICTURE || 'Imagem indisponível',
+    title: beach.BEACH_NAME || 'Nome indisponível',
+    description: beach.DESCRIPTION || 'Descrição indisponível',
+    locationText: `${beach.CITY_LOCATION}, ${beach.COUNTRY_LOCATION}` || 'Localiuzação indisponível',
+    pricingText: `EUR ${beach.RESERVATION_COST}/Dia` || 'Preço da reserva indisponível',
+    rating: beach.SCORE || 'N/A'
+  })) : [];
 
   return (
     <Container>
