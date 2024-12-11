@@ -98,16 +98,17 @@ export default (props) => {
 
   const [error, setError] = useState({});
   const handleInputChange = (e) => {
-    if(error[e.target.name]) {
+    const [ name, value ] = e.target
+    if(error[name]) {
       setError({
         ...error,
-        [e.target.name]: undefined
+        [name]: undefined
       });
     };
 
     setClientData({
       ...clientData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
   };
 
