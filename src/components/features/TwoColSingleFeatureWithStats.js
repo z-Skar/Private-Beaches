@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import tw from "twin.macro";
 import styled from "styled-components";
 import { css } from "styled-components/macro"; //eslint-disable-line
@@ -30,24 +30,45 @@ const Key = tw.div`font-medium text-gray-700`
 export default ({textOnLeft = false}) => {
   // The textOnLeft boolean prop can be used to display either the text on left or right side of the image.
   //Change the statistics variable as you like, add or delete objects
+
+  const [informationData, setInformationData] = useState([{}]);
+
+  useEffect(() => {
+    const getInformationData = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/information/');
+        setInformationData(await response.json());
+      } catch (error) {
+        console.log('Fetch Errror: ', error);
+      };
+    };
+    getInformationData();
+  }, []);
+
+  const { NUMBER_OF_BEACHES,
+          NUMBER_OF_CLIENTS,
+          NUMBER_OF_COUNTRIES,
+          NUMBER_OF_LIFEGUARDS
+  } = informationData[0] || {};
+
   const statistics = [
     {
       key: "Países",
-      value: "192",
+      value: NUMBER_OF_COUNTRIES,
     },
     {
       key: "Praias",
-      value: "479",
+      value: NUMBER_OF_BEACHES,
     },
     {
       key: "Clientes",
-      value: "2093",
+      value: NUMBER_OF_CLIENTS,
     },
     {
       key: "Salva-Vidas",
-      value: "10347",
+      value: NUMBER_OF_LIFEGUARDS,
     }
-  ]
+  ];
 
   return (
     <Container>
@@ -57,7 +78,7 @@ export default ({textOnLeft = false}) => {
         </ImageColumn>
         <TextColumn textOnLeft={textOnLeft}>
           <TextContent>
-            <Heading>Nós temos o melhor serviço.</Heading>
+            <Heading>Nós temos o melhor serviço</Heading>
             <Description>Com dedicação e excelência, oferecemos o melhor serviço para transformar as tuas experiências em algo extraordinário. Cada detalhe é pensado para atender suas necessidades com perfeição, garantindo qualidade, confiança e satisfação em cada momento.</Description>
             <Statistics>
               {statistics.map((statistic, index) => (

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import tw from "twin.macro";
 import styled from "styled-components";
 import { css } from "styled-components/macro"; //eslint-disable-line
@@ -55,29 +55,52 @@ const CardMetaFeature = styled.div`
 `;
 const CardAction = tw(PrimaryButtonBase)`w-full mt-8`;
 
+
+
 export default () => {
-  const cards = [
+  const [luxuryTravelData, setLuxuryTravelData] = useState([{}]);
+
+  useEffect(() => {
+    const getLuxuryTravelsData = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/beaches/luxury')
+        const jsonData = await response.json();
+
+        const updatedLuxuryTravelData = jsonData.map(luxuryTravel => ({
+          ...luxuryTravel,
+          PICTURE: `http://localhost:5000${luxuryTravel.PICTURE}`
+        }));
+        setLuxuryTravelData(updatedLuxuryTravelData);
+      } catch (error) {
+        console.log('Fetch Error: ', error);
+      };
+    };
+    getLuxuryTravelsData();
+  }, []);
+
+  const cards = luxuryTravelData.length > 1 ? [
     {
-      imageSrc:
-        "https://images.unsplash.com/photo-1553194587-b010d08c6c56?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=768&q=80",
+      imageSrc: luxuryTravelData[0].PICTURE
+        /*"https://images.unsplash.com/photo-1553194587-b010d08c6c56?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=768&q=80"*/,
       type: "Beira-Mar",
-      pricePerDay: "€99",
-      title: "Uma viagem às Bahamas e ao Mar das Caraíbas",
-      trendingText: "Premium",
+      pricePerDay: `€${luxuryTravelData[0].RESERVATION_COST}`,
+      title: "Viagem à Praia da Rocha com arribas espétaculares",
+      trendingText: luxuryTravelData[0].SERVICE_TYPE,
       durationText: "7 Dias",
-      locationText: "África"
+      locationText: luxuryTravelData[0].COUNTRY_LOCATION
     },
     {
-      imageSrc:
-        "https://images.unsplash.com/photo-1584200186925-87fa8f93be9b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=768&q=80",
-      type: "Cruzeiro",
-      pricePerDay: "€169",
-      title: "Cruzeiro pela Fossa das Marianas e as Filipinas",
-      trendingText: "Premium",
+      imageSrc: luxuryTravelData[1].PICTURE
+        /*"https://images.unsplash.com/photo-1584200186925-87fa8f93be9b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=768&q=80"*/,
+      type: "Competição de Surf",
+      pricePerDay: `€${luxuryTravelData[1].RESERVATION_COST}`,
+      title: "Competição de surf na Praia do Guincho entre amigos",
+      trendingText: luxuryTravelData[1].SERVICE_TYPE,
       durationText: "15 dias",
-      locationText: "Austrália"
+      locationText: luxuryTravelData[1].COUNTRY_LOCATION
     }
-  ];
+  ] : [];
+
   return (
     <Container>
       <Content>

@@ -1,6 +1,7 @@
 const EXPRESS = require('express');
 const ROUTER = EXPRESS.Router();
-const DATABASE = require('../database/db-connection')
+const DATABASE = require('../database/db-connection');
+const BCRYPT = require('bcrypt');
 
 ROUTER.get('/', (req, res) => {
     const SQL = 'SELECT * FROM clients;'
@@ -13,17 +14,22 @@ ROUTER.get('/', (req, res) => {
     });
 });
 
-ROUTER.post('/add', (req, res) => {
-    const SQL = 'INSERT INTO Clients (CLIENT_NIF, NAME, YEAR_OF_BIRTH, EMAIL, CONTACT) VALUES (?, ?, ?, ?, ?)';    
-    const { NIF, NAME, YEAR_OF_BIRTH, EMAIL, CONTACT } = req.body;
-    DATABASE.query(SQL, [NIF, NAME, YEAR_OF_BIRTH, EMAIL, CONTACT], (err, data) => {
-        if (err) {
-            console.log("Erro ao inserir registo: ", err)
-            return res.status(500).json({error: 'Falha ao adicionar cliente.'});
-        };
-        console.log("O registo foi adicionado à base de dados com sucesso.");
-        return res.status(200).json({message: 'Cliente adicionado com sucesso.', data});
-    });
+ROUTER.post('/register', async (req, res) => {
+    const { EMAIL, PASSWORD } = req.body;
+    try {
+        const SALT_ROUNDS = 10;
+        const HASHED_PASSWORD = await BCRYPT.hash(PASSWORD, SALT_ROUNDS);
+        const SQL = 'INSERT INTO Clients (EMAIL, PASSWORD) VALUES (?, ?)';
+
+        DATABASE.query(SQL, [EMAIL, HASHED_PASSWORD], (err, data) => {
+            if (err) {
+                return res.status(500).json({error: 'Falha ao adicionar cliente.'});
+            };
+            res.status(201).json({message: 'Cliente adicionado com sucesso.', data});
+        });
+    } catch (error) {
+        res.status(500).json({error : 'Erro interno do servidor'});
+    };
 });
 
 module.exports = ROUTER;

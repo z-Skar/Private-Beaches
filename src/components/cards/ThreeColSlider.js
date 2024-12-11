@@ -106,7 +106,6 @@ export default () => {
     };
     getBeaches();
   }, []);
-  console.log(beaches);
 
   /* Change this according to your needs */
   /* const cards = beaches.length > 1 ? [
@@ -150,7 +149,7 @@ export default () => {
     title: beach.BEACH_NAME || 'Nome indisponível',
     description: beach.DESCRIPTION || 'Descrição indisponível',
     locationText: `${beach.CITY_LOCATION}, ${beach.COUNTRY_LOCATION}` || 'Localiuzação indisponível',
-    pricingText: `EUR ${beach.RESERVATION_COST}/Dia` || 'Preço da reserva indisponível',
+    pricingText: `€${beach.RESERVATION_COST}/Dia` || 'Preço da reserva indisponível',
     rating: beach.SCORE || 'N/A'
   })) : [];
 

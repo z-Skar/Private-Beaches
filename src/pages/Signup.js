@@ -9,6 +9,7 @@ import logo from "images/logo192.png";
 import googleIconImageSrc from "images/google-icon.png";
 import twitterIconImageSrc from "images/twitter-icon.png";
 import { ReactComponent as SignUpIcon } from "feather-icons/dist/icons/user-plus.svg";
+import { validateFields } from "validation/validationFunctions";
 
 const Container = tw(ContainerBase)`min-h-screen bg-primary-900 text-white font-medium flex justify-center -m-8`;
 const Content = tw.div`max-w-screen-xl m-0 sm:mx-20 sm:my-16 bg-white text-gray-900 shadow sm:rounded-lg flex justify-center flex-1`;
@@ -73,25 +74,14 @@ export default (props) => {
   } = props;
 
   const [clientData, setClientData] = useState({
-    NIF: "",
     NAME: "",
-    YEAR_OF_BIRTH: "",
     EMAIL: "",
-    CONTACT: "",
-    PROFILE_PICTURE: ""
+    PASSWORD: "",
   });
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setClientData({
-      ...clientData,
-      [name]: value
-    });
-  };
 
   const addClient = async () => {
     try {
-      const response = await fetch('http://localhost:5000/clients/add',
+      const response = await fetch('http://localhost:5000/clients/register',
         {
           method: 'POST',
           headers: {
@@ -102,13 +92,37 @@ export default (props) => {
       );
       console.log(response.json());
     } catch (error) {
-      throw new Error(error);
+      console.log('Fetch Error: ', error)
     };
+  };
+
+  const [error, setError] = useState({});
+  const handleInputChange = (e) => {
+    if(error[e.target.name]) {
+      setError({
+        ...error,
+        [e.target.name]: undefined
+      });
+    };
+
+    setClientData({
+      ...clientData,
+      [e.target.name]: e.target.value
+    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addClient();
+
+    const formData = new FormData(e.target);
+    const DATA = Object.fromEntries(formData);
+    const ERRORS = validateFields(DATA);
+
+    if(Object.keys(ERRORS).length > 0) {
+      setError(ERRORS);
+    } else {
+      // addClient();
+    };
   };
 
   return (
@@ -136,9 +150,26 @@ export default (props) => {
                   <DividerText>Ou regista-te com o teu e-mail</DividerText>
                 </DividerTextContainer>
                 <Form onSubmit={handleSubmit}>
-                  <Input type="text" name='NIF' placeholder="NIF" maxLength="9" onChange={handleInputChange}/>
-                  <Input type="email" name='EMAIL' placeholder="Email" onChange={handleInputChange}/>
-                  <Input type="password" name='PASSWORD' placeholder="Password" />
+                  <Input
+                    type="text"
+                    name='NAME'
+                    placeholder="Nome Completo"
+                    onChange={handleInputChange}
+                  />
+                  {error.NAME && <p tw="text-red-700 text-xs pl-1 pt-1">{error.NAME}</p>}
+                  <Input
+                    name="EMAIL"
+                    placeholder="Email"
+                    onChange={handleInputChange}
+                  />
+                  {error.EMAIL && <p tw="text-red-700 text-xs pl-1 pt-1">{error.EMAIL}</p>}
+                  <Input
+                    type="password"
+                    name='PASSWORD'
+                    placeholder="Password"
+                    onChange={handleInputChange}
+                  />
+                  {error.PASSWORD && <p tw="text-red-700 text-xs pl-1 pt-1">{error.PASSWORD}</p>}
                   <SubmitButton type="submit">
                     <SubmitButtonIcon className="icon" />
                     <span className="text">{submitButtonText}</span>
