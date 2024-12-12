@@ -68,9 +68,10 @@ export default (props) => {
     ],
     submitButtonText = "Registar",
     SubmitButtonIcon = SignUpIcon,
-    termsOfServiceUrl = "/pages/TermsOfService.js",
-    privacyPolicyUrl = "/pages/PrivacyPolicy.js",
-    signInUrl = "/pages/Login.js"
+    termsOfServiceUrl = "/TermsOfService.js",
+    privacyPolicyUrl = "/PrivacyPolicy.js",
+    signInUrl = "/Login.js",
+    
   } = props;
 
   const [clientData, setClientData] = useState({
@@ -98,21 +99,20 @@ export default (props) => {
 
   const [error, setError] = useState({});
   const handleInputChange = (e) => {
-    const [ name, value ] = e.target
-    if(error[name]) {
+    if(error[e.target.name]) {
       setError({
         ...error,
-        [name]: undefined
+        [e.target.name]: undefined
       });
     };
 
     setClientData({
       ...clientData,
-      [name]: value
+      [e.target.name]: e.target.value
     });
   };
 
-  const handleSubmit = (e) => {
+  const  handleSubmit = async (e) => {
     e.preventDefault();
 
     const formData = new FormData(e.target);
@@ -122,7 +122,12 @@ export default (props) => {
     if(Object.keys(ERRORS).length > 0) {
       setError(ERRORS);
     } else {
-      // addClient();
+      try {
+        // await addClient();
+        window.location.href = 'http://localhost:3000/';
+      } catch (error) {
+        console.log(error);
+      };
     };
   };
 

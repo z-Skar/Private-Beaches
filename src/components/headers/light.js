@@ -77,7 +77,7 @@ export default ({ roundedHeaderButton = false, logoLink, links, className, colla
       <NavLink href="/#">Salva-vidas</NavLink>
       <NavLink href="/#">Contacte-nos</NavLink>
       <NavLink href="/pages/Login.js" tw="lg:ml-12!">Login</NavLink>
-      <PrimaryLink css={roundedHeaderButton && tw`rounded-full`}href="/pages/Signup.js">Regista-te</PrimaryLink>
+      <PrimaryLink css={roundedHeaderButton && tw`rounded-full`}href="/Signup.js">Regista-te</PrimaryLink>
     </NavLinks>
   ];
 

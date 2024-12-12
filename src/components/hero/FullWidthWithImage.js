@@ -47,7 +47,7 @@ export default ({
       <NavLink href="#">Sobre</NavLink>
       <NavLink href="#">Admin</NavLink>
       <NavLink href="#">Salva-vidas</NavLink>
-      <NavLink href="/pages/Login.js">Login</NavLink>
+      <NavLink href="/Login.js">Login</NavLink>
     </NavLinks>
   ],
   heading = (
@@ -60,9 +60,9 @@ export default ({
     </>
   ),
   description = "Temos estado no negócio de Praias Privadas durante 5 anos. Nós lhe garantimos que irá adorar estar connosco e escolher os nossos serviços.",
-  primaryActionUrl = "/pages/Login.js",
+  primaryActionUrl = "/Login.js",
   primaryActionText = "Faz Login",
-  secondaryActionUrl = "#",
+  secondaryActionUrl = "/Beaches.js",
   secondaryActionText = "Pesquisa Praias",
 }) => {
   return (

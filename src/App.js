@@ -50,7 +50,7 @@ import { css } from "styled-components/macro"; //eslint-disable-line
 // import SliderCard from "components/cards/ThreeColSlider.js";
 // import TrendingCard from "components/cards/TwoTrendingPreviewCardsWithImage.js";
 // import Portfolio from "components/cards/PortfolioTwoCardsWithImage.js";
-// import TabGrid from "components/cards/TabCardGrid.js";
+import TabGrid from "components/cards/TabCardGrid.js";
 
 // import Blog from "components/blogs/ThreeColSimpleWithImage.js";
 // import Blog from "components/blogs/ThreeColSimpleWithImageAndDashedBorder.js";
@@ -119,10 +119,11 @@ export default function App() {
           <Route path="/components/:type/:name" element={<ComponentRenderer />} />
           <Route path="/thank-you" element={<ThankYouPage />} />
           <Route path="/" element={<HotelTravelLandingPage />} />
-          <Route path="/pages/Login.js" element={<LoginPage />} />
-          <Route path="/pages/Signup.js" element={<SignupPage />} />
-          <Route path="/pages/TermsOfService.js" element={<TermsOfServicePage />} />
-          <Route path="pages/PrivacyPolicy.js" element={<PrivacyPolicyPage />} />
+          <Route path="/Login.js" element={<LoginPage />} />
+          <Route path="/Signup.js" element={<SignupPage />} />
+          <Route path="/TermsOfService.js" element={<TermsOfServicePage />} />
+          <Route path="/PrivacyPolicy.js" element={<PrivacyPolicyPage />} />
+          <Route path="/Beaches.js" element={<TabGrid />} />
         </Routes>
       </Router>
     </>
