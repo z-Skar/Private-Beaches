@@ -93,7 +93,7 @@ export default () => {
   useEffect(() => {
     const getBeaches = async () => {
       try {
-        const response = await fetch('http://localhost:5000/beaches')
+        const response = await fetch('http://localhost:5000/beaches?orderBy=Evaluations.SCORE&orderDirection=DESC')
         const data = await response.json();
         const updatedBeaches = data.map(beach => ({
           ...beach,
@@ -144,7 +144,7 @@ export default () => {
   ] : []; */
 
   const NUMBER_OF_CARDS = 4;
-  const cards = beaches.length > 1 ? beaches.slice(0, NUMBER_OF_CARDS).map(beach => ({
+  const cards = beaches.length > 0 ? beaches.slice(0, NUMBER_OF_CARDS).map(beach => ({
     imageSrc: beach.PICTURE || 'Imagem indisponível',
     title: beach.BEACH_NAME || 'Nome indisponível',
     description: beach.DESCRIPTION || 'Descrição indisponível',

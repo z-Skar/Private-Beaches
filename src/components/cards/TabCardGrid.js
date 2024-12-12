@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import tw from "twin.macro";
 import styled from "styled-components";
@@ -11,9 +11,16 @@ import { ReactComponent as SvgDecoratorBlob1 } from "images/svg-decorator-blob-5
 import { ReactComponent as SvgDecoratorBlob2 } from "images/svg-decorator-blob-7.svg";
 import Header from "components/headers/light.js";
 
-const HeaderRow = tw.div`flex justify-between items-center flex-col xl:flex-row`;
-const Title = tw(SectionHeading)``;
-const TabsControl = tw.div`flex flex-wrap bg-gray-200 px-2 py-2 rounded leading-none mt-12 xl:mt-0`;
+const HeaderRow = tw.div`flex justify-between items-center flex-col xl:flex-row w-full`;
+const Heading = tw(SectionHeading)`text-gray-700 mb-3`
+const TabsControl = tw.div`bg-gray-200 px-2 py-2 rounded leading-none mt-12 xl:mt-0`;
+  /*<TabsControl>
+  {Object.keys(tabs).map((tabName, index) => (
+    <TabControl key={index} active={activeTab === tabName} onClick={() => setActiveTab(tabName)}>
+      {tabName}
+    </TabControl>
+  ))}
+  </TabsControl>*/
 
 const TabControl = styled.div`
   ${tw`cursor-pointer px-6 py-3 mt-2 sm:mt-0 sm:mr-2 last:mr-0 text-gray-600 font-medium rounded-sm transition duration-300 text-sm sm:text-base w-1/2 sm:w-auto text-center`}
@@ -21,6 +28,16 @@ const TabControl = styled.div`
     ${tw`bg-gray-300 text-gray-700`}
   }
   ${props => props.active && tw`bg-primary-500! text-gray-100!`}
+  }
+`;
+
+const Actions = styled.div`
+  ${tw`relative max-w-md text-center mx-auto lg:mx-0 w-full`}
+  input {
+    ${tw`sm:pr-48 pl-8 py-4 sm:py-5 rounded-full border-2 w-full font-medium focus:outline-none transition duration-300  focus:border-primary-500 hover:border-gray-500`}
+  }
+  button {
+    ${tw`w-full sm:absolute right-0 top-0 bottom-0 bg-primary-500 text-gray-100 font-bold mr-2 my-4 sm:my-2 rounded-full py-4 flex items-center justify-center sm:w-40 sm:leading-none focus:outline-none hover:bg-primary-900 transition duration-300`}
   }
 `;
 
@@ -49,7 +66,8 @@ const CardReview = tw.div`font-medium text-xs text-gray-600`;
 
 const CardText = tw.div`p-4 text-gray-900`;
 const CardTitle = tw.h5`text-lg font-semibold group-hover:text-primary-500`;
-const CardContent = tw.p`mt-1 text-sm font-medium text-gray-600`;
+const CardContent = tw.p`mt-1 text-sm font-medium text-gray-600 line-clamp-2`;
+
 const CardPrice = tw.p`mt-4 text-xl font-bold`;
 
 const DecoratorBlob1 = styled(SvgDecoratorBlob1)`
@@ -61,7 +79,36 @@ const DecoratorBlob2 = styled(SvgDecoratorBlob2)`
 
 export default ({
   heading = "Vem conhecer as nossas Praias",
-  tabs = {
+}) => {
+  /*
+   * To customize the tabs, pass in data using the `tabs` prop. It should be an object which contains the name of the tab
+   * as the key and value of the key will be its content (as an array of objects).
+   * To see what attributes are configurable of each object inside this array see the example above for "Starters".
+   */
+
+  const [beaches, setBeaches] = useState([{}]);
+
+  useEffect(() => {
+    const getRecentBeaches = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/beaches?orderBy=Beaches.BEACH_ID&orderDirection=DESC');
+        const data = await response.json();
+
+        const updatedBeaches = data.map(beach => ({
+          ...beach,
+          PICTURE: `http://localhost:5000${beach.PICTURE}`
+        }));
+        setBeaches(updatedBeaches);
+      } catch (error) {
+        console.log('Fetch Error: ', error);
+      };
+    };
+    getRecentBeaches();
+  }, []);
+
+  console.log(beaches);
+  
+  /*const tabs = {
     Starters: [
       {
         imageSrc:
@@ -147,13 +194,21 @@ export default ({
     Main: getRandomCards(),
     Soup: getRandomCards(),
     Desserts: getRandomCards()
-  }
-}) => {
-  /*
-   * To customize the tabs, pass in data using the `tabs` prop. It should be an object which contains the name of the tab
-   * as the key and value of the key will be its content (as an array of objects).
-   * To see what attributes are configurable of each object inside this array see the example above for "Starters".
-   */
+  }; */
+
+
+  const tabs = beaches.length > 0 ? {
+    Starters: beaches.map(beach => ({
+      imageSrc: beach.PICTURE || 'Imagem indisponível',
+      title: beach.BEACH_NAME || 'Título indisponível',
+      content: beach.DESCRIPTION || 'Descrição indisponível',
+      price: `€${beach.RESERVATION_COST}` || 'Preço indisponível',
+      rating: beach.SCORE || '[N/A]',
+      Evaluations: beach.EVALUATIONS || '[N/A]',
+      url: '#'
+    }))
+  } : {};
+
   const tabsKeys = Object.keys(tabs);
   const [activeTab, setActiveTab] = useState(tabsKeys[0]);
 
@@ -162,14 +217,11 @@ export default ({
       <Header />
       <ContentWithPaddingXl>
         <HeaderRow>
-          <Title>{heading}</Title>
-          <TabsControl>
-            {Object.keys(tabs).map((tabName, index) => (
-              <TabControl key={index} active={activeTab === tabName} onClick={() => setActiveTab(tabName)}>
-                {tabName}
-              </TabControl>
-            ))}
-          </TabsControl>
+          <Heading>{heading}</Heading>
+          <Actions>
+            <input type="text" placeholder="Nome da Praia" />
+            <button>Pesquisar</button>
+          </Actions>
         </HeaderRow>
 
         {tabsKeys.map((tabKey, index) => (
@@ -200,7 +252,7 @@ export default ({
                         <StarIcon />
                         {card.rating}
                       </CardRating>
-                      <CardReview>({card.Avaliações})</CardReview>
+                      <CardReview>({card.Evaluations})</CardReview>
                     </CardRatingContainer>
                     <CardHoverOverlay
                       variants={{
@@ -215,7 +267,7 @@ export default ({
                       }}
                       transition={{ duration: 0.3 }}
                     >
-                      <CardButton>Buy Now</CardButton>
+                      <CardButton>Reservar</CardButton>
                     </CardHoverOverlay>
                   </CardImageContainer>
                   <CardText>
