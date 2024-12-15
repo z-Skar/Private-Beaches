@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import AnimationRevealPage from "helpers/AnimationRevealPage.js";
 import { motion } from "framer-motion";
 import tw from "twin.macro";
 import styled from "styled-components";
@@ -87,11 +88,13 @@ export default ({
    */
 
   const [beaches, setBeaches] = useState([{}]);
+  const [filterText, setFilterText] = useState('');
+  const [direction, setDirection] = useState('left')
 
   useEffect(() => {
     const getRecentBeaches = async () => {
       try {
-        const response = await fetch('http://localhost:5000/beaches?orderBy=Beaches.BEACH_ID&orderDirection=DESC');
+        const response = await fetch(`http://localhost:5000/beaches?orderBy=Beaches.BEACH_ID&orderDirection=DESC${!filterText ? '' : `&textParameter=${filterText}`}`);
         const data = await response.json();
 
         const updatedBeaches = data.map(beach => ({
@@ -104,7 +107,7 @@ export default ({
       };
     };
     getRecentBeaches();
-  }, []);
+  }, [filterText]);
 
   console.log(beaches);
   
@@ -196,6 +199,11 @@ export default ({
     Desserts: getRandomCards()
   }; */
 
+  const SEARCH = () => {
+    const textInput = document.getElementById('textInput').value;
+    setDirection('right');
+    setFilterText(textInput);
+  };
 
   const tabs = beaches.length > 0 ? {
     Starters: beaches.map(beach => ({
@@ -213,77 +221,88 @@ export default ({
   const [activeTab, setActiveTab] = useState(tabsKeys[0]);
 
   return (
-    <Container>
-      <Header />
-      <ContentWithPaddingXl>
-        <HeaderRow>
-          <Heading>{heading}</Heading>
-          <Actions>
-            <input type="text" placeholder="Nome da Praia" />
-            <button>Pesquisar</button>
-          </Actions>
-        </HeaderRow>
+    <AnimationRevealPage>
+      <Container>
+        <Header />
+        <ContentWithPaddingXl>
+          <HeaderRow>
+            <Heading>{heading}</Heading>
+            <Actions>
+              <input
+                type="text"
+                placeholder="Nome ou descrição da Praia"
+                id="textInput"
+                onKeyDown={(key) => key.code === 'Enter' && SEARCH()}
+              />
+              <button onClick={SEARCH}>
+                Pesquisar
+              </button>
+            </Actions>
+          </HeaderRow>
 
-        {tabsKeys.map((tabKey, index) => (
-          <TabContent
-            key={index}
-            variants={{
-              current: {
-                opacity: 1,
-                scale:1,
-                display: "flex",
-              },
-              hidden: {
-                opacity: 0,
-                scale:0.8,
-                display: "none",
-              }
-            }}
-            transition={{ duration: 0.4 }}
-            initial={activeTab === tabKey ? "current" : "hidden"}
-            animate={activeTab === tabKey ? "current" : "hidden"}
-          >
-            {tabs[tabKey].map((card, index) => (
-              <CardContainer key={index}>
-                <Card className="group" href={card.url} initial="rest" whileHover="hover" animate="rest">
-                  <CardImageContainer imageSrc={card.imageSrc}>
-                    <CardRatingContainer>
-                      <CardRating>
-                        <StarIcon />
-                        {card.rating}
-                      </CardRating>
-                      <CardReview>({card.Evaluations})</CardReview>
-                    </CardRatingContainer>
-                    <CardHoverOverlay
-                      variants={{
-                        hover: {
-                          opacity: 1,
-                          height: "auto"
-                        },
-                        rest: {
-                          opacity: 0,
-                          height: 0
-                        }
-                      }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <CardButton>Reservar</CardButton>
-                    </CardHoverOverlay>
-                  </CardImageContainer>
-                  <CardText>
-                    <CardTitle>{card.title}</CardTitle>
-                    <CardContent>{card.content}</CardContent>
-                    <CardPrice>{card.price}</CardPrice>
-                  </CardText>
-                </Card>
-              </CardContainer>
-            ))}
-          </TabContent>
-        ))}
-      </ContentWithPaddingXl>
-      <DecoratorBlob1 />
-      <DecoratorBlob2 />
-    </Container>
+          {tabsKeys.map((tabKey, index) => (
+            <AnimationRevealPage key={filterText} direction={direction}>
+              <TabContent
+                key={index}
+                variants={{
+                  current: {
+                    opacity: 1,
+                    scale:1,
+                    display: "flex",
+                  },
+                  hidden: {
+                    opacity: 0,
+                    scale:0.8,
+                    display: "none",
+                  }
+                }}
+                transition={{ duration: 0.4 }}
+                initial={activeTab === tabKey ? "current" : "hidden"}
+                animate={activeTab === tabKey ? "current" : "hidden"}
+              >
+                {tabs[tabKey].map((card, index) => (
+                  <CardContainer key={index}>
+                    <Card className="group" href={card.url} initial="rest" whileHover="hover" animate="rest">
+                      <CardImageContainer imageSrc={card.imageSrc}>
+                        <CardRatingContainer>
+                          <CardRating>
+                            <StarIcon />
+                            {card.rating}
+                          </CardRating>
+                          <CardReview>({card.Evaluations})</CardReview>
+                        </CardRatingContainer>
+                        <CardHoverOverlay
+                          variants={{
+                            hover: {
+                              opacity: 1,
+                              height: "auto"
+                            },
+                            rest: {
+                              opacity: 0,
+                              height: 0
+                            }
+                          }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <CardButton>Reservar</CardButton>
+                        </CardHoverOverlay>
+                      </CardImageContainer>
+                      <CardText>
+                        <CardTitle>{card.title}</CardTitle>
+                        <CardContent>{card.content}</CardContent>
+                        <CardPrice>{card.price}</CardPrice>
+                      </CardText>
+                    </Card>
+                  </CardContainer>
+                ))}
+              </TabContent>
+            </AnimationRevealPage>
+          ))}
+        </ContentWithPaddingXl>
+        <DecoratorBlob1 />
+        <DecoratorBlob2 />
+      </Container>
+    </AnimationRevealPage>
   );
 };
 

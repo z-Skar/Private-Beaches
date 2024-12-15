@@ -7,14 +7,17 @@ import { motion } from "framer-motion";
 import useInView from "helpers/useInView";
 
 const StyledDiv = tw.div`font-display min-h-screen text-secondary-500 p-8 overflow-hidden`;
-function AnimationReveal({ disabled, children }) {
+function AnimationReveal({ disabled, direction = 'left', children }) {
   if (disabled) {
     return <>{children}</>;
   }
 
   if (!Array.isArray(children)) children = [children];
 
-  const directions = ["left", "right"];
+  let directions;
+  if (direction === 'left') directions = ['left', 'right'];
+  else if (direction === 'right') directions = ['right', 'left'];
+
   const childrenWithAnimation = children.map((child, i) => {
     return (
       <AnimatedSlideInComponent key={i} direction={directions[i % directions.length]}>
@@ -31,7 +34,7 @@ function AnimatedSlideInComponent({ direction = "left", offset = 30, children })
   const x = { target: "0%" };
 
   if (direction === "left") x.initial = "-150%";
-  else x.initial = "150%";
+  else if (direction ==="right") x.initial = "150%";
 
   return (
     <div ref={ref}>

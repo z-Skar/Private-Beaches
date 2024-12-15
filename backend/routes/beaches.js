@@ -13,12 +13,17 @@ ROUTER.get('/', (req, res) => {
         return res.status(400).json({erro: 'Parâmetros inválidos.'});
     };
 
-    const SQL = `SELECT BEACH_NAME, CITY_LOCATION, COUNTRY_LOCATION, RESERVATION_COST, DESCRIPTION, 
+    const SQL = `SELECT BEACH_NAME, BEACH_NAME, CITY_LOCATION, COUNTRY_LOCATION, RESERVATION_COST, DESCRIPTION, 
                  AVG(Evaluations.SCORE) AS SCORE, COUNT(Evaluations.BEACH_ID) AS EVALUATIONS, PICTURE FROM Beaches 
                  INNER JOIN Evaluations ON beaches.BEACH_ID = Evaluations.BEACH_ID 
+                 WHERE BEACH_NAME LIKE ? OR DESCRIPTION LIKE ?
                  GROUP BY Beaches.BEACH_ID  
                  ORDER BY ${ORDER_PARAMETER} ${ORDER_DIRECTION}`
-    DATABASE.query(SQL, (err, data) => {
+    
+    let filterText = req.query.textParameter || '';
+    filterText = `%${filterText}%`
+
+    DATABASE.query(SQL, [filterText, filterText], (err, data) => {
         if(err) {
             return res.status(500).json(err);
         } return res.status(200).json(data);
