@@ -16,7 +16,7 @@ export const validateFields = (data) => {
     // /g Fim da expressão regex com uma flag que mantém o indice do último match.
     
     if(!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(data.EMAIL)) {
-        if (!errors.EMAIL) {
+        if (!errors.EMAIL.trim()) {
             errors.EMAIL = 'Email inválido.';
         };
     };
@@ -24,6 +24,12 @@ export const validateFields = (data) => {
     if(!data.PASSWORD.trim()) {
         errors.PASSWORD = 'Password obrigatória.';
     };
+
+    if(data.PASSWORD.trim()) {
+        if(data.PASSWORD.trim().length < 4) {
+            errors.PASSWORD = 'A password tem de ter no minímo 4 caractéres.'
+        }
+    }
 
     return errors;
 }
