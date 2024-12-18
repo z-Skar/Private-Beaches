@@ -34,10 +34,10 @@ const Textarea = styled(Input).attrs({as: "textarea"})`
 const SubmitButton = tw(PrimaryButtonBase)`inline-block mt-8`
 
 export default ({
-  subheading = "Contacte-nos",
-  heading = <>Feel free to <span tw="text-primary-500">get in touch</span><wbr/> with us.</>,
-  description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  submitButtonText = "Send",
+  subheading = "Vem fazer parte da segurança das pessoas!",
+  heading = <>Candidata-te a ser um <span tw="text-primary-500">Salva-Vidas!</span><wbr/></>,
+  description = <>Seja a diferença que salva vidas! Como salva-vidas, tu garantes a segurança, prevines acidentes e atuas em resgates com coragem e preparo.<br />Enviaremos um e-mail caso seja aceite com as informações necessárias.</>,
+  submitButtonText = "Enviar",
   formAction = "#",
   formMethod = "get",
   textOnLeft = true,
@@ -56,10 +56,11 @@ export default ({
             <Heading>{heading}</Heading>
             {description && <Description>{description}</Description>}
             <Form action={formAction} method={formMethod}>
-              <Input type="email" name="email" placeholder="Your Email Address" />
-              <Input type="text" name="name" placeholder="Full Name" />
-              <Input type="text" name="subject" placeholder="Subject" />
-              <Textarea name="message" placeholder="Your Message Here" />
+              <Input type="text" name='NIF' placeholder="Número de Identificação Fiscal" />
+              <Input type="text" name="FULL_NAME" placeholder="Nome completo" />
+              <Input type='date' name='YEAR_OF_BIRTH' placeholder="Ano de nascimento" />
+              <Input type="email" name="EMAIL" placeholder="Endereço de email" />
+              <Input type="text" name="CONTACT" placeholder="Número de telemóvel" />
               <SubmitButton type="submit">{submitButtonText}</SubmitButton>
             </Form>
           </TextContent>

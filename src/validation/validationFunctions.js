@@ -1,4 +1,4 @@
-export const validateFields = (data) => {
+export const validateSignUpFields = (data) => {
     const errors = {};
 
     if(!data.NAME.trim()) {
@@ -32,4 +32,13 @@ export const validateFields = (data) => {
     }
 
     return errors;
+}
+
+export const validateLifeguardFields = (data) => {
+    const errors = {};
+
+    MANDATORY_FIELDS = ['NIF', 'FULL_NAME', 'YEAR_OF_BIRTH', 'EMAIL', 'CONTACT'];
+    if(!data.NIF) {
+        errors.NIF = 'NIF'
+    }
 }

@@ -70,6 +70,7 @@ import TabGrid from "components/cards/TabCardGrid.js";
 // import ContactUsForm from "components/forms/SimpleContactUs.js";
 // import ContactUsForm from "components/forms/TwoColContactUsWithIllustration.js";
 // import SubscribeNewsLetterForm from "components/forms/SimpleSubscribeNewsletter.js";
+import TwoColContactUsWithIllustrationFullForm from "components/forms/TwoColContactUsWithIllustrationFullForm";
 //
 // import GetStarted from "components/cta/GetStarted.js";
 // import GetStarted from "components/cta/GetStartedLight.js";
@@ -124,6 +125,7 @@ export default function App() {
           <Route path="/TermsOfService.js" element={<TermsOfServicePage />} />
           <Route path="/PrivacyPolicy.js" element={<PrivacyPolicyPage />} />
           <Route path="/Beaches.js" element={<TabGrid />} />
+          <Route path="/Lifeguards.js" element={<TwoColContactUsWithIllustrationFullForm />} />
         </Routes>
       </Router>
     </>

@@ -9,7 +9,7 @@ import logo from "images/logo192.png";
 import googleIconImageSrc from "images/google-icon.png";
 import twitterIconImageSrc from "images/twitter-icon.png";
 import { ReactComponent as SignUpIcon } from "feather-icons/dist/icons/user-plus.svg";
-import { validateFields } from "validation/validationFunctions";
+import { validateSignUpFields } from "validation/validationFunctions";
 
 const Container = tw(ContainerBase)`min-h-screen bg-primary-900 text-white font-medium flex justify-center -m-8`;
 const Content = tw.div`max-w-screen-xl m-0 sm:mx-20 sm:my-16 bg-white text-gray-900 shadow sm:rounded-lg flex justify-center flex-1`;
@@ -117,7 +117,7 @@ export default (props) => {
 
     const formData = new FormData(e.target);
     const DATA = Object.fromEntries(formData);
-    const ERRORS = validateFields(DATA);
+    const ERRORS = validateSignUpFields(DATA);
 
     if(Object.keys(ERRORS).length > 0) {
       setError(ERRORS);
