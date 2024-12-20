@@ -6,6 +6,7 @@ import { SectionHeading, Subheading as SubheadingBase } from "components/misc/He
 import { PrimaryButton as PrimaryButtonBase } from "components/misc/Buttons.js";
 import EmailIllustrationSrc from "images/email-illustration.svg";
 import { validateLifeguardFields } from "validation/validationFunctions";
+import { DatePicker } from "@mui/x-date-pickers";
 
 const Container = tw.div`relative`;
 const TwoColumn = tw.div`flex flex-col md:flex-row justify-between max-w-screen-xl mx-auto py-20 md:py-24`;
@@ -124,7 +125,29 @@ export default ({
               <Input type="text" name="FULL_NAME" placeholder="Nome completo" onChange={handleInputChange} />
               {error.FULL_NAME && <p tw="text-red-700 text-xs pl-1 pt-1">{error.FULL_NAME}</p>}
 
-              <Input type='date' name='YEAR_OF_BIRTH' placeholder="Ano de nascimento" onChange={handleInputChange} />
+              <DatePicker
+                sx={{
+                  mt: 2,
+                  mb: -2,
+                  fontWeight: tw`font-medium`,
+                  '& .MuiInputBase-input' : {
+                    color: tw`text-gray-600`,
+                    px: 0,
+                    
+                  },
+                  '& .MuiOutlinedInput-root' : {
+                    '& fieldset': {
+                      border: 'none',
+                      borderBottom: '2px solid',
+                      borderBottomColor: tw`border-b-gray-300`
+                    },
+                    '&:hover fieldset, &.Mui-focused fieldset': {
+                      borderBottomColor: tw`border-primary-500`,
+                      transition: 'border-color 300ms',
+                    },
+                  },
+                }}
+              />
               {error.YEAR_OF_BIRTH && <p tw="text-red-700 text-xs pl-1 pt-1">{error.YEAR_OF_BIRTH}</p>}
 
               <Input type="text" name="EMAIL" placeholder="Endereço de email" onChange={handleInputChange} />
