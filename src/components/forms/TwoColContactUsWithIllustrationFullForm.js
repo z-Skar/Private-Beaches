@@ -49,7 +49,7 @@ export default ({
   const [lifeguardData, setLifeguardData] = useState({
     NIF: '',
     FULL_NAME: '',
-    YEAR_OF_YEAR: '',
+    YEAR_OF_BIRTH: '',
     EMAIL: '',
     CONTACT: ''
   });
@@ -87,9 +87,24 @@ export default ({
     };
   };
 
+  const formatDate = (date) => {
+    date = new Date(date);
+
+    const DATE_YEAR = date.getFullYear();
+    const DATE_MONTH = date.getMonth() < 10 ? `0 ${date.getMonth()}` : date.getMonth();
+    const DATE_DAY = String(date).slice(0, 2);
+
+    return `${DATE_YEAR}-${DATE_MONTH}-${DATE_DAY}`;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setLifeguardData({
+      ...lifeguardData,
+      YEAR_OF_BIRTH: formatDate(lifeguardData.YEAR_OF_BIRTH)
+    });
+    
     const formData = new FormData(e.target);
     const DATA = Object.fromEntries(formData);
     const ERRORS = validateLifeguardFields(DATA);
