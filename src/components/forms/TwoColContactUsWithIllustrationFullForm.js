@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import tw from "twin.macro";
 import styled from "styled-components";
 import { css } from "styled-components/macro"; //eslint-disable-line
@@ -7,6 +7,11 @@ import { PrimaryButton as PrimaryButtonBase } from "components/misc/Buttons.js";
 import EmailIllustrationSrc from "images/email-illustration.svg";
 import { validateLifeguardFields } from "validation/validationFunctions";
 import { DatePicker } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
+import Header from "components/headers/light.js";
+import AnimationRevealPage from "helpers/AnimationRevealPage";
+import { TextField } from "@mui/material";
+import { ElderlyWoman } from "@mui/icons-material";
 
 const Container = tw.div`relative`;
 const TwoColumn = tw.div`flex flex-col md:flex-row justify-between max-w-screen-xl mx-auto py-20 md:py-24`;
@@ -28,12 +33,27 @@ const Heading = tw(SectionHeading)`mt-4 font-black text-left text-3xl sm:text-4x
 const Description = tw.p`mt-4 text-center md:text-left text-sm md:text-base lg:text-lg font-medium leading-relaxed text-secondary-100`
 
 const Form = tw.form`mt-8 md:mt-10 text-sm flex flex-col max-w-sm mx-auto md:mx-0`
-const Input = tw.input`mt-6 first:mt-0 border-b-2 py-3 focus:outline-none font-medium transition duration-300 hocus:border-primary-500`
+const Input = tw.input`pl-4 mt-6 first:mt-0 border-2 rounded-sm py-3 focus:border-primary-500 font-medium transition duration-300 text-gray-700 hocus:border-primary-500`
 const Textarea = styled(Input).attrs({as: "textarea"})`
   ${tw`h-24`}
 `
 
 const SubmitButton = tw(PrimaryButtonBase)`inline-block mt-8`
+
+const commonStyles = {
+  marginTop: 2.5,
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      border: `solid ${tw`border-b-gray-300`}`,
+      borderWidth: 2,
+    },
+    '&:hover fieldset, &.Mui-focused fieldset': {
+      transition: 'border-color 500ms',
+      borderBottomColor: tw`border-primary-500`,
+      color: tw`text-primary-500`,
+    },
+  },
+};
 
 export default ({
   subheading = "Vem fazer parte da segurança das pessoas!",
@@ -53,8 +73,21 @@ export default ({
     EMAIL: '',
     CONTACT: ''
   });
+  const [date, setDate] = useState('');
+  const [error, setError] = useState({});
 
-  const [error, setError] = useState({})
+  const handleDateChange = (inputDate) => {
+    if(error.YEAR_OF_BIRTH) setError({...error, YEAR_OF_BIRTH: undefined});
+    try {
+      inputDate = inputDate.format('YYYY-MM-DD')
+    } catch (error) {
+      inputDate = ''
+    };
+    setLifeguardData({
+      ...lifeguardData,
+      YEAR_OF_BIRTH: inputDate === 'Invalid Date' ? '' : inputDate
+    });
+  };
 
   const handleInputChange = (e) => {
     if(error[e.target.name]) {
@@ -69,6 +102,11 @@ export default ({
       [e.target.name]: e.target.value,
     });
   };
+
+  useEffect(() => {
+    setDate(date)
+  }, [date]);
+  
 
   const addLifeguard = async (data) => {
     try {
@@ -87,28 +125,9 @@ export default ({
     };
   };
 
-  const formatDate = (date) => {
-    date = new Date(date);
-
-    const DATE_YEAR = date.getFullYear();
-    const DATE_MONTH = date.getMonth() < 10 ? `0 ${date.getMonth()}` : date.getMonth();
-    const DATE_DAY = String(date).slice(0, 2);
-
-    return `${DATE_YEAR}-${DATE_MONTH}-${DATE_DAY}`;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    setLifeguardData({
-      ...lifeguardData,
-      YEAR_OF_BIRTH: formatDate(lifeguardData.YEAR_OF_BIRTH)
-    });
-    
-    const formData = new FormData(e.target);
-    const DATA = Object.fromEntries(formData);
-    const ERRORS = validateLifeguardFields(DATA);
-
+    const ERRORS = validateLifeguardFields(lifeguardData);
     if(Object.keys(ERRORS).length > 0) {
       setError(ERRORS);
     } else {
@@ -117,64 +136,68 @@ export default ({
         // document.location.href = 'http://localhost:3000/';
       } catch (error) {
         alert(error);
-      }
-      // addLifeguard(lifeguardData);
-    }
+      };
+    };
   };
 
   return (
-    <Container>
-      <TwoColumn>
-        <ImageColumn>
-          <Image imageSrc={EmailIllustrationSrc} />
-        </ImageColumn>
-        <TextColumn textOnLeft={textOnLeft}>
-          <TextContent>
-            {subheading && <Subheading>{subheading}</Subheading>}
-            <Heading>{heading}</Heading>
-            {description && <Description>{description}</Description>}
-            <Form onSubmit={handleSubmit}>
-              <Input type="text" name='NIF' placeholder="Número de Identificação Fiscal" onChange={handleInputChange} />
-              {error.NIF && <p tw="text-red-700 text-xs pl-1 pt-1">{error.NIF}</p>}
-
-              <Input type="text" name="FULL_NAME" placeholder="Nome completo" onChange={handleInputChange} />
-              {error.FULL_NAME && <p tw="text-red-700 text-xs pl-1 pt-1">{error.FULL_NAME}</p>}
-
-              <DatePicker
-                sx={{
-                  mt: 2,
-                  mb: -2,
-                  fontWeight: tw`font-medium`,
-                  '& .MuiInputBase-input' : {
-                    color: tw`text-gray-600`,
-                    px: 0,
-                    
+    <AnimationRevealPage>
+      <Container>
+        <Header tw="mt-4"/>
+        <TwoColumn tw="pt-10">
+          <ImageColumn>
+            <Image imageSrc={EmailIllustrationSrc} />
+          </ImageColumn>
+          <TextColumn textOnLeft={textOnLeft}>
+            <TextContent>
+              {subheading && <Subheading>{subheading}</Subheading>}
+              <Heading>{heading}</Heading>
+              {description && <Description>{description}</Description>}
+              <Form onSubmit={handleSubmit}>
+                <TextField  name='NIF' label="Número de Identificação Fiscal" onChange={handleInputChange}
+                sx={{...commonStyles, '& .MuiInputLabel-root.Mui-focused': {
+                      color: tw`text-primary-500`,
                   },
-                  '& .MuiOutlinedInput-root' : {
-                    '& fieldset': {
-                      border: 'none',
-                      borderBottom: '2px solid',
-                      borderBottomColor: tw`border-b-gray-300`
-                    },
-                    '&:hover fieldset, &.Mui-focused fieldset': {
-                      borderBottomColor: tw`border-primary-500`,
-                      transition: 'border-color 300ms',
-                    },
+                }} />
+                {error.NIF && <p tw="text-red-700 text-xs pl-1 pt-1">{error.NIF}</p>}
+
+                <TextField name='FULL_NAME' label="Nome completo" onChange={handleInputChange}
+                  sx={{...commonStyles, '& .MuiInputLabel-root.Mui-focused': {
+                    color: tw`text-primary-500`,
                   },
-                }}
-              />
-              {error.YEAR_OF_BIRTH && <p tw="text-red-700 text-xs pl-1 pt-1">{error.YEAR_OF_BIRTH}</p>}
+                }} 
+                />
+                {error.FULL_NAME && <p tw="text-red-700 text-xs pl-1 pt-1">{error.FULL_NAME}</p>}
 
-              <Input type="text" name="EMAIL" placeholder="Endereço de email" onChange={handleInputChange} />
-              {error.EMAIL && <p tw="text-red-700 text-xs pl-1 pt-1">{error.EMAIL}</p>}
+                <TextField name='EMAIL' label="Endereço de email" onChange={handleInputChange}
+                  sx={{...commonStyles, '& .MuiInputLabel-root.Mui-focused': {
+                    color: tw`text-primary-500`,
+                    },
+                  }} 
+                />
+                {error.EMAIL && <p tw="text-red-700 text-xs pl-1 pt-1">{error.EMAIL}</p>}
 
-              <Input type="text" name="CONTACT" placeholder="Número de telemóvel" onChange={handleInputChange} />
-              {error.CONTACT && <p tw="text-red-700 text-xs pl-1 pt-1">{error.CONTACT}</p>}
-              <SubmitButton type="submit">{submitButtonText}</SubmitButton>
-            </Form>
-          </TextContent>
-        </TextColumn>
-      </TwoColumn>
-    </Container>
+                <TextField name='CONTACT' label="Número de telemóvel" onChange={handleInputChange}
+                  sx={{...commonStyles, '& .MuiInputLabel-root.Mui-focused': {
+                    color: tw`text-primary-500`,
+                    },
+                  }} 
+                />
+                {error.CONTACT && <p tw="text-red-700 text-xs pl-1 pt-1">{error.CONTACT}</p>}
+
+                <DatePicker disableFuture format="YYYY-MM-DD" label="Data de nascimento" onChange={handleDateChange}
+                  sx={{...commonStyles, '& .MuiInputLabel-root.Mui-focused': {
+                    color: tw`text-primary-500`,
+                    },
+                  }}
+                />
+                {error.YEAR_OF_BIRTH && <p tw="text-red-700 text-xs pl-1 pt-1">{error.YEAR_OF_BIRTH}</p>}
+                <SubmitButton type="submit">{submitButtonText}</SubmitButton>
+              </Form>
+            </TextContent>
+          </TextColumn>
+        </TwoColumn>
+      </Container>
+    </AnimationRevealPage>
   );
 };

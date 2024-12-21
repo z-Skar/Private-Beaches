@@ -39,7 +39,7 @@ export const validateLifeguardFields = (data) => {
     const errors = {};
 
     const MANDATORY_FIELDS = {
-        NIF: 'O NIF é obrigatória.',
+        NIF: 'O NIF é obrigatório.',
         FULL_NAME: 'O nome completo é obrigatório.',
         YEAR_OF_BIRTH: 'A data de nascimento é obrigatória.',
         EMAIL: 'O endereço de email é obrigatório.',
@@ -58,8 +58,8 @@ export const validateLifeguardFields = (data) => {
         errors.EMAIL = 'Email inválido.';
     };
 
-    Object.keys(MANDATORY_FIELDS).map((field) => {
-        if(!data[field].trim()) {
+    Object.keys(MANDATORY_FIELDS).forEach((field) => {
+        if(!(data[field]).trim()) {
             errors[field] = MANDATORY_FIELDS[field];
         };
     });
