@@ -41,7 +41,7 @@ export const validateLifeguardFields = (data) => {
     const MANDATORY_FIELDS = {
         NIF: 'O NIF é obrigatório.',
         FULL_NAME: 'O nome completo é obrigatório.',
-        YEAR_OF_BIRTH: 'A data de nascimento é obrigatória.',
+        YEAR_OF_BIRTH: 'A data de nascimento inserida é inválida.',
         EMAIL: 'O endereço de email é obrigatório.',
         CONTACT: 'O número de telemóvel é obrigatório.'
     };

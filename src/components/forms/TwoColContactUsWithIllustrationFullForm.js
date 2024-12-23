@@ -7,11 +7,11 @@ import { PrimaryButton as PrimaryButtonBase } from "components/misc/Buttons.js";
 import EmailIllustrationSrc from "images/email-illustration.svg";
 import { validateLifeguardFields } from "validation/validationFunctions";
 import { DatePicker } from "@mui/x-date-pickers";
-import dayjs from "dayjs";
 import Header from "components/headers/light.js";
 import AnimationRevealPage from "helpers/AnimationRevealPage";
 import { TextField } from "@mui/material";
-import { ElderlyWoman } from "@mui/icons-material";
+import Profile from "components/my_components/Profile";
+import "react-image-crop/dist/ReactCrop.css";
 
 const Container = tw.div`relative`;
 const TwoColumn = tw.div`flex flex-col md:flex-row justify-between max-w-screen-xl mx-auto py-20 md:py-24`;
@@ -44,7 +44,7 @@ const commonStyles = {
   marginTop: 2.5,
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
-      border: `solid ${tw`border-b-gray-300`}`,
+      border: `solid ${tw`border-gray-300`}`,
       borderWidth: 2,
     },
     '&:hover fieldset, &.Mui-focused fieldset': {
@@ -103,11 +103,6 @@ export default ({
     });
   };
 
-  useEffect(() => {
-    setDate(date)
-  }, [date]);
-  
-
   const addLifeguard = async (data) => {
     try {
       const response = await fetch('http://localhost:5000/clients/register',
@@ -154,6 +149,7 @@ export default ({
               <Heading>{heading}</Heading>
               {description && <Description>{description}</Description>}
               <Form onSubmit={handleSubmit}>
+                <Profile />
                 <TextField  name='NIF' label="Número de Identificação Fiscal" onChange={handleInputChange}
                 sx={{...commonStyles, '& .MuiInputLabel-root.Mui-focused': {
                       color: tw`text-primary-500`,
