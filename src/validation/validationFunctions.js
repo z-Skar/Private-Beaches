@@ -1,10 +1,33 @@
-const validEmail = (email) => {
+const MANDATORY_FIELDS = {
+    NIF: 'O NIF inserido é inválido (9 caracteres necessários).',
+    FULL_NAME: 'O nome completo é obrigatório.',
+    YEAR_OF_BIRTH: 'A data de nascimento inserida é inválida.',
+    EMAIL: 'O endereço de email é obrigatório.',
+    PASSWORD: 'A password é obrigatória.',
+    CONTACT: 'O número de telemóvel é obrigatório.'
+};
+
+const setMandatoryMessageErrors = (fields, data) => {
+    Object.keys(fields).forEach((field) => {
+        if(!(data[field] || '').trim()) {
+            fields[field] = MANDATORY_FIELDS[field];
+        };
+    });
+};
+
+const checkOnlyNumbers = (string) => {
+    return /^\d+$/.test(string);
+};
+
+const setEmailError = (errors, email) => {
     // ^ Vai dar match apenas no inicio da string.
     // [\w-\.]+@ A primeira parte da string tem de ser um caracter alfanumérico, hifen ou um ponto pelo menos 1 vez, depois disso é obrigatório existir um @.
     // ([\w-]+\.)+ Uma seccção que aceita um caractér alfanumérico, o hifen e em seguida, obrigatoriamente um ponto, essa captura tem de ocorrer pelo menos uma vez.
     // [\w-]{2,4}$ Aceita uma string alfanumérica e/ou hifen entre 2 a 4 caractéres e tem de estar no fim da string.
     // /g Fim da expressão regex com uma flag que mantém o indice do último match.
-    return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(email);
+    if(!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(email)) {
+        errors.EMAIL = 'O email inserido é inválido.';
+    };
 };
 
 const getAge = (date) => {
@@ -13,55 +36,64 @@ const getAge = (date) => {
 };
 
 export const validateSignUpFields = (data) => {
-    const errors = {};
-
-    if (!data.NAME.trim()) {
-        errors.NAME = 'O nome completo é obrigatório.';
+    const errors = {
+        FULL_NAME: '',
+        EMAIL: '',
+        PASSWORD: ''
     };
 
-    if (!data.EMAIL.trim()) {
-        errors.EMAIL = 'O email é obrigatório.';
-    };
+    setEmailError(errors, (data.EMAIL || '').trim());
 
-    if (!errors.EMAIL && validEmail(data.EMAIL.trim())) {
-        errors.EMAIL = 'Email inválido.'
-    };
-
-    if (!data.PASSWORD.trim()) {
-        errors.PASSWORD = 'A password é obrigatória.';
-    } else if (data.PASSWORD.trim().length < 4) {
+    if (data.PASSWORD.trim().length < 4) {
         errors.PASSWORD = 'A password tem de ter no minímo 4 caractéres.';
     };
+
+    setMandatoryMessageErrors(errors, data)
     return errors;
 };
 
 export const validateLifeguardFields = (data) => {
-    const errors = {};
-
-    const MANDATORY_FIELDS = {
-        NIF: 'O NIF é obrigatório.',
-        FULL_NAME: 'O nome completo é obrigatório.',
-        YEAR_OF_BIRTH: 'A data de nascimento inserida é inválida.',
-        EMAIL: 'O endereço de email é obrigatório.',
-        CONTACT: 'O número de telemóvel é obrigatório.'
+    const errors = {
+        NIF: '',
+        FULL_NAME: '',
+        YEAR_OF_BIRTH: '',
+        EMAIL: '',
+        CONTACT: ''
     };
 
+    // NIF VALIDATION
+    if(data.NIF.length < 9) {
+        errors.NIF = MANDATORY_FIELDS.NIF;
+    };
+
+    if(!checkOnlyNumbers(data.NIF)) {
+        errors.NIF = 'O NIF inserido é inválido, só pode conter números.'
+    };
+
+
+    // FULL NAME VALIDATION
     if (data.FULL_NAME.length < 5) {
         errors.NAME = 'O nome completo é necessário.';
     };
+
+
+    // EMAIL VALIDATION
+    setEmailError(errors, (data.EMAIL || '').trim());
+
     
+    // CONTACT VALIDATION
+    if(data.CONTACT.length < 9) {
+        errors.CONTACT = 'O número de telemóvel é inválido (9 caracteres necessários).';
+    };
+    if(!checkOnlyNumbers((data.CONTACT || '').trim()))
+
+
+    // YEAR OF BIRTH VALIDATION
     if (getAge(data.YEAR_OF_BIRTH) <= 18) {
         errors.YEAR_OF_BIRTH = 'Apenas salva-vidas maiores de 18 anos podem se candidatar.';
     };
+    //--
 
-    if (!validEmail(data.EMAIL)) {
-        errors.EMAIL = 'Email inválido.';
-    };
-
-    Object.keys(MANDATORY_FIELDS).forEach((field) => {
-        if(!(data[field]).trim()) {
-            errors[field] = MANDATORY_FIELDS[field];
-        };
-    });
+    setMandatoryMessageErrors(errors, data);
     return errors;
 };

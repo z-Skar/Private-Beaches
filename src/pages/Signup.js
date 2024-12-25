@@ -75,7 +75,7 @@ export default (props) => {
   } = props;
 
   const [clientData, setClientData] = useState({
-    NAME: "",
+    FULL_NAME: "",
     EMAIL: "",
     PASSWORD: "",
   });
@@ -114,20 +114,18 @@ export default (props) => {
 
   const  handleSubmit = async (e) => {
     e.preventDefault();
-
-    const formData = new FormData(e.target);
-    const DATA = Object.fromEntries(formData);
-    const ERRORS = validateSignUpFields(DATA);
+    const ERRORS = validateSignUpFields(clientData);
 
     if(Object.keys(ERRORS).length > 0) {
       setError(ERRORS);
-    } else {
-      try {
-        // await addClient();
-        window.location.href = 'http://localhost:3000/';
-      } catch (error) {
-        console.log(error);
-      };
+      return;
+    };
+
+    try {
+      // await addClient();
+      window.location.href = 'http://localhost:3000/';
+    } catch (error) {
+      console.log(error);
     };
   };
 
@@ -162,7 +160,7 @@ export default (props) => {
                     placeholder="Nome Completo"
                     onChange={handleInputChange}
                   />
-                  {error.NAME && <p tw="text-red-700 text-xs pl-1 pt-1">{error.NAME}</p>}
+                  {error.FULL_NAME && <p tw="text-red-700 text-xs pl-1 pt-1">{error.FULL_NAME}</p>}
                   <Input
                     name="EMAIL"
                     placeholder="Email"
