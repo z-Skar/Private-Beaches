@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef} from "react";
 import tw from "twin.macro";
 import styled from "styled-components";
 import { css } from "styled-components/macro"; //eslint-disable-line
@@ -10,8 +10,10 @@ import { DatePicker } from "@mui/x-date-pickers";
 import Header from "components/headers/light.js";
 import AnimationRevealPage from "helpers/AnimationRevealPage";
 import { TextField } from "@mui/material";
-import Profile from "components/my_components/Profile";
 import "react-image-crop/dist/ReactCrop.css";
+import PencilIcon from "../my_components/PencilIcon";
+import Modal from "../my_components/Modal";
+import ProfilePicture from '../../images/default-profile-picture.webp'
 
 const Container = tw.div`relative`;
 const TwoColumn = tw.div`flex flex-col md:flex-row justify-between max-w-screen-xl mx-auto py-20 md:py-24`;
@@ -39,6 +41,11 @@ const Textarea = styled(Input).attrs({as: "textarea"})`
 `
 
 const SubmitButton = tw(PrimaryButtonBase)`inline-block mt-8`
+
+const ProfilePictureContainer = tw.div`flex flex-col items-center pb-2`
+const RelativeContainer = tw.div`relative`
+const ProfilePictureForm = tw.img`w-[150px] h-[150px] rounded-full border-4 border-gray-400`
+const Button = tw.button`absolute left-0 right-0 m-auto p-[.35rem] rounded-full bg-gray-400 hover:bg-gray-200 border border-gray-600 -bottom-[0.75rem] w-[1.75rem]`
 
 const commonStyles = {
   marginTop: 2.5,
@@ -71,9 +78,9 @@ export default ({
     FULL_NAME: '',
     YEAR_OF_BIRTH: '',
     EMAIL: '',
-    CONTACT: ''
+    CONTACT: '',
+    PROFILE_PICTURE: 'default-profile-picture.webp'
   });
-  const [date, setDate] = useState('');
   const [error, setError] = useState({});
 
   const handleDateChange = (inputDate) => {
@@ -123,16 +130,30 @@ export default ({
   const handleSubmit = async (e) => {
     e.preventDefault();
     const ERRORS = validateLifeguardFields(lifeguardData);
+
     if(Object.keys(ERRORS).length > 0) {
       setError(ERRORS);
-    } else {
-      try {
-        // await addLifeguard();
-        // document.location.href = 'http://localhost:3000/';
-      } catch (error) {
-        alert(error);
-      };
+      return;
     };
+
+    try {
+      // await addLifeguard();
+      // document.location.href = 'http://localhost:3000/';
+    } catch (error) {
+      alert(error);
+    };
+  };
+
+  // Funções para o Profile
+  const [avatarUrl, setAvatarUrl] = useState(ProfilePicture);
+  const [modalOpen, setModalOpen]  = useState(false);
+
+  const updateAvatar = (imgSrc) => {
+    setAvatarUrl(imgSrc);
+    setLifeguardData({
+      ...lifeguardData,
+      PROFILE_PICTURE: imgSrc
+    });
   };
 
   return (
@@ -149,7 +170,27 @@ export default ({
               <Heading>{heading}</Heading>
               {description && <Description>{description}</Description>}
               <Form onSubmit={handleSubmit}>
-                <Profile />
+                <ProfilePictureContainer>
+                  <RelativeContainer>
+                    <ProfilePictureForm
+                      src={avatarUrl}
+                      alt="Avatar"
+                    />
+                    <Button
+                      type="button"
+                      title="Change photo"
+                      onClick={() => setModalOpen(true)}
+                    >
+                      <PencilIcon />
+                    </Button>
+                  </RelativeContainer>
+                  {modalOpen && (
+                    <Modal
+                      updateAvatar={updateAvatar}
+                      closeModal={() => setModalOpen(false)}
+                    />
+                  )}
+                </ProfilePictureContainer>
                 <TextField  name='NIF' label="Número de Identificação Fiscal" onChange={handleInputChange}
                 sx={{...commonStyles, '& .MuiInputLabel-root.Mui-focused': {
                       color: tw`text-primary-500`,

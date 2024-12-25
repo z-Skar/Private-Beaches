@@ -27,7 +27,7 @@ const Profile = () => {
           alt="Avatar"
         />
         <Button
-          css={{ width: 'fit-content' }}
+          type="button"
           title="Change photo"
           onClick={() => setModalOpen(true)}
         >
