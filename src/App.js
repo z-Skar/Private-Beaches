@@ -109,7 +109,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import Profile from "components/my_components/Profile";
 
 export default function App() {
   // If you want to disable the animation just use the disabled `prop` like below on your page's component

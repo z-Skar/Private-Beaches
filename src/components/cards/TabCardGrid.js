@@ -11,6 +11,14 @@ import { ReactComponent as StarIcon } from "images/star-icon.svg";
 import { ReactComponent as SvgDecoratorBlob1 } from "images/svg-decorator-blob-5.svg";
 import { ReactComponent as SvgDecoratorBlob2 } from "images/svg-decorator-blob-7.svg";
 import Header from "components/headers/light.js";
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Typography } from "@mui/material";
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
 
 const HeaderRow = tw.div`flex justify-between items-center flex-col xl:flex-row w-full`;
 const Heading = tw(SectionHeading)`text-gray-700 mb-3`
@@ -78,6 +86,28 @@ const DecoratorBlob2 = styled(SvgDecoratorBlob2)`
   ${tw`pointer-events-none -z-20 absolute left-0 bottom-0 h-80 w-80 opacity-15 transform -translate-x-2/3 text-primary-500`}
 `;
 
+const commonStyles = {
+  marginTop: '0.5rem',
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      border: `solid ${tw`border-gray-100`}`,
+      borderWidth: 2,
+    },
+    '&:hover fieldset, &.Mui-focused fieldset': {
+      transition: 'border-color 500ms',
+      borderBottomColor: tw`border-primary-500`,
+    },
+  },
+  '& .MuiInputLabel-root': {
+    '&:hover': {
+      color: tw`text-primary-500`,
+    },
+    '&.Mui-focused': {
+      color: tw`text-primary-500`,
+    },
+  },
+};
+
 export default ({
   heading = "Vem conhecer as nossas Praias",
 }) => {
@@ -89,7 +119,10 @@ export default ({
 
   const [beaches, setBeaches] = useState([{}]);
   const [filterText, setFilterText] = useState('');
-  const [direction, setDirection] = useState('left')
+  const [animationDirection, setAnimationDirection] = useState('left')
+  const [country, setCountry] = useState('');
+  const [city, setCity] = useState('');
+  const [serviceType, setServiceType] = useState('');
 
   useEffect(() => {
     const getRecentBeaches = async () => {
@@ -198,10 +231,10 @@ export default ({
     Soup: getRandomCards(),
     Desserts: getRandomCards()
   }; */
-
+  const options = ['The Godfather', 'Pulp Fiction'];
   const SEARCH = () => {
     const textInput = document.getElementById('textInput').value;
-    setDirection('right');
+    setAnimationDirection('right');
     setFilterText(textInput);
   };
 
@@ -239,9 +272,59 @@ export default ({
               </button>
             </Actions>
           </HeaderRow>
-
+          <HeaderRow>
+            <Accordion
+              style={{
+                backgroundColor: '#EDF2F7',
+                borderWidth: '2px',
+                borderColor: 'E2E8F0',
+                borderRadius: '10px',
+                marginTop: '1.5rem',
+                marginBottom: '-1.5rem',
+                width: '90rem'
+              }}>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                id="filterSection"
+                style={{ height: '4rem' }}
+              >
+                <Typography
+                  component="span"
+                  style={{ fontFamily: 'Inter', fontWeight: '600', color: '#4a5568'}}>
+                    MAIS FILTROS
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails
+                style={{ borderTopWidth: '2px', display: 'flex', justifyContent: 'space-between'}}
+              >
+                <Autocomplete options={options} sx={{ width: '14rem', ...commonStyles}}
+                  renderInput={(params) => <TextField {...params} label="País" />}
+                />
+                <Autocomplete options={options} sx={{ width: '14rem', ...commonStyles}}
+                  renderInput={(params) => <TextField {...params} label="Cidade" />}
+                />
+                <Autocomplete options={options} sx={{ width: '14rem', ...commonStyles}}
+                  renderInput={(params) => <TextField {...params} label="Serviço" />}
+                />
+                <TextField label='Preço minímo' sx={{marginTop: '0.5rem', ...commonStyles }} placeholder="0.00"
+                  slotProps={{
+                    input: {
+                      endAdornment: <InputAdornment>€</InputAdornment>
+                    }
+                  }}
+                />
+                <TextField label='Preço máximo' sx={{marginTop: '0.5rem', ...commonStyles }} placeholder="0.00"
+                  slotProps={{
+                    input: {
+                      endAdornment: <InputAdornment>€</InputAdornment>
+                    },
+                  }}
+                />
+              </AccordionDetails>
+            </Accordion>
+          </HeaderRow>
           {tabsKeys.map((tabKey, index) => (
-            <AnimationRevealPage key={filterText} direction={direction}>
+            <AnimationRevealPage key={filterText} direction={animationDirection}>
               <TabContent
                 key={index}
                 variants={{

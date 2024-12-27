@@ -88,7 +88,7 @@ export const validateLifeguardFields = (data) => {
     if(!checkOnlyNumbers((data.CONTACT || '').trim()))
 
 
-    // YEAR OF BIRTH VALIDATION
+    // YEAR OF BIRTH VALIDATION 
     if (getAge(data.YEAR_OF_BIRTH) <= 18) {
         errors.YEAR_OF_BIRTH = 'Apenas salva-vidas maiores de 18 anos podem se candidatar.';
     };
