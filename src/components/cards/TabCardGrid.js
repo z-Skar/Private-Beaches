@@ -15,10 +15,11 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Typography } from "@mui/material";
-import Autocomplete from '@mui/material/Autocomplete';
+import { Button, Typography } from "@mui/material";
+import Autocomplete  from '@mui/material/Autocomplete';
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
+import { validateReservationCostFields } from "validation/validationFunctions";
 
 const HeaderRow = tw.div`flex justify-between items-center flex-col xl:flex-row w-full`;
 const Heading = tw(SectionHeading)`text-gray-700 mb-3`
@@ -117,32 +118,81 @@ export default ({
    * To see what attributes are configurable of each object inside this array see the example above for "Starters".
    */
 
+  // Use States
   const [beaches, setBeaches] = useState([{}]);
-  const [filterText, setFilterText] = useState('');
   const [animationDirection, setAnimationDirection] = useState('left')
+
+  // Parâmetros de Filtragem
+  const [filterText, setFilterText] = useState('');
   const [country, setCountry] = useState('');
   const [city, setCity] = useState('');
   const [serviceType, setServiceType] = useState('');
+  const [minCost, setMinCost] = useState("0");
+  const [maxCost, setMaxCost] = useState("999999");
+
+  // Opções para as ComboBoxs
+  const [countries, setCountries] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [serviceTypes, setServiceTypes] = useState([]);
+
+  // Mensagens de Erro
+  const [errors, setErrors] = useState({
+    minCostMessage: '',
+    maxCostMessage: ''
+  });
+
+  // Trigger para a Pesquisa
+  const [trigger, setTrigger] = useState(Date.now());
 
   useEffect(() => {
-    const getRecentBeaches = async () => {
+    const getData = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/beaches?orderBy=Beaches.BEACH_ID&orderDirection=DESC${!filterText ? '' : `&textParameter=${filterText}`}`);
-        const data = await response.json();
+        // DEFINIÇÃO DA URL COM OS SEUS PARÂMETROS.
+        const query_parameters = new URLSearchParams();
 
-        const updatedBeaches = data.map(beach => ({
+        //-- PARÂMETROS DEFAULT.
+        query_parameters.append('orderBy', 'Beaches.BEACH_ID');
+        query_parameters.append('orderDireciton', 'DESC')
+
+        //-- PARÂMETROS DE FILTRAGEM DE DADOS.
+        filterText && query_parameters.append('textParameter', filterText);
+        country && query_parameters.append('countryParameter', country);
+        city && query_parameters.append('cityParameter', city);
+        serviceType && query_parameters.append('serviceTypeParameter', serviceType);
+
+        //-- PARÂMETROS DE FILTRAGEM DE DADOS EM FUNÇÃO DO CUSTO DE RESERVA, PARÂMETROS ESSES QUE NUNCA SERÃO "falsy".
+        query_parameters.append('minCostParameter', minCost);
+        query_parameters.append('maxCostParameter', maxCost);
+
+
+        //-- EXECUÇÃO DAS URLs. OS DADOS SERÃO CHAMADOS PARA PREENCHER A INTERFACE DO SITE.
+        const beaches = await fetch(`http://localhost:5000/beaches?${query_parameters.toString()}`);
+        const location = await fetch('http://localhost:5000/beaches/location');
+        const services = await fetch('http://localhost:5000/beaches/services');
+
+        //-- DADOS EM FORMATO JSON.
+        const beachesData = await beaches.json();
+        const locationData = await location.json();
+        const servicesData = await services.json();
+        
+        //-- CRIAÇÃO DO CAMINHO DA IMAGEM VINDA DO SERVIDOR.
+        const updatedBeaches = beachesData.map(beach => ({
           ...beach,
           PICTURE: `http://localhost:5000${beach.PICTURE}`
         }));
+
+        //-- ATRIBUIÇÃO DOS VALORES AOS ESTADOS QUE RETORNARÃO OS DADOS NECESSÁRIOS
+        //-- PARA MOSTRAR A INTERFACE E OS INPUTS DE MANEIRA CORRETA.
         setBeaches(updatedBeaches);
+        setCountries(locationData.map(record => record.COUNTRY_LOCATION));
+        setCities(locationData.flatMap(record => record.CITIES.split(', ')));
+        setServiceTypes(servicesData.map(record => record.SERVICE_TYPE));
       } catch (error) {
         console.log('Fetch Error: ', error);
       };
     };
-    getRecentBeaches();
-  }, [filterText]);
-
-  console.log(beaches);
+    getData();
+  }, [trigger]);
   
   /*const tabs = {
     Starters: [
@@ -231,11 +281,43 @@ export default ({
     Soup: getRandomCards(),
     Desserts: getRandomCards()
   }; */
-  const options = ['The Godfather', 'Pulp Fiction'];
+  
   const SEARCH = () => {
-    const textInput = document.getElementById('textInput').value;
     setAnimationDirection('right');
-    setFilterText(textInput);
+    const errorMessages = validateReservationCostFields((minCost || '0'), (maxCost || '999999'));
+
+    setErrors(errorMessages);
+    
+    if(!errorMessages.minCostMessage && !errorMessages.maxCostMessage) {
+      setTrigger(Date.now());
+    };
+  };
+
+  const CLEAR_INPUTS = () => {
+    document.getElementById('textInput').value = '';
+    setFilterText('');
+
+    document.getElementById('country').value = '';
+    setCountry('');
+
+    document.getElementById('city').value = '';
+    setCity('');
+
+    document.getElementById('serviceType').value = '';
+    setServiceType('');
+
+    document.getElementById('minCost').value = '';
+    setMinCost('0');
+
+    document.getElementById('maxCost').value = '';
+    setMaxCost('999999');
+
+    setErrors({
+      minCostMessage: '',
+      maxCostMessage: ''
+    });
+
+    setTrigger(Date.now());
   };
 
   const tabs = beaches.length > 0 ? {
@@ -265,6 +347,7 @@ export default ({
                 type="text"
                 placeholder="Nome ou descrição da Praia"
                 id="textInput"
+                onChange={e => setFilterText(e.target.value)}
                 onKeyDown={(key) => key.code === 'Enter' && SEARCH()}
               />
               <button onClick={SEARCH}>
@@ -280,7 +363,7 @@ export default ({
                 borderColor: 'E2E8F0',
                 borderRadius: '10px',
                 marginTop: '1.5rem',
-                marginBottom: '-1.5rem',
+                marginBottom: '-3.5rem',
                 width: '90rem'
               }}>
               <AccordionSummary
@@ -297,34 +380,92 @@ export default ({
               <AccordionDetails
                 style={{ borderTopWidth: '2px', display: 'flex', justifyContent: 'space-between'}}
               >
-                <Autocomplete options={options} sx={{ width: '14rem', ...commonStyles}}
-                  renderInput={(params) => <TextField {...params} label="País" />}
-                />
-                <Autocomplete options={options} sx={{ width: '14rem', ...commonStyles}}
+                <div>
+                  <Autocomplete options={countries} sx={{ width: '14rem', ...commonStyles}}
+                    value={country}
+                    renderInput={(params) => <TextField {...params} label="País" />}
+                    noOptionsText='Sem opções'
+                    onChange={(event, newValue) => setCountry(newValue)}
+                    id="country"
+                  />
+                  <div tw='flex mt-3 justify-between'>
+                    <Button sx={{
+                        backgroundColor: tw`bg-primary-500`,
+                        color: tw`text-white`,
+                        ":hover": tw`hover:bg-primary-900 transition duration-300`,
+                      }}
+                      disableRipple
+                      onClick={SEARCH}
+                    >
+                      PESQUISAR
+                    </Button>
+                    <Button sx={{
+                        backgroundColor: tw`bg-gray-500`,
+                        color: tw`text-white`,
+                        ":hover": tw`hover:bg-gray-600 transition duration-300`,
+                      }}
+                      disableRipple
+                      onClick={CLEAR_INPUTS}
+                    >
+                      LIMPAR
+                    </Button>
+                  </div> 
+                </div>
+                <Autocomplete options={cities} sx={{ width: '14rem', ...commonStyles}}
+                  value={city}
                   renderInput={(params) => <TextField {...params} label="Cidade" />}
+                  noOptionsText='Sem opções'
+                  onChange={(event, newValue) => setCity(newValue)}
+                  id="city"
                 />
-                <Autocomplete options={options} sx={{ width: '14rem', ...commonStyles}}
+                <Autocomplete options={serviceTypes} sx={{ width: '14rem', ...commonStyles}}
+                  value={serviceType}
                   renderInput={(params) => <TextField {...params} label="Serviço" />}
+                  noOptionsText='Sem opções'
+                  onChange={(event, newValue) =>setServiceType(newValue)}
+                  id="serviceType"
                 />
-                <TextField label='Preço minímo' sx={{marginTop: '0.5rem', ...commonStyles }} placeholder="0.00"
-                  slotProps={{
-                    input: {
-                      endAdornment: <InputAdornment>€</InputAdornment>
-                    }
-                  }}
-                />
-                <TextField label='Preço máximo' sx={{marginTop: '0.5rem', ...commonStyles }} placeholder="0.00"
-                  slotProps={{
-                    input: {
-                      endAdornment: <InputAdornment>€</InputAdornment>
-                    },
-                  }}
-                />
+                <div>
+                  <TextField label='Preço minímo' sx={{marginTop: '0.5rem', ...commonStyles }} placeholder="Valor em euros (ex: 100)"
+                    slotProps={{
+                      input: {
+                        endAdornment: <InputAdornment position="end">€</InputAdornment>
+                      },
+                      htmlInput: {
+                        maxLength: 6
+                      },
+                    }}
+                    onChange={event => {
+                      errors.minCostMessage = '';
+                      setMinCost(event.target.value);
+                    }}
+                    id="minCost"
+                  />
+                  {errors.minCostMessage && <p tw="text-red-700 text-xs pt-1">{errors.minCostMessage}</p>}
+                </div>
+                <div>
+                  <TextField label='Preço máximo' sx={{marginTop: '0.5rem', ...commonStyles }} placeholder="Valor em euros (ex: 750)"
+                    slotProps={{
+                      input: {
+                        endAdornment: <InputAdornment position="end">€</InputAdornment>
+                      },
+                      htmlInput: {
+                        maxLength: 6
+                      },
+                    }}
+                    onChange={event => {
+                      errors.maxCostMessage = '';
+                      setMaxCost(event.target.value);
+                    }}
+                    id='maxCost'
+                  />
+                  {errors.maxCostMessage && <p tw="text-red-700 text-xs pt-1">{errors.maxCostMessage}</p>}
+                </div>
               </AccordionDetails>
             </Accordion>
           </HeaderRow>
           {tabsKeys.map((tabKey, index) => (
-            <AnimationRevealPage key={filterText} direction={animationDirection}>
+            <AnimationRevealPage key={trigger} direction={animationDirection}>
               <TabContent
                 key={index}
                 variants={{
@@ -390,7 +531,7 @@ export default ({
 };
 
 /* This function is only there for demo purposes. It populates placeholder cards */
-const getRandomCards = () => {
+/*const getRandomCards = () => {
   const cards = [
     {
       imageSrc:
@@ -476,4 +617,4 @@ const getRandomCards = () => {
 
   // Shuffle array
   return cards.sort(() => Math.random() - 0.5);
-};
+}; */

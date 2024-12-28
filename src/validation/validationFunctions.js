@@ -35,6 +35,10 @@ const getAge = (date) => {
     return CURRENT_YEAR - parseInt( ( date.slice(0, 4)));
 };
 
+export const validPositiveIntegerNumber = (number) => {
+    return /^\d+$/.test(number);
+}
+
 export const validateSignUpFields = (data) => {
     const errors = {
         FULL_NAME: '',
@@ -95,5 +99,34 @@ export const validateLifeguardFields = (data) => {
     //--
 
     setMandatoryMessageErrors(errors, data);
+    return errors;
+};
+
+
+export const validateReservationCostFields = (minCost, maxCost) => {
+    const errors = {
+        minCostMessage: '',
+        maxCostMessage: ''
+    };
+
+    if(!validPositiveIntegerNumber(minCost)) {
+        errors.minCostMessage = 'Indique um valor válido.';
+    };
+
+    if (!validPositiveIntegerNumber(maxCost)) {
+        errors.maxCostMessage = 'Indique um valor válido.';
+    };
+
+    if (errors.minCostMessage || errors.maxCostMessage) {
+        return errors;
+    };
+
+    const MIN = Number(minCost);
+    const MAX = Number(maxCost);
+
+    if (errors.minCostMessage === '' && errors.maxCostMessage === '' && MIN > MAX) {
+        errors.minCostMessage = 'Valor minímo maior que o valor máximo.';
+        errors.maxCostMessage = 'Valor máximo menor que o valor minímo.'
+    };
     return errors;
 };
