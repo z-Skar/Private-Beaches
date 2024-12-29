@@ -26,8 +26,8 @@ ROUTER.get('/', (req, res) => {
     const selectedCountry = req.query.countryParameter ? `%${req.query.countryParameter}%` : '%';
     const selectedCity = req.query.cityParameter ? `%${req.query.cityParameter}%` : '%';
     const selectedServiceType = req.query.serviceTypeParameter ? `%${req.query.serviceTypeParameter}%` : '%';
-    const selectedMinCost = req.query.minCostParameter;
-    const selectedMaxCost = req.query.maxCostParameter;
+    const selectedMinCost = req.query.minCostParameter || 0;
+    const selectedMaxCost = req.query.maxCostParameter || 999999;
 
     DATABASE.query(SQL, [filterText, filterText, selectedCountry, selectedCity,
         selectedServiceType, selectedMinCost, selectedMaxCost], (err, data) => {

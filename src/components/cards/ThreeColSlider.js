@@ -93,7 +93,14 @@ export default () => {
   useEffect(() => {
     const getBeaches = async () => {
       try {
-        const response = await fetch('http://localhost:5000/beaches?orderBy=Evaluations.SCORE&orderDirection=DESC')
+        // DEFINIÇÃO DA URL COM OS SEUS PARÂMETROS.
+        const query_parameters = new URLSearchParams();
+
+        //-- PARÂMETROS DEFAULT.
+        query_parameters.append('orderBy', 'Beaches.BEACH_ID');
+        query_parameters.append('orderDireciton', 'DESC')
+
+        const response = await fetch(`http://localhost:5000/beaches?${query_parameters}`)
         const data = await response.json();
         const updatedBeaches = data.map(beach => ({
           ...beach,

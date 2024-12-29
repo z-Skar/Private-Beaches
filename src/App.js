@@ -130,6 +130,7 @@ export default function App() {
             <Route path="/PrivacyPolicy.js" element={<PrivacyPolicyPage />} />
             <Route path="/Beaches.js" element={<TabGrid />} />
             <Route path="/Lifeguards.js" element={<TwoColContactUsWithIllustrationFullForm />} />
+            <Route path="/Admin.js" element={<TwoColContactUsWithIllustrationFullForm />} />
           </Routes>
         </Router>
       </LocalizationProvider>
