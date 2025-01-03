@@ -4,6 +4,8 @@ This website was developed as part of an academic project and uses a pre-existin
 
 All additional content, such as functionalities, customizations, and specific information, was developed by me.
 
+The Administration page that was used is also a template from [MUI JOY](https://mui.com/joy-ui/getting-started/templates/) and its template [Order Dashbord](https://mui.com/joy-ui/getting-started/templates/order-dashboard/).
+
 If you have any questions about the template or the project, feel free to reach out.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
