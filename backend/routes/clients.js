@@ -32,4 +32,21 @@ ROUTER.post('/register', async (req, res) => {
     };
 });
 
+ROUTER.get('/admin', (req, res) => {
+    const SQL = `SELECT CLIENT_ID, FULL_NAME, EMAIL, YEAR_OF_BIRTH, CONTACT 
+                 FROM clients
+                 ORDER BY CLIENT_ID DESC;`;
+    DATABASE.query(SQL, (err, data) => {
+        if(err) {
+            return res.status(500).json(err);
+        } else {
+            data = data.map(record => ({
+                ...record,
+                YEAR_OF_BIRTH: record.YEAR_OF_BIRTH.toISOString().split('T')[0]
+            }));
+            return res.status(200).json(data);
+        };
+    });
+});
+
 module.exports = ROUTER;

@@ -1,4 +1,4 @@
-import React, { useState, useRef} from "react";
+import React, { useState } from "react";
 import tw from "twin.macro";
 import styled from "styled-components";
 import { css } from "styled-components/macro"; //eslint-disable-line
@@ -14,6 +14,7 @@ import "react-image-crop/dist/ReactCrop.css";
 import PencilIcon from "../my_components/PencilIcon";
 import Modal from "../my_components/Modal";
 import ProfilePicture from '../../images/default-profile-picture.webp'
+import Footer from "components/footers/MiniCenteredFooter.js";
 
 const Container = tw.div`relative`;
 const TwoColumn = tw.div`flex flex-col md:flex-row justify-between max-w-screen-xl mx-auto py-20 md:py-24`;
@@ -234,6 +235,7 @@ export default ({
             </TextContent>
           </TextColumn>
         </TwoColumn>
+        <Footer />
       </Container>
     </AnimationRevealPage>
   );

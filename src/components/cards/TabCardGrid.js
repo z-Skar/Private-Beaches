@@ -20,6 +20,7 @@ import Autocomplete  from '@mui/material/Autocomplete';
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import { validateReservationCostFields } from "validation/validationFunctions";
+import Footer from "components/footers/MiniCenteredFooter.js";
 
 const HeaderRow = tw.div`flex justify-between items-center flex-col xl:flex-row w-full`;
 const Heading = tw(SectionHeading)`text-gray-700 mb-3`
@@ -525,6 +526,7 @@ export default ({
         </ContentWithPaddingXl>
         <DecoratorBlob1 />
         <DecoratorBlob2 />
+        <Footer />
       </Container>
     </AnimationRevealPage>
   );

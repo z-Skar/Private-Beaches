@@ -45,7 +45,7 @@ export default ({
   navLinks = [
     <NavLinks key={1}>
       <NavLink href="#">Sobre</NavLink>
-      <NavLink href="#">Admin</NavLink>
+      <NavLink href="Admin.js">Admin</NavLink>
       <NavLink href="/Lifeguards.js">Salva-vidas</NavLink>
       <NavLink href="/Login.js">Login</NavLink>
     </NavLinks>
