@@ -12,15 +12,31 @@ ROUTER.get('/', (req, res) => {
 });
 
 ROUTER.get('/admin', (req, res) => {
-    const SQL = `SELECT EVALUATION_ID, Clients.FULL_NAME, Beaches.BEACH_NAME, SCORE 
+    const SQL = `SELECT EVALUATION_ID, Clients.FULL_NAME, COALESCE(Beaches.BEACH_NAME, '[N/A]') AS BEACH_NAME, SCORE 
                  FROM Evaluations
                  INNER JOIN Clients ON Evaluations.CLIENT_ID = Clients.CLIENT_ID 
-                 INNER JOIN Beaches ON Evaluations.BEACH_ID = Beaches.BEACH_ID 
+                 LEFT JOIN Beaches ON Evaluations.BEACH_ID = Beaches.BEACH_ID 
                  ORDER BY EVALUATION_ID DESC;`
     DATABASE.query(SQL, (err, data) => {
         if(err) {
             return res.status(500).json(err);
         } return res.status(200).json(data);
+    });
+});
+
+ROUTER.delete('/delete/:id', (req, res) => {
+    const { id } = req.params;
+
+    if (!id || isNaN(id)) {
+        return res.status(400).send('ID inválido.')
+    };
+
+    const SQL = `DELETE FROM Evaluations WHERE EVALUATION_ID = ?`;
+
+    DATABASE.query(SQL, [id], (err, result) => {
+        if (err) {
+            return res.status(500).json(err);
+        } return res.status(200).json({success: 'Registo eliminado com sucesso.'});
     });
 });
 

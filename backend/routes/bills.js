@@ -31,6 +31,22 @@ ROUTER.get('/admin', (req, res) => {
             return res.status(200).json(data);
         };
     });
-})
+});
+
+ROUTER.delete('/delete/:id', (req, res) => {
+    const { id } = req.params;
+
+    if (!id || isNaN(id)) {
+        return res.status(400).send('ID inválido.')
+    };
+
+    const SQL = `DELETE FROM Bills WHERE BILL_ID = ?`;
+
+    DATABASE.query(SQL, [id], (err, result) => {
+        if (err) {
+            return res.status(500).json(err);
+        } return res.status(200).json({success: 'Registo eliminado com sucesso.'});
+    });
+});
 
 module.exports = ROUTER;

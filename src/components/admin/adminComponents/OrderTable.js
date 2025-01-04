@@ -36,6 +36,7 @@ import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded"
 
 import { getColumns } from "../utils"
 import GenericTable from "./GenericTable"
+import { Alert, AlertTitle } from "@mui/material"
 
 const rows = [
   {
@@ -238,23 +239,7 @@ function getComparator(order, orderBy) {
 }
 
 export default function OrderTable({ entity, entityName }) {
-  const [open, setOpen] = React.useState(false)
-  const [data, setData] = React.useState([{}]);
-
-  React.useEffect(() => {
-    const getData = async () => {
-      try {
-        const query_parameters = new URLSearchParams();
-
-        const response = await fetch(`http://localhost:5000/${entity}/admin`); 
-        const DATA = await response.json();
-        setData(DATA);
-      } catch (error) {
-        console.error(error);
-      };
-    };
-    getData();
-  }, [entity]);
+  const [open, setOpen] = React.useState(false);
 
   const renderFilters = () => (
     <React.Fragment>
@@ -365,7 +350,7 @@ export default function OrderTable({ entity, entityName }) {
           minHeight: 0
         }}
       >
-        <GenericTable entity={entity} entityData={data}/>
+        <GenericTable entity={entity} />
       </Sheet>
       <Box
         className="Pagination-laptopUp"

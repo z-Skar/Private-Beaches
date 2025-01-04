@@ -72,7 +72,6 @@ export default function Sidebar({ selectedEntity, onSelectEntity }) {
           md: "none"
         },
         transition: "transform 0.4s, width 0.4s",
-        zIndex: 10000,
         height: "100dvh",
         width: "var(--Sidebar-width)",
         top: 0,
@@ -99,7 +98,6 @@ export default function Sidebar({ selectedEntity, onSelectEntity }) {
         className="Sidebar-overlay"
         sx={{
           position: "fixed",
-          zIndex: 9998,
           top: 0,
           left: 0,
           width: "100vw",

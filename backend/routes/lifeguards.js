@@ -42,10 +42,27 @@ ROUTER.get('/admin', (req, res) => {
             data = data.map(record => ({
                 ...record,
                 LIFEGUARD_NIF: CensorField(record.LIFEGUARD_NIF),
-                YEAR_OF_BIRTH: record.YEAR_OF_BIRTH.toISOString().split('T')[0]
+                YEAR_OF_BIRTH: record.YEAR_OF_BIRTH.toISOString().split('T')[0],
+                SALARY: Number(record.SALARY).toFixed(2) + '€'
             }));
             return res.status(200).json(data);
         };
+    });
+});
+
+ROUTER.delete('/delete/:id', (req, res) => {
+    const { id } = req.params;
+
+    if (!id || isNaN(id)) {
+        return res.status(400).send('ID inválido.')
+    };
+
+    const SQL = `DELETE FROM Lifeguards WHERE LIFEGUARD_ID = ?`;
+
+    DATABASE.query(SQL, [id], (err, result) => {
+        if (err) {
+            return res.status(500).json(err);
+        } return res.status(200).json({success: 'Registo eliminado com sucesso.'});
     });
 });
 

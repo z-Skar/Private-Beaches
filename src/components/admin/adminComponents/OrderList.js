@@ -107,7 +107,7 @@ function RowMenu() {
   )
 }
 
-export default function OrderList({ entity, entityName }) {
+export default function OrderList({ entity, entityName, setEntity }) {
   return (
     <Box sx={{ display: { xs: "block", sm: "none" } }}>
       {listItems.map(listItem => (

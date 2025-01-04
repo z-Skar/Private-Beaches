@@ -14,8 +14,8 @@ ROUTER.get('/', (req, res) => {
     };
 
     const SQL = `SELECT Beaches.BEACH_ID, BEACH_NAME, CITY_LOCATION, COUNTRY_LOCATION, RESERVATION_COST, DESCRIPTION, SERVICE_TYPE, 
-                 AVG(Evaluations.SCORE) AS SCORE, COUNT(Evaluations.BEACH_ID) AS EVALUATIONS, PICTURE FROM Beaches 
-                 INNER JOIN Evaluations ON beaches.BEACH_ID = Evaluations.BEACH_ID 
+                 COALESCE(AVG(Evaluations.SCORE), 0) AS SCORE, COUNT(Evaluations.BEACH_ID) AS EVALUATIONS, PICTURE FROM Beaches 
+                 LEFT JOIN Evaluations ON beaches.BEACH_ID = Evaluations.BEACH_ID 
                  WHERE (BEACH_NAME LIKE ? OR DESCRIPTION LIKE ?) 
                  AND COUNTRY_LOCATION LIKE ? AND CITY_LOCATION LIKE ? AND SERVICE_TYPE LIKE ? 
                  AND RESERVATION_COST BETWEEN ? AND ? 
@@ -70,10 +70,10 @@ ROUTER.get('/services', (req, res) => {
 
 ROUTER.get('/admin', (req, res) => {
     const SQL = `SELECT Beaches.BEACH_ID, BEACH_NAME, DESCRIPTION, CITY_LOCATION, COUNTRY_LOCATION, 
-                 RESERVATION_COST, Lifeguards.FULL_NAME, SERVICE_TYPE, AVG(Evaluations.SCORE) AS SCORE 
+                 RESERVATION_COST, COALESCE(Lifeguards.FULL_NAME, 'INDISPONÍVEL') AS FULL_NAME, SERVICE_TYPE, COALESCE(AVG(Evaluations.SCORE), 0) AS SCORE
                  FROM BEACHES 
-                 INNER JOIN Evaluations ON beaches.BEACH_ID = Evaluations.BEACH_ID 
-                 INNER JOIN Lifeguards ON beaches.LIFEGUARD_ID = Lifeguards.LIFEGUARD_ID 
+                 LEFT JOIN Evaluations ON beaches.BEACH_ID = Evaluations.BEACH_ID 
+                 LEFT JOIN Lifeguards ON beaches.LIFEGUARD_ID = Lifeguards.LIFEGUARD_ID 
                  GROUP BY Beaches.BEACH_ID 
                  ORDER BY BEACH_ID DESC`;
     DATABASE.query(SQL, (err, data) => {
@@ -82,10 +82,26 @@ ROUTER.get('/admin', (req, res) => {
         } else {
             data = data.map(record => ({
                 ...record,
-                RESERVATION_COST: record.RESERVATION_COST + '€'
+                RESERVATION_COST: record.RESERVATION_COST + '€',
             }));
             return res.status(200).json(data);
         };
+    });
+});
+
+ROUTER.delete('/delete/:id', (req, res) => {
+    const { id } = req.params;
+
+    if (!id || isNaN(id)) {
+        return res.status(400).send('ID inválido.')
+    };
+
+    const SQL = `DELETE FROM Beaches WHERE BEACH_ID = ?`;
+
+    DATABASE.query(SQL, [id], (err, result) => {
+        if (err) {
+            return res.status(500).json(err);
+        } return res.status(200).json({success: 'Registo eliminado com sucesso.'});
     });
 });
 

@@ -93,7 +93,7 @@ export default (props) => {
       );
       console.log(response.json());
     } catch (error) {
-      console.log('Fetch Error: ', error)
+      console.log('Fetch Error: ', error);
     };
   };
 

@@ -58,21 +58,13 @@ export default function AdminDashbord() {
               <Link
                 underline="none"
                 color="neutral"
-                href="#some-link"
+                href='http://localhost:3000/Admin.js'
                 aria-label="Home"
               >
                 <HomeRoundedIcon />
               </Link>
-              <Link
-                underline="hover"
-                color="neutral"
-                href="#some-link"
-                sx={{ fontSize: 12, fontWeight: 500 }}
-              >
-                Dashboard
-              </Link>
               <Typography color="primary" sx={{ fontWeight: 500, fontSize: 12 }}>
-                {ENTITIES_NAMES[selectedEntity]}
+                {ENTITIES_NAMES[selectedEntity] || 'Brevemente'}
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -98,7 +90,7 @@ export default function AdminDashbord() {
               Download PDF
             </Button>*/}
           </Box>
-          <Content entity={selectedEntity} />
+          <Content entity={selectedEntity} setEntity={setSelectedEntity}/>
         </Box>
       </Box>
     </CssVarsProvider>
