@@ -1,4 +1,4 @@
-import * as React from "react"
+import { useState, useEffect } from "react"
 import Avatar from "@mui/joy/Avatar"
 import Box from "@mui/joy/Box"
 import Chip from "@mui/joy/Chip"
@@ -24,6 +24,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { Button } from "@mui/joy"
 
 import { getColumns } from "../utils"
+import { useNavigate } from "react-router-dom"
 
 function RowMenu() {
   return (
@@ -45,14 +46,34 @@ function RowMenu() {
   );
 };
 
-const GenericTable = ({ entity }) => {
-    const [order, setOrder] = React.useState("desc");
+function descendingComparator(a, b, orderBy) {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
+  }
+  
+  function getComparator(order, orderBy) {
+    return order === 'desc'
+      ? (a, b) => descendingComparator(a, b, orderBy)
+      : (a, b) => -descendingComparator(a, b, orderBy);
+  }
 
-    const [data, setData] = React.useState([{}]);
-    const [selectedIDs, setSelectedIDs] = React.useState([]);
-    const [open, setOpen] = React.useState(false);
+const GenericTable = ({ entity }) => {
+    const [order, setOrder] = useState("desc");
+    const [data, setData] = useState([{}]);
+    const [selectedIDs, setSelectedIDs] = useState([]);
+
+    // Control the opening of Modals.
+    const [deletetionModalOpen, setDeletetionModalOpen] = useState(false);
+    const [editionModalOpen, setEditionModalOpen] = useState(false)
+
+    const navigate = useNavigate();
     
-    React.useEffect(() => {
+    useEffect(() => {
       const getData = async () => {
         try {
           const query_parameters = new URLSearchParams();
@@ -60,12 +81,12 @@ const GenericTable = ({ entity }) => {
           const response = await fetch(`http://localhost:5000/${entity}/admin`); 
           const DATA = await response.json();
           setData(DATA);
-          console.log(DATA);
         } catch (error) {
           console.error(error);
         };
       };
       getData();
+      setSelectedIDs([]);
     }, [entity]);
   
     const deleteRecord = async (entity, id) => {
@@ -88,7 +109,7 @@ const GenericTable = ({ entity }) => {
 
     const handleClickForDelete = (id) => {
         !selectedIDs.includes(id) && setSelectedIDs(prevIDs => [...prevIDs, id]);
-        setOpen(true);
+        setDeletetionModalOpen(true);
     };
 
     const handleDelete = () => {
@@ -96,10 +117,14 @@ const GenericTable = ({ entity }) => {
             selectedIDs.forEach(ID => {
                 deleteRecord(entity, ID);
             });
-            setOpen(false);
+            setDeletetionModalOpen(false);
             setData(prevData => prevData.filter(record => !selectedIDs.includes(record[ENTITY_COLUMN_KEYS[0]])));
             setSelectedIDs([]);
         };
+    };
+
+    const handleClickForEdit = (id) => {
+        navigate(`/Profile/${entity}/${id}`);
     };
 
     return (
@@ -145,7 +170,7 @@ const GenericTable = ({ entity }) => {
                     <th style={{ width: 'auto', padding: "12px 6px", textAlign: 'center'}}>
                     <Link
                         underline="none"
-                        color="primary"
+                        textColor="#ff5a00"
                         component="button"
                         onClick={() => setOrder(order === "asc" ? "desc" : "asc")}
                         endDecorator={<ArrowDropDownIcon />}
@@ -180,7 +205,7 @@ const GenericTable = ({ entity }) => {
                 </thead>
                 <tbody>
                 {//[...rows].sort(getComparator(order, "id")).map(row => (
-                data.map((row, index) => (
+                [...data].sort(getComparator(order, ENTITY_COLUMN_KEYS[0])).map((row, index) => (
                     <tr key={row + index}>
                     {<td style={{ textAlign: "center", width: 120 }}>
                         <Checkbox
@@ -256,7 +281,10 @@ const GenericTable = ({ entity }) => {
                     </td>*/}
                     <td>
                         <Box sx={{ display: "flex", gap: 2, alignItems: "center", justifyContent: 'center'}}>
-                            <AllowedActions entity={entity} openDeletionModal={() => handleClickForDelete(row[ENTITY_COLUMN_KEYS[0]])}/>
+                            <AllowedActions entity={entity} 
+                                deletionModalOpen={() => handleClickForDelete(row[ENTITY_COLUMN_KEYS[0]])}
+                                editionModalOpen={() => handleClickForEdit(row[ENTITY_COLUMN_KEYS[0]])}
+                            />
                         </Box>
                     </td>
                     </tr>
@@ -264,8 +292,8 @@ const GenericTable = ({ entity }) => {
                 </tbody>
             </Table>
             <Modal
-                open={open}
-                onClose={() => setOpen(false)}
+                open={deletetionModalOpen}
+                onClose={() => setDeletetionModalOpen(false)}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
@@ -288,7 +316,7 @@ const GenericTable = ({ entity }) => {
                             Tens a certeza que desejas eliminar o registo?
                         </Typography>
                         <IconButton>
-                            <CloseRoundedIcon onClick={() => setOpen(false)}/>
+                            <CloseRoundedIcon onClick={() => setDeletetionModalOpen(false)}/>
                         </IconButton>
                     </div>
                     <Typography id="modal-modal-title" variant="h6" component="h2" fontFamily={'sans-serif'}>
@@ -303,7 +331,7 @@ const GenericTable = ({ entity }) => {
                                 backgroundColor: '#718096 !important',
                                 transition: 'background-color 300ms !important',
                             },
-                        }} onClick={() => setOpen(false)}
+                        }} onClick={() => setDeletetionModalOpen(false)}
                         >
                             CANCELAR
                         </Button>

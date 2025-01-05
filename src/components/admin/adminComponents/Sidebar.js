@@ -142,7 +142,7 @@ export default function Sidebar({ selectedEntity, onSelectEntity }) {
               selected={selectedEntity === 'home' && true}
               onClick={() => onSelectEntity('home')}
             >
-              <HomeRoundedIcon />
+              <HomeRoundedIcon style={selectedEntity === 'home' ? {color: '#ff5a00'} : {}}/>
               <ListItemContent>
                 <Typography level="title-sm">Home</Typography>
               </ListItemContent>
@@ -154,7 +154,7 @@ export default function Sidebar({ selectedEntity, onSelectEntity }) {
               selected={selectedEntity === 'beaches' && true}
               onClick={() => onSelectEntity('beaches')}
             >
-              <BeachAccessRoundedIcon />
+              <BeachAccessRoundedIcon style={selectedEntity === 'beaches' ? {color: '#ff5a00'} : {}}/>
               <ListItemContent>
                 <Typography level="title-sm">Praias</Typography>
               </ListItemContent>
@@ -165,7 +165,7 @@ export default function Sidebar({ selectedEntity, onSelectEntity }) {
               selected={selectedEntity === 'reservations' && true}
               onClick={() => onSelectEntity('reservations')}
             >
-              <ReceiptIcon />
+              <ReceiptIcon style={selectedEntity === 'reservations' ? {color: '#ff5a00'} : {}}/>
               <ListItemContent>
                 <Typography level="title-sm">Reservas</Typography>
               </ListItemContent>
@@ -181,7 +181,7 @@ export default function Sidebar({ selectedEntity, onSelectEntity }) {
                     onSelectEntity('lifeguards')
                   }}
                 >
-                  <SupportRoundedIcon />
+                  <SupportRoundedIcon style={selectedEntity === 'lifeguards' ? {color: '#ff5a00'} : {}}/>
                   <ListItemContent>
                     <Typography level="title-sm">Salva-vidas</Typography>
                   </ListItemContent>
@@ -220,7 +220,7 @@ export default function Sidebar({ selectedEntity, onSelectEntity }) {
                 selected={selectedEntity === 'bills' && true}
                 onClick={() => onSelectEntity('bills')}
             >
-              <AddCardRoundedIcon />
+              <AddCardRoundedIcon style={selectedEntity === 'bills' ? {color: '#ff5a00'} : {}}/>
               <ListItemContent>
                 <Typography level="title-sm">Pagamentos</Typography>
               </ListItemContent>
@@ -234,7 +234,7 @@ export default function Sidebar({ selectedEntity, onSelectEntity }) {
               selected={selectedEntity === 'evaluations' && true}
               onClick={() => onSelectEntity('evaluations')}
             >
-              <QuestionAnswerRoundedIcon />
+              <QuestionAnswerRoundedIcon style={selectedEntity === 'evaluations' ? {color: '#ff5a00'} : {}}/>
               <ListItemContent>
                 <Typography level="title-sm">Avaliações</Typography>
               </ListItemContent>
@@ -250,7 +250,7 @@ export default function Sidebar({ selectedEntity, onSelectEntity }) {
                     onSelectEntity('clients')
                   }}
                 >
-                  <GroupRoundedIcon />
+                  <GroupRoundedIcon style={selectedEntity === 'clients' ? {color: '#ff5a00'} : {}}/>
                   <ListItemContent>
                     <Typography level="title-sm">Clientes</Typography>
                   </ListItemContent>

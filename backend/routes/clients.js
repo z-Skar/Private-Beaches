@@ -49,4 +49,15 @@ ROUTER.get('/admin', (req, res) => {
     });
 });
 
+ROUTER.get('/profile/:id', (req, res) => {
+    const { id } = req.params;
+    const SQL = `SELECT * FROM Clients WHERE CLIENT_ID = ?`;
+
+    DATABASE.query(SQL, [id], (err, data) => {
+        if (err) {
+            return res.status(500).json(err);
+        } return res.status(200).json(data);
+    });
+});
+
 module.exports = ROUTER;

@@ -63,7 +63,7 @@ export default function AdminDashbord() {
               >
                 <HomeRoundedIcon />
               </Link>
-              <Typography color="primary" sx={{ fontWeight: 500, fontSize: 12 }}>
+              <Typography textColor="#ff5a00" sx={{ fontWeight: 500, fontSize: 12 }}>
                 {ENTITIES_NAMES[selectedEntity] || 'Brevemente'}
               </Typography>
             </Breadcrumbs>
