@@ -7,7 +7,7 @@ import FormLabel from "@mui/joy/FormLabel"
 import ListItemDecorator from "@mui/joy/ListItemDecorator"
 import Typography from "@mui/joy/Typography"
 
-export default function ContrySelector(props) {
+export default function Selector(props) {
   const { sx, ...other } = props
   return (
     <FormControl
@@ -18,31 +18,9 @@ export default function ContrySelector(props) {
       <Autocomplete
         size="sm"
         autoHighlight
-        isOptionEqualToValue={(option, value) => option.code === value.code}
-        options={countries}
-        renderOption={(optionProps, option) => (
-          <AutocompleteOption {...optionProps}>
-            <ListItemDecorator>
-              <AspectRatio ratio="1" sx={{ minWidth: 20, borderRadius: "50%" }}>
-                <img
-                  loading="lazy"
-                  width="20"
-                  srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                  src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                  alt=""
-                />
-              </AspectRatio>
-            </ListItemDecorator>
-            {option.label}
-            <Typography
-              component="span"
-              textColor="text.tertiary"
-              sx={{ ml: 0.5 }}
-            >
-              (+{option.phone})
-            </Typography>
-          </AutocompleteOption>
-        )}
+        isOptionEqualToValue={(option, value) => option.label === value.label}
+        options={serviceTypeOptions}
+        placeholder={props.defaultValue}
         slotProps={{
           input: {
             autoComplete: "new-password" // disable autocomplete and autofill
@@ -480,6 +458,6 @@ const countries = [
 ]
 
 const serviceTypeOptions = [
-  { label: "Económico", value: "Económico" },
-  { label: "Premium", value: "Premium" },
+  { label: "Económico" },
+  { label: "Premium" },
 ];

@@ -33,11 +33,13 @@ import EditRoundedIcon from "@mui/icons-material/EditRounded"
 
 import DropZone from "./DropZone"
 import FileUpload from "./FileUpload"
-import CountrySelector from "./CountrySelector"
+import Selector from "./Selector";
 import EditorToolbar from "./EditorToolbar"
 
 import { useParams } from "react-router-dom";
-import Sidebar from "./Sidebar";
+import InputAdornment from "@mui/material/InputAdornment";
+import { checkOnlyNumbers } from "validation/validationFunctions";
+
 
 export default function MyProfile() {
   const { entity, id } = useParams();
@@ -100,28 +102,25 @@ export default function MyProfile() {
                 >
                   <FormLabel>Nome da Praia</FormLabel>
                   <Input size="sm" placeholder="Praia da Fonte da Telha"
-                    value={data.FULL_NAME || ''}
+                    value={data.BEACH_NAME || ''}
                     onChange={(e) => setData({...data, FULL_NAME: e.target.value})}
                   />
                 </FormControl>
                 <div>
-                 <CountrySelector label='Tipo de Serviço'/>
+                <Selector label='Tipo de Serviço' placeholder='Económico' value={data.SERVICE_TYPE}/>
                 </div>
               </Stack>
               <Stack direction="row" spacing={2}>
-                <FormControl>
-                  <FormLabel>Role</FormLabel>
-                  <Input size="sm" defaultValue="UI Developer" />
+                <FormControl sx={{ flex: 1 }}>
+                  <FormLabel>País</FormLabel>
+                  <Input size="sm" placeholder="Portugal"/>
                 </FormControl>
-                <FormControl sx={{ flexGrow: 1 }}>
-                  <FormLabel>Email</FormLabel>
+                <FormControl sx={{ flex: 1}}>
+                  <FormLabel>Cidade</FormLabel>
                   <Input
                     size="sm"
-                    type="email"
-                    startDecorator={<EmailRoundedIcon />}
-                    placeholder="exemplo@gmail.com"
-                    defaultValue="siriwatk@test.com"
-                    sx={{ flexGrow: 1 }}
+                    type="text"
+                    placeholder="Lisboa"
                   />
                 </FormControl>
               </Stack>
@@ -131,6 +130,37 @@ export default function MyProfile() {
                   <Textarea
                     size="sm"
                     placeholder="Praia com areia fina e água cristalina"
+                    value={data.DESCRIPTION || ''}
+                    onChange={(e) => {
+                      if (data.DESCRIPTION.length < 301 || e.nativeEvent.inputType === 'deleteContentBackward') {
+                        setData({ ...data, DESCRIPTION: e.target.value });
+                      }
+                    }}
+                  />
+                </FormControl>
+              </Stack>
+              <Stack direction="row" spacing={2}>
+                <FormControl sx={{ flex: 1 }}>
+                  <FormLabel>Custo da reserva</FormLabel>
+                  <Input
+                    size="sm"
+                    placeholder="200"
+                    endDecorator='€'
+                    value={data.RESERVATION_COST || ''}
+                    onChange={(e) => {
+                      if ((checkOnlyNumbers(e.target.value) || (e.target.value === '')) && 
+                          (data.RESERVATION_COST.toString().length <= 4 || e.nativeEvent.inputType === 'deleteContentBackward')) {
+                          setData({ ...data, RESERVATION_COST: e.target.value })
+                      };
+                    }}
+                  />
+                </FormControl>
+                <FormControl sx={{ flex: 2 }}>
+                  <FormLabel>Salva-vidas</FormLabel>
+                  <Input
+                    size="sm"
+                    type="text"
+                    placeholder="Pedro Silva"
                   />
                 </FormControl>
               </Stack>
@@ -161,20 +191,6 @@ export default function MyProfile() {
               <FormLabel>Role</FormLabel>
               <Input size="sm" defaultValue="UI Developer" />
             </FormControl>
-            <FormControl sx={{ flexGrow: 1 }}>
-              <FormLabel>Email</FormLabel>
-              <Input
-                size="sm"
-                type="email"
-                startDecorator={<EmailRoundedIcon />}
-                placeholder="email"
-                defaultValue="siriwatk@test.com"
-                sx={{ flexGrow: 1 }}
-              />
-            </FormControl>
-            <div>
-              <CountrySelector />
-            </div>
           </Stack>
           <Box sx={{ mb: 1 }}>
             <Typography level="title-md">Imagem da Praia</Typography>

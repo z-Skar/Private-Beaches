@@ -15,7 +15,7 @@ const setMandatoryMessageErrors = (fields, data) => {
     });
 };
 
-const checkOnlyNumbers = (string) => {
+export const checkOnlyNumbers = (string) => {
     return /^\d+$/.test(string);
 };
 
