@@ -46,7 +46,7 @@ export default function MyProfile() {
   useEffect(() => {
     const getUserData = async () => {
       try {
-        const RESPONSE = await axios.get(`http://localhost:5000/${entity}/profile/${id}`);
+        const RESPONSE = await axios.get(`http://localhost:5000/${entity}/${id}`);
         setData(RESPONSE.data[0]);
       } catch (error) {
         console.log(error);
@@ -91,19 +91,22 @@ export default function MyProfile() {
             sx={{ display: { xs: "none", md: "flex" }, my: 1 }}
           >
             <Stack spacing={2} sx={{ flexGrow: 1 }}>
-              <Stack spacing={1}>
-                <FormLabel>Nome da Praia</FormLabel>
+              <Stack spacing={1} direction={{ xs: "column", md: "row" }}>
                 <FormControl
                   sx={{
                     display: { sm: "flex-column", md: "flex-row" },
-                    gap: 2
+                    flexGrow: 1,
                   }}
                 >
+                  <FormLabel>Nome da Praia</FormLabel>
                   <Input size="sm" placeholder="Praia da Fonte da Telha"
                     value={data.FULL_NAME || ''}
                     onChange={(e) => setData({...data, FULL_NAME: e.target.value})}
                   />
                 </FormControl>
+                <div>
+                 <CountrySelector label='Tipo de Serviço'/>
+                </div>
               </Stack>
               <Stack direction="row" spacing={2}>
                 <FormControl>
@@ -122,9 +125,15 @@ export default function MyProfile() {
                   />
                 </FormControl>
               </Stack>
-              <div>
-                <CountrySelector />
-              </div>
+              <Stack>
+                <FormControl>
+                  <FormLabel>Descrição da Praia</FormLabel>
+                  <Textarea
+                    size="sm"
+                    placeholder="Praia com areia fina e água cristalina"
+                  />
+                </FormControl>
+              </Stack>
             </Stack>
           </Stack>
           <Stack

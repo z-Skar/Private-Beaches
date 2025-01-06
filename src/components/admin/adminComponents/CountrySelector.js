@@ -14,12 +14,11 @@ export default function ContrySelector(props) {
       {...other}
       sx={[{ display: { sm: "contents" } }, ...(Array.isArray(sx) ? sx : [sx])]}
     >
-      <FormLabel>Country</FormLabel>
+      <FormLabel>{props.label}</FormLabel>
       <Autocomplete
         size="sm"
         autoHighlight
         isOptionEqualToValue={(option, value) => option.code === value.code}
-        defaultValue={{ code: "TH", label: "Thailand", phone: "66" }}
         options={countries}
         renderOption={(optionProps, option) => (
           <AutocompleteOption {...optionProps}>
@@ -479,3 +478,8 @@ const countries = [
   { code: "ZM", label: "Zambia", phone: "260" },
   { code: "ZW", label: "Zimbabwe", phone: "263" }
 ]
+
+const serviceTypeOptions = [
+  { label: "Económico", value: "Económico" },
+  { label: "Premium", value: "Premium" },
+];

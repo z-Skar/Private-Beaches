@@ -42,7 +42,9 @@ ROUTER.get('/admin', (req, res) => {
         } else {
             data = data.map(record => ({
                 ...record,
-                YEAR_OF_BIRTH: record.YEAR_OF_BIRTH.toISOString().split('T')[0]
+                FULL_NAME: record.FULL_NAME ? record.FULL_NAME : 'NÃO DEFINIDO',
+                CONTACT: record.CONTACT ? record.CONTACT : 'NÃO DEFINIDO',
+                YEAR_OF_BIRTH: record.YEAR_OF_BIRTH ? record.YEAR_OF_BIRTH.toISOString().split('T')[0] : 'NÃO DEFINIDO'
             }));
             return res.status(200).json(data);
         };

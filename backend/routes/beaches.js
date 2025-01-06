@@ -105,4 +105,15 @@ ROUTER.delete('/delete/:id', (req, res) => {
     });
 });
 
+ROUTER.get('/:id', (req, res) => {
+    const { id } = req.params;
+    const SQL = `SELECT * FROM Beaches WHERE BEACH_ID = ?`;
+
+    DATABASE.query(SQL, [id], (err, data) => {
+        if (err) {
+            return res.status(500).json(err);
+        } return res.status(200).json(data);
+    });
+});
+
 module.exports = ROUTER;
