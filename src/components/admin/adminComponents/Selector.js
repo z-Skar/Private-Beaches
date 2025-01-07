@@ -8,7 +8,7 @@ import ListItemDecorator from "@mui/joy/ListItemDecorator"
 import Typography from "@mui/joy/Typography"
 
 export default function Selector(props) {
-  const { sx, ...other } = props
+  const { sx, defaultValue, ...other } = props
   return (
     <FormControl
       {...other}
@@ -20,13 +20,14 @@ export default function Selector(props) {
         autoHighlight
         isOptionEqualToValue={(option, value) => option.label === value.label}
         options={serviceTypeOptions}
-        placeholder={props.defaultValue}
+        placeholder={props.placeholder}
         slotProps={{
           input: {
             autoComplete: "new-password" // disable autocomplete and autofill
           }
         }}
       />
+      {console.log(defaultValue)}
     </FormControl>
   )
 }

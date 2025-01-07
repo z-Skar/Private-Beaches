@@ -39,23 +39,37 @@ import EditorToolbar from "./EditorToolbar"
 import { useParams } from "react-router-dom";
 import InputAdornment from "@mui/material/InputAdornment";
 import { checkOnlyNumbers } from "validation/validationFunctions";
+import { Autocomplete } from "@mui/joy";
 
 
 export default function MyProfile() {
   const { entity, id } = useParams();
   const [data, setData] = useState({});
+  const [lifeguardOptions, setLifeguardOptions] = useState([]);
 
   useEffect(() => {
     const getUserData = async () => {
       try {
-        const RESPONSE = await axios.get(`http://localhost:5000/${entity}/${id}`);
-        setData(RESPONSE.data[0]);
+        const RESPONSE = (await axios.get(`http://localhost:5000/${entity}/${id}`)).data[0];
+        setData({
+          ...RESPONSE,
+          SERVICE_TYPE: serviceTypeOptions.find(option => option.value === RESPONSE.SERVICE_TYPE)
+        });
+
+        const LIFEGUARDS_DATA_RESPONSE = (await axios.get(`http://localhost:5000/lifeguards/?onlyNecessary=true`)).data;
+        const LIFEGUARDS_OPTIONS = LIFEGUARDS_DATA_RESPONSE.map(lifeguard => ({ label: lifeguard.FULL_NAME, value: lifeguard.LIFEGUARD_ID }));
+        setLifeguardOptions([{ label: 'Indiponível', value: null }, ...LIFEGUARDS_OPTIONS]);
       } catch (error) {
         console.log(error);
       };
     };
     getUserData();
   }, [id, entity]);
+
+  const serviceTypeOptions = [
+    { label: "Económico", value: "Económico" },
+    { label: "Premium", value: "Premium" },
+  ];
 
   return (
     <Box sx={{ flex: 1, width: "100%" }}>
@@ -106,14 +120,31 @@ export default function MyProfile() {
                     onChange={(e) => setData({...data, FULL_NAME: e.target.value})}
                   />
                 </FormControl>
-                <div>
-                <Selector label='Tipo de Serviço' placeholder='Económico' value={data.SERVICE_TYPE}/>
-                </div>
+                <FormControl>
+                  <FormLabel>Tipo de Serviço</FormLabel>
+                  <Autocomplete
+                    size="sm"
+                    autoHighlight
+                    isOptionEqualToValue={(option, value) => option.value === value.value}
+                    value={data.SERVICE_TYPE || null}
+                    onChange={(event, newValue) => setData({ ...data, SERVICE_TYPE: newValue})}
+                    options={serviceTypeOptions}
+                    placeholder={'Económico'}
+                    slotProps={{
+                      input: {
+                        autoComplete: "new-password" // disable autocomplete and autofill
+                      }
+                    }}
+                  />
+                </FormControl>
               </Stack>
               <Stack direction="row" spacing={2}>
                 <FormControl sx={{ flex: 1 }}>
                   <FormLabel>País</FormLabel>
-                  <Input size="sm" placeholder="Portugal"/>
+                  <Input size="sm" placeholder="Portugal"
+                    value={data.COUNTRY_LOCATION || ''}
+                    onChange={(e) => setData({ ...data, COUNTRY_LOCATION: e.target.value})}
+                  />
                 </FormControl>
                 <FormControl sx={{ flex: 1}}>
                   <FormLabel>Cidade</FormLabel>
@@ -121,6 +152,8 @@ export default function MyProfile() {
                     size="sm"
                     type="text"
                     placeholder="Lisboa"
+                    value={data.CITY_LOCATION || ''}
+                    onChange={e => setData({ ...data, CITY_LOCATION: e.target.value })}
                   />
                 </FormControl>
               </Stack>
@@ -157,10 +190,19 @@ export default function MyProfile() {
                 </FormControl>
                 <FormControl sx={{ flex: 2 }}>
                   <FormLabel>Salva-vidas</FormLabel>
-                  <Input
+                  <Autocomplete
                     size="sm"
-                    type="text"
-                    placeholder="Pedro Silva"
+                    autoHighlight
+                    isOptionEqualToValue={(option, value) => option.value === value.value}
+                    options={lifeguardOptions}
+                    value={lifeguardOptions.find(lifeguard => lifeguard.value === data.LIFEGUARD_ID) || null }
+                    onChange={(event, newValue) => setData({ ...data, LIFEGUARD_ID: newValue ? newValue.value : null })}
+                    placeholder={'António Manuel'}
+                    slotProps={{
+                      input: {
+                        autoComplete: "new-password" // disable autocomplete and autofill
+                      }
+                    }}
                   />
                 </FormControl>
               </Stack>
