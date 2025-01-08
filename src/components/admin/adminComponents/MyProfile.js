@@ -36,7 +36,7 @@ import FileUpload from "./FileUpload"
 import Selector from "./Selector";
 import EditorToolbar from "./EditorToolbar"
 
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import InputAdornment from "@mui/material/InputAdornment";
 import { checkOnlyNumbers } from "validation/validationFunctions";
 import { Autocomplete } from "@mui/joy";
@@ -70,6 +70,8 @@ export default function MyProfile() {
     { label: "Económico", value: "Económico" },
     { label: "Premium", value: "Premium" },
   ];
+
+  const navigate = useNavigate();
 
   return (
     <Box sx={{ flex: 1, width: "100%" }}>
@@ -243,8 +245,8 @@ export default function MyProfile() {
           </Stack>
           <CardOverflow sx={{ borderTop: "1px solid", borderColor: "divider" }}>
             <CardActions sx={{ alignSelf: "flex-end", pt: 2 }}>
-              <Button size="sm" variant="outlined" color="neutral">
-                Cancel
+              <Button size="sm" variant="outlined" color="neutral" onClick={() => navigate(-1)}>
+                Cancelar
               </Button>
               <Button size="sm"
                 sx={{ backgroundColor: '#ff5a00 !important',

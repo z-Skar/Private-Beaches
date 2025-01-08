@@ -19,8 +19,8 @@ import AnimationRevealPage from 'helpers/AnimationRevealPage';
 import Content from './adminComponents/ContentRenderer';
 import { entitiesAndNames } from './utils';
 
-export default function AdminDashbord() {
-  const [selectedEntity, setSelectedEntity] = useState('home');
+export default function AdminDashbord(entity='home') {
+  const [selectedEntity, setSelectedEntity] = useState(entity);
   const ENTITIES_NAMES = entitiesAndNames();
 
   return (

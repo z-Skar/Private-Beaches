@@ -36,10 +36,10 @@ export default function DropZone(props) {
         <div>{icon ?? <FileUploadRoundedIcon />}</div>
       </AspectRatio>
       <Typography level="body-sm" sx={{ textAlign: "center" }}>
-        <Link component="button" overlay>
-          Click to upload
+        <Link component="Input" overlay type="file"
+        >
+          Clica para carregar uma imagem
         </Link>{" "}
-        or drag and drop
         <br /> SVG, PNG, JPG or GIF (max. 800x400px)
       </Typography>
     </Card>
