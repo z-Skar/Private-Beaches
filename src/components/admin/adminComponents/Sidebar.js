@@ -149,17 +149,46 @@ export default function Sidebar({ selectedEntity, onSelectEntity }) {
             </ListItemButton>
           </ListItem>
 
-          <ListItem key='beaches'>
-            <ListItemButton
-              selected={selectedEntity === 'beaches' && true}
-              onClick={() => onSelectEntity('beaches')}
+          <ListItem nested key='beaches'>
+          <Toggler
+              renderToggle={({ open, setOpen }) => (
+                <ListItemButton
+                  selected={selectedEntity === 'beaches'}
+                  onClick={() => {
+                    setOpen(!open)
+                    onSelectEntity('beaches')
+                  }}
+                >
+                  <BeachAccessRoundedIcon style={selectedEntity === 'beaches' ? {color: '#ff5a00'} : {}}/>
+                  <ListItemContent>
+                    <Typography level="title-sm">Praias</Typography>
+                  </ListItemContent>
+                  <KeyboardArrowDownIcon
+                    sx={[
+                      open
+                        ? {
+                            transform: "rotate(180deg)"
+                          }
+                        : {
+                            transform: "none"
+                          }
+                    ]}
+                  />
+                </ListItemButton>
+              )}
             >
-              <BeachAccessRoundedIcon style={selectedEntity === 'beaches' ? {color: '#ff5a00'} : {}}/>
-              <ListItemContent>
-                <Typography level="title-sm">Praias</Typography>
-              </ListItemContent>
-            </ListItemButton>
+              <List sx={{ gap: 0.5 }}>
+                <ListItem sx={{ mt: 0.5 }}>
+                  <ListItemButton
+                    onClick={null}
+                  >
+                    Criar nova Praia
+                  </ListItemButton>
+                </ListItem>
+              </List>
+            </Toggler>
           </ListItem>
+
           <ListItem key='reservations'>
             <ListItemButton
               selected={selectedEntity === 'reservations' && true}

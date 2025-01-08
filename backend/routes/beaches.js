@@ -70,7 +70,8 @@ ROUTER.get('/services', (req, res) => {
 
 ROUTER.get('/admin', (req, res) => {
     const SQL = `SELECT Beaches.BEACH_ID, BEACH_NAME, DESCRIPTION, CITY_LOCATION, COUNTRY_LOCATION, 
-                 RESERVATION_COST, COALESCE(Lifeguards.FULL_NAME, 'INDISPONÍVEL') AS FULL_NAME, SERVICE_TYPE, COALESCE(AVG(Evaluations.SCORE), 0) AS SCORE
+                 RESERVATION_COST, COALESCE(Lifeguards.FULL_NAME, 'INDISPONÍVEL') AS FULL_NAME, 
+                 SERVICE_TYPE, COALESCE(AVG(Evaluations.SCORE), 0) AS SCORE
                  FROM BEACHES 
                  LEFT JOIN Evaluations ON beaches.BEACH_ID = Evaluations.BEACH_ID 
                  LEFT JOIN Lifeguards ON beaches.LIFEGUARD_ID = Lifeguards.LIFEGUARD_ID 
@@ -112,7 +113,13 @@ ROUTER.get('/:id', (req, res) => {
     DATABASE.query(SQL, [id], (err, data) => {
         if (err) {
             return res.status(500).json(err);
-        } return res.status(200).json(data);
+        } else {
+            data = data.map(record => ({
+                ...record,
+                PICTURE: `http://localhost:5000${record.PICTURE}`
+            }))
+            return res.status(200).json(data);
+        }
     });
 });
 

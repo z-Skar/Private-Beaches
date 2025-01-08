@@ -148,7 +148,7 @@ export default function MyProfile() {
                     onChange={(e) => setData({ ...data, COUNTRY_LOCATION: e.target.value})}
                   />
                 </FormControl>
-                <FormControl sx={{ flex: 1}}>
+                <FormControl sx={{ flex: 1 }}> 
                   <FormLabel>Cidade</FormLabel>
                   <Input
                     size="sm"
@@ -241,7 +241,7 @@ export default function MyProfile() {
           </Box>
           <Divider />
           <Stack spacing={2} sx={{ my: 1 }}>
-            <DropZone />
+            <DropZone imgSrc={data.PICTURE} />
           </Stack>
           <CardOverflow sx={{ borderTop: "1px solid", borderColor: "divider" }}>
             <CardActions sx={{ alignSelf: "flex-end", pt: 2 }}>

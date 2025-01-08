@@ -4,12 +4,35 @@ import Card from "@mui/joy/Card"
 import Link from "@mui/joy/Link"
 import Typography from "@mui/joy/Typography"
 import AspectRatio from "@mui/joy/AspectRatio"
+import { useState, useEffect } from "react"
 
 import FileUploadRoundedIcon from "@mui/icons-material/FileUploadRounded"
+import Button from "@mui/joy/Button"
 
 export default function DropZone(props) {
-  const { icon, sx, ...other } = props
+  const { icon, sx, imgSrc, ...other } = props
+
+  const [imagePreview, setImagePreview] = useState(imgSrc);
+
+  useEffect(() => {
+    if (imgSrc) {
+      setImagePreview(imgSrc);
+    }
+  }, [imgSrc]);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImagePreview(reader.result); // Carrega a imagem como uma URL base64
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
+    <>
     <Card
       variant="soft"
       {...other}
@@ -36,12 +59,42 @@ export default function DropZone(props) {
         <div>{icon ?? <FileUploadRoundedIcon />}</div>
       </AspectRatio>
       <Typography level="body-sm" sx={{ textAlign: "center" }}>
-        <Link component="Input" overlay type="file"
-        >
+        <Link component="label" sx={{ cursor: "pointer" }}>
           Clica para carregar uma imagem
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            style={{ display: "none" }}
+          />
         </Link>{" "}
-        <br /> SVG, PNG, JPG or GIF (max. 800x400px)
+        <br /> SVG, PNG, JPG ou GIF (max. 400px de altura)
       </Typography>
+      {imagePreview && (
+        <div style={{ marginTop: "20px" }}>
+          <img
+            src={imagePreview}
+            alt="Preview"
+            style={{ maxWidth: "100%", maxHeight: "400px", border: "1px solid #ccc", display: 'block', margin: '0 auto'}}
+          />
+          <Button
+            size="sm"
+            variant="outlined"
+            color="neutral"
+            onClick={() => setImagePreview(imgSrc)}
+            sx={{
+              marginTop: 2,
+              '&:hover': {
+                backgroundColor: '#e2e8f0 !important',
+                transition: 'background-color 300ms !important'
+              }
+          }}
+          >
+            Repor imagem
+          </Button>
+        </div>
+      )}
     </Card>
+    </>
   )
 }
