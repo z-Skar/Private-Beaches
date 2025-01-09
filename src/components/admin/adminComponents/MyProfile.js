@@ -48,12 +48,12 @@ export default function MyProfile() {
   const [lifeguardOptions, setLifeguardOptions] = useState([]);
 
   useEffect(() => {
-    const getUserData = async () => {
+    const getBeachData = async () => {
       try {
-        const RESPONSE = (await axios.get(`http://localhost:5000/${entity}/${id}`)).data[0];
+        const BEACH_DATA_RESPONSE = (await axios.get(`http://localhost:5000/${entity}/${id}`)).data[0];
         setData({
-          ...RESPONSE,
-          SERVICE_TYPE: serviceTypeOptions.find(option => option.value === RESPONSE.SERVICE_TYPE)
+          ...BEACH_DATA_RESPONSE,
+          SERVICE_TYPE: serviceTypeOptions.find(option => option.value === BEACH_DATA_RESPONSE.SERVICE_TYPE)
         });
 
         const LIFEGUARDS_DATA_RESPONSE = (await axios.get(`http://localhost:5000/lifeguards/?onlyNecessary=true`)).data;
@@ -63,13 +63,17 @@ export default function MyProfile() {
         console.log(error);
       };
     };
-    getUserData();
+    getBeachData();
   }, [id, entity]);
 
   const serviceTypeOptions = [
     { label: "Económico", value: "Económico" },
     { label: "Premium", value: "Premium" },
   ];
+
+  const handleImageChange = (image) => {
+    setData({ ...data, PICTURE: image });
+  };
 
   const navigate = useNavigate();
 
@@ -254,6 +258,11 @@ export default function MyProfile() {
                         backgroundColor: '#cc4100 !important',
                         transition: 'background-color 300ms !important'
                       }
+                  }}
+                  onClick={() => {
+                    axios.put(`http://localhost:5000/${entity}/edit/${id}`, data)
+                      .then(() => navigate(-1))
+                      .catch(error => console.log(error));
                   }}
                 >
                 Salvar

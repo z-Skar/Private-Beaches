@@ -10,7 +10,7 @@ import FileUploadRoundedIcon from "@mui/icons-material/FileUploadRounded"
 import Button from "@mui/joy/Button"
 
 export default function DropZone(props) {
-  const { icon, sx, imgSrc, ...other } = props
+  const { icon, sx, imgSrc, handleImageChange, ...other } = props
 
   const [imagePreview, setImagePreview] = useState(imgSrc);
 
@@ -26,6 +26,7 @@ export default function DropZone(props) {
       const reader = new FileReader();
       reader.onload = () => {
         setImagePreview(reader.result); // Carrega a imagem como uma URL base64
+        console.log(reader.result);
       };
       reader.readAsDataURL(file);
     }
@@ -66,6 +67,7 @@ export default function DropZone(props) {
             accept="image/*"
             onChange={handleFileChange}
             style={{ display: "none" }}
+            name="beachImage"
           />
         </Link>{" "}
         <br /> SVG, PNG, JPG ou GIF (max. 400px de altura)
@@ -88,7 +90,7 @@ export default function DropZone(props) {
                 backgroundColor: '#e2e8f0 !important',
                 transition: 'background-color 300ms !important'
               }
-          }}
+            }}
           >
             Repor imagem
           </Button>

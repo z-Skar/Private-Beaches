@@ -1,6 +1,7 @@
 const EXPRESS = require('express');
 const ROUTER = EXPRESS.Router();
 const DATABASE = require('../database/db-connection')
+const UPLOAD_IMAGE = require('../middlewares/imageUploader');
 
 ROUTER.get('/', (req, res) => {
     const ORDER_PARAMETER = req.query.orderBy || 'Evaluations.SCORE';
@@ -117,10 +118,34 @@ ROUTER.get('/:id', (req, res) => {
             data = data.map(record => ({
                 ...record,
                 PICTURE: `http://localhost:5000${record.PICTURE}`
-            }))
+            }));
             return res.status(200).json(data);
-        }
+        };
     });
 });
+
+ROUTER.post('/edit/:id', (req, res, next) => {
+    const { BEACH_ID, BEACH_NAME, DESCRIPTION, CITY_LOCATION, COUNTRY_LOCATION, 
+        RESERVATION_COST, SERVICE_TYPE, PICTURE } = req.body;
+    
+    const SQL = `UPDATE Beaches SET 
+                    BEACH_NAME = ?, 
+                    DESCRIPTION = ?, 
+                    CITY_LOCATION = ?, 
+                    COUNTRY_LOCATION = ?, 
+                    RESERVATION_COST = ?, 
+                    SERVICE_TYPE = ? 
+                    WHERE BEACH_ID = ?`;
+    DATABASE.query(SQL, [BEACH_NAME, DESCRIPTION, CITY_LOCATION, COUNTRY_LOCATION, 
+                         RESERVATION_COST, SERVICE_TYPE, BEACH_ID], 
+        (err, data) => {
+            if(err) {
+                return res.status(500).json(err);
+            } else {
+                next();
+                return res.status(200).json({ success: 'Registo atualizado com sucesso.' });
+            };
+        });
+}, UPLOAD_IMAGE.single('beachImage'));
 
 module.exports = ROUTER;

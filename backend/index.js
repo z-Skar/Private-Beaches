@@ -7,6 +7,8 @@ const APP = EXPRESS();
 APP.use(CORS());
 APP.use(EXPRESS.json());
 
+
+
 const BEACHES_ROUTE = require('./routes/beaches');
 const BILLS_ROUTE = require('./routes/bills');
 const CLIENTS_ROUTE = require('./routes/clients'); // Importa a rota clients.
