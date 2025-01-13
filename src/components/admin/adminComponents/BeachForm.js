@@ -86,6 +86,7 @@ export const BeachForm = ({ entity, id, setEditionModalOpen }) => {
   ];
 
   const handleFileChange = (event) => {
+    setErrors({ ...errors, PICTURE: '' })
     const file = event.target.files[0];
     if (file) {
       setSelectedFile(file);
@@ -111,10 +112,12 @@ export const BeachForm = ({ entity, id, setEditionModalOpen }) => {
       formData.append("beachImage", selectedFile);
     };
 
-    const DATA_TO_VALIDATE = { ...data, SERVICE_TYPE: data.SERVICE_TYPE?.value, PICTURE: selectedFile }
-    console.log(DATA_TO_VALIDATE); return;
-    setErrors(validateBeachFormFields(formData));
-    if (errors) return;
+    const DATA_TO_VALIDATE = { ...data, SERVICE_TYPE: data.SERVICE_TYPE?.value, PICTURE: selectedFile ||  data.PICTURE }
+    const ERRORS = validateBeachFormFields(DATA_TO_VALIDATE);
+    setErrors(ERRORS);
+
+    const HAS_ERRORS = Object.values(ERRORS).some((error) => error !== "");
+    if (HAS_ERRORS) return;
 
     try {
       if (id) {
@@ -177,85 +180,96 @@ export const BeachForm = ({ entity, id, setEditionModalOpen }) => {
           onScroll={() => {
             setServiceTypeAutocomplete(false);
             setLifeguardAutocomplete(false);
-          }}
-        >
-          <Box sx={{ mb: 1 }}>
+            }}
+          >
+            <Box sx={{ mb: 1 }}>
             <Typography level="title-md">Informação relativa à Praia</Typography>
             <Typography level="body-sm">
               Costumiza a forma que a informação será apresentada.
             </Typography>
-          </Box>
-          <Divider />
-          <Stack
+            </Box>
+            <Divider />
+            <Stack
             direction="row"
             spacing={3}
             sx={{ display: { xs: "none", md: "flex" }, my: 1 }}
-          >
+            >
             <Stack spacing={2} sx={{ flexGrow: 1 }}>
               <Stack spacing={1} direction={{ xs: "column", md: "row" }}>
-                <FormControl
-                  sx={{
-                    display: { sm: "flex-column", md: "flex-row" },
-                    flexGrow: 1,
+              <FormControl
+                sx={{
+                display: { sm: "flex-column", md: "flex-row" },
+                flexGrow: 1,
+                }}
+              >
+                <FormLabel>Nome da Praia</FormLabel>
+                <Input
+                  size="sm"
+                  placeholder="Praia da Fonte da Telha"
+                  value={data.BEACH_NAME || ""}
+                  error={errors.BEACH_NAME ? true : false}
+                  onChange={(e) => {
+                    setErrors({ ...errors, BEACH_NAME: '' })
+                    setData({ ...data, BEACH_NAME: e.target.value })
                   }}
-                >
-                  <FormLabel>Nome da Praia</FormLabel>
-                  <Input
-                    size="sm"
-                    placeholder="Praia da Fonte da Telha"
-                    value={data.BEACH_NAME || ""}
-                    
-                    onChange={(e) =>
-                      setData({ ...data, BEACH_NAME: e.target.value })
-                    }
-                  />
-                </FormControl>
-                <FormControl>
-                  <FormLabel>Tipo de Serviço</FormLabel>
-                  <Autocomplete
-                    size="sm"
-                    autoHighlight
-                    isOptionEqualToValue={(option, value) =>
-                      option.value === value.value
-                    }
-                    value={data.SERVICE_TYPE || null}
-                    onChange={(event, newValue) =>
-                      setData({ ...data, SERVICE_TYPE: newValue })
-                    }
-                    options={serviceTypeOptions}
-                    placeholder={"Económico"}
-                    noOptionsText={"Sem opções"}
-                    open={serviceTypeAutocomplete}
-                    onOpen={() => setServiceTypeAutocomplete(true)}
-                    onClose={() => setServiceTypeAutocomplete(false)}
-                    slotProps={slotProps}
-                  />
-                </FormControl>
+                />
+                {errors.BEACH_NAME && (<Typography level="body-xs" color="danger" sx={{ pl: '0.1rem', pt: 0.5, fontWeight: 'lighter' }}>{errors.BEACH_NAME}</Typography>)}
+              </FormControl>
+              <FormControl>
+                <FormLabel>Tipo de Serviço</FormLabel>
+                <Autocomplete
+                  size="sm"
+                  autoHighlight
+                  isOptionEqualToValue={(option, value) =>
+                    option.value === value.value
+                  }
+                  value={data.SERVICE_TYPE || null}
+                  onChange={(event, newValue) => {
+                    setErrors({ ...errors, SERVICE_TYPE: '' })
+                    setData({ ...data, SERVICE_TYPE: newValue })}
+                  }
+                  options={serviceTypeOptions}
+                  placeholder={"Económico"}
+                  noOptionsText={"Sem opções"}
+                  open={serviceTypeAutocomplete}
+                  onOpen={() => setServiceTypeAutocomplete(true)}
+                  onClose={() => setServiceTypeAutocomplete(false)}
+                  slotProps={slotProps}
+                  error={errors.SERVICE_TYPE ? true : false}
+                />
+                {errors.SERVICE_TYPE && (<Typography level="body-xs" color="danger" sx={{ pl: '0.1rem', pt: 0.5, fontWeight: 'lighter' }}>{errors.SERVICE_TYPE}</Typography>)}
+              </FormControl>
               </Stack>
               <Stack direction="row" spacing={2}>
-                <FormControl sx={{ flex: 1 }}>
-                  <FormLabel>País</FormLabel>
-                  <Input
-                    size="sm"
-                    placeholder="Portugal"
-                    value={data.COUNTRY_LOCATION || ""}
-                    onChange={(e) =>
-                      setData({ ...data, COUNTRY_LOCATION: e.target.value })
-                    }
-                  />
-                </FormControl>
-                <FormControl sx={{ flex: 1 }}>
-                  <FormLabel>Cidade</FormLabel>
-                  <Input
-                    size="sm"
-                    type="text"
-                    placeholder="Lisboa"
-                    value={data.CITY_LOCATION || ""}
-                    onChange={(e) =>
-                      setData({ ...data, CITY_LOCATION: e.target.value })
-                    }
-                  />
-                </FormControl>
+              <FormControl sx={{ flex: 1 }}>
+                <FormLabel>País</FormLabel>
+                <Input
+                  size="sm"
+                  placeholder="Portugal"
+                  value={data.COUNTRY_LOCATION || ""}
+                  error={errors.COUNTRY_LOCATION ? true : false}
+                  onChange={(e) => {
+                    setErrors({ ...errors, COUNTRY_LOCATION: '' })
+                    setData({ ...data, COUNTRY_LOCATION: e.target.value })}
+                  }
+                />
+                {errors.COUNTRY_LOCATION && (<Typography level="body-xs" color="danger" sx={{ pl: '0.1rem', pt: 0.5, fontWeight: 'lighter' }}>{errors.COUNTRY_LOCATION}</Typography>)}
+              </FormControl>
+              <FormControl sx={{ flex: 1 }}>
+                <FormLabel>Cidade</FormLabel>
+                <Input
+                  size="sm"
+                  type="text"
+                  placeholder="Lisboa"
+                  value={data.CITY_LOCATION || ""}
+                  error={errors.CITY_LOCATION ? true : false}
+                  onChange={(e) => {
+                    setErrors({ ...errors, CITY_LOCATION: '' })
+                    setData({ ...data, CITY_LOCATION: e.target.value })
+                  }}
+                />
+                {errors.CITY_LOCATION && (<Typography level="body-xs" color="danger" sx={{ pl: '0.1rem', pt: 0.5, fontWeight: 'lighter' }}>{errors.CITY_LOCATION}</Typography>)}
+              </FormControl>
               </Stack>
               <Stack>
                 <FormControl>
@@ -264,13 +278,16 @@ export const BeachForm = ({ entity, id, setEditionModalOpen }) => {
                     size="sm"
                     placeholder="Praia com areia fina e água cristalina"
                     value={data.DESCRIPTION || ""}
+                    error={errors.DESCRIPTION ? true : false}
                     onChange={(e) => {
+                      setErrors({ ...errors, DESCRIPTION: '' })
                       const newValue = e.target.value;
                       if (newValue.length <= 300) {
                         setData({ ...data, DESCRIPTION: newValue });
                       }
                     }}
                   />
+                  {errors.DESCRIPTION && (<Typography level="body-xs" color="danger" sx={{ pl: '0.1rem', pt: 0.5, fontWeight: 'lighter' }}>{errors.DESCRIPTION}</Typography>)}
                 </FormControl>
               </Stack>
               <Stack direction="row" spacing={2}>
@@ -283,14 +300,14 @@ export const BeachForm = ({ entity, id, setEditionModalOpen }) => {
                     value={data.RESERVATION_COST || ""}
                     onChange={(e) => {
                       const newValue = e.target.value;
-                      if (
-                        newValue.length <= 5 &&
-                        checkOnlyNumbers(newValue)
-                      ) {
+                      if ( newValue.length <= 5 && checkOnlyNumbers(newValue)) {
+                        setErrors({ ...errors, RESERVATION_COST: '' })
                         setData({ ...data, RESERVATION_COST: newValue });
                       }
                     }}
+                    error={errors.RESERVATION_COST ? true : false}
                   />
+                  {errors.RESERVATION_COST && (<Typography level="body-xs" color="danger" sx={{ pl: '0.1rem', pt: 0.5, fontWeight: 'lighter' }}>{errors.RESERVATION_COST}</Typography>)}
                 </FormControl>
                 <FormControl sx={{ flex: 2 }}>
                   <FormLabel>Salva-vidas</FormLabel>
@@ -306,11 +323,12 @@ export const BeachForm = ({ entity, id, setEditionModalOpen }) => {
                         (lifeguard) => lifeguard.value === data.LIFEGUARD_ID
                       ) || null
                     }
-                    onChange={(event, newValue) =>
+                    onChange={(event, newValue) => {
+                      setErrors({ ...errors, LIFEGUARD_ID: '' })
                       setData({
                         ...data,
                         LIFEGUARD_ID: newValue ? newValue.value : null,
-                      })
+                      })}
                     }
                     open={lifeguardAutocomplete}
                     onOpen={() => setLifeguardAutocomplete(true)}
@@ -318,7 +336,9 @@ export const BeachForm = ({ entity, id, setEditionModalOpen }) => {
                     placeholder={"António Manuel"}
                     noOptionsText={"Sem opções"}
                     slotProps={slotProps}
+                    error={errors.LIFEGUARD_ID ? true : false}
                   />
+                  {errors.LIFEGUARD_ID && (<Typography level="body-xs" color="danger" sx={{ pl: '0.1rem', pt: 0.5,  fontWeight: 'lighter' }}>{errors.LIFEGUARD_ID}</Typography>)}
                 </FormControl>
               </Stack>
             </Stack>
@@ -334,6 +354,7 @@ export const BeachForm = ({ entity, id, setEditionModalOpen }) => {
               imagePreview={imagePreview}
               setImagePreview={setImagePreview}
             />
+            {errors.PICTURE && (<Typography level="body-xs" color="danger" sx={{ pl: '0.1rem', fontWeight: 'lighter' }}>{errors.PICTURE}</Typography>)}
           </Stack>
           <CardOverflow sx={{ borderTop: "1px solid", borderColor: "divider" }}>
             <CardActions sx={{ alignSelf: "flex-end", pt: 2 }}>

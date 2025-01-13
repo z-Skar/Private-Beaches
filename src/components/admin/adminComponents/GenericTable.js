@@ -31,6 +31,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 
 import axios from "axios"
+import { useNavigate } from "react-router-dom"
 
 function RowMenu() {
   return (
@@ -147,6 +148,7 @@ const GenericTable = ({ entity }) => {
             });
             setDeletetionModalOpen(false);
             setSelectedIDsToDelete([]);
+            NAVIGATE(0);
         };
     };
 
@@ -175,6 +177,8 @@ const GenericTable = ({ entity }) => {
         
         saveAs(blob, `${entitiesAndNames()[entity].toLowerCase()}.xlsx`);
     };
+
+    const NAVIGATE = useNavigate();
     
     return (
         <>

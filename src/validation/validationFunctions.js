@@ -7,15 +7,18 @@ const MANDATORY_FIELDS = {
     CONTACT: 'O número de telemóvel é obrigatório.',
     BEACH_NAME: 'O nome da praia é obrigatório.',
     SERVICE_TYPE: 'O tipo de serviço é obrigatório.',
+    LIFEGUARD_ID: 'O preenchimento do campo de Salva-vidas é obrigatório.',
     COUNTRY_LOCATION: 'O país em que a praia pertence é obrigatória.',
     CITY_LOCATION: 'A cidade em que a praia pertence é obrigatória.',
     DESCRIPTION: 'A descrição é obrigatória.',
-    PICTURE: 'A imagem é obrigatória.'
+    PICTURE: 'A imagem é obrigatória.',
+    RESERVATION_COST: 'O custo da reserva é obrigatório.'
 };
 
 const setMandatoryMessageErrors = (fields, data) => {
     Object.keys(fields).forEach((field) => {
-        if(!(data[field] || '').trim()) {
+        const value = data[field];
+        if ((!value || (typeof value === 'string' && !value.trim()))) {
             fields[field] = MANDATORY_FIELDS[field];
         };
     });
@@ -149,38 +152,18 @@ export const validateBeachFormFields = (data) => {
         PICTURE: '',
     };
 
-    if (!data.BEACH_NAME.trim()) {
-        errors.BEACH_NAME = MANDATORY_FIELDS.BEACH_NAME || 'O nome da praia é obrigatório.';
-    }
-
-    if (!data.SERVICE_TYPE.trim()) {
-        errors.SERVICE_TYPE = MANDATORY_FIELDS.SERVICE_TYPE || 'O tipo de serviço é obrigatório.';
-    }
-
-    if (!data.COUNTRY_LOCATION.trim()) {
-        errors.COUNTRY_LOCATION = MANDATORY_FIELDS.COUNTRY_LOCATION || 'A localização do país é obrigatória.';
-    }
-
-    if (!data.CITY_LOCATION.trim()) {
-        errors.CITY_LOCATION = MANDATORY_FIELDS.CITY_LOCATION || 'A localização da cidade é obrigatória.';
-    }
-
-    if (!data.DESCRIPTION.trim()) {
-        errors.DESCRIPTION = MANDATORY_FIELDS.DESCRIPTION || 'A descrição é obrigatória.';
-    }
-
-    if (!data.RESERVATION_COST.trim() || !checkOnlyNumbers(data.RESERVATION_COST)) {
-        errors.RESERVATION_COST = 'O custo da reserva é obrigatório e deve conter apenas números.';
-    }
-
-    if (data.LIFEGUARD_ID !== null && !data.LIFEGUARD_ID.trim()) {
-        errors.LIFEGUARD_ID = 'O ID do salva-vidas é obrigatório.';
-    }
-
-    if (!data.PICTURE) {
-        errors.PICTURE = MANDATORY_FIELDS.PICTURE;
+    if (!checkOnlyNumbers(data.RESERVATION_COST)) {
+        errors.RESERVATION_COST = 'O custo de reserva só pode conter números.';
     };
 
     setMandatoryMessageErrors(errors, data);
+    
+    if (data.LIFEGUARD_ID !== undefined) {
+        errors.LIFEGUARD_ID = '';
+    };
+
+    if (!(data.PICTURE)) {
+        errors.PICTURE = MANDATORY_FIELDS.PICTURE;
+    };
     return errors;
 };

@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-const MULTER = require('multer');
-const UPLOAD = MULTER({ dest: 'images/' });
-
-module.exports = UPLOAD;
-=======
 const MULTER = require('multer');
 const PATH = require('path');
 const DATABASE = require('../database/db-connection')
@@ -31,4 +25,3 @@ const storage = MULTER.diskStorage({
 const IMAGE_UPLOAD = MULTER({ storage: storage });
 
 module.exports = IMAGE_UPLOAD;
->>>>>>> 2bb6295f744d936d33455b932ad850b603fae928
