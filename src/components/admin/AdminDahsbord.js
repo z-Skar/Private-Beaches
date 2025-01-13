@@ -10,6 +10,7 @@ import Typography from '@mui/joy/Typography';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
+import UploadRoundedIcon from '@mui/icons-material/UploadRounded';
 
 import Sidebar from './adminComponents/Sidebar';
 import OrderTable from './adminComponents/OrderTable';
@@ -19,7 +20,7 @@ import AnimationRevealPage from 'helpers/AnimationRevealPage';
 import Content from './adminComponents/ContentRenderer';
 import { entitiesAndNames } from './utils';
 
-export default function AdminDashbord(entity='home') {
+export default function AdminDashbord({ entity='home' }) {
   const [selectedEntity, setSelectedEntity] = useState(entity);
   const ENTITIES_NAMES = entitiesAndNames();
 
@@ -82,13 +83,21 @@ export default function AdminDashbord(entity='home') {
             <Typography level="h2" component="h1">
               {ENTITIES_NAMES[selectedEntity]}
             </Typography>
-            {/*<Button
-              color="primary"
-              startDecorator={<DownloadRoundedIcon />}
-              size="sm"
-            >
-              Download PDF
-            </Button>*/}
+            { selectedEntity !== 'home' && 
+              <Button
+                sx={{
+                  backgroundColor: '#2f855a !important',
+                  '&:hover': {
+                    backgroundColor: '#276749 !important',
+                    transition: 'background-color 300ms !important'
+                  }
+                }}
+                startDecorator={<UploadRoundedIcon />}
+                size="sm"
+              >
+                Exportar {ENTITIES_NAMES[selectedEntity]} para Excel
+              </Button>
+            }
           </Box>
           <Content entity={selectedEntity} setEntity={setSelectedEntity}/>
         </Box>

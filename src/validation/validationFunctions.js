@@ -16,7 +16,7 @@ const setMandatoryMessageErrors = (fields, data) => {
 };
 
 export const checkOnlyNumbers = (string) => {
-    return /^\d+$/.test(string);
+    return /^\d*$/.test(string);
 };
 
 const setEmailError = (errors, email) => {

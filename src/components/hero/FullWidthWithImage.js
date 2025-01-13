@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { css } from "styled-components/macro"; //eslint-disable-line
 
 import Header, { LogoLink, NavLinks, NavLink as NavLinkBase } from "../headers/light.js";
+import { useNavigate } from "react-router-dom";
 
 const StyledHeader = styled(Header)`
   ${tw`justify-between`}
@@ -41,6 +42,8 @@ const Actions = styled.div`
   }
 `;
 
+
+
 export default ({
   navLinks = [
     <NavLinks key={1}>
@@ -65,6 +68,11 @@ export default ({
   secondaryActionUrl = "/Beaches.js",
   secondaryActionText = "Pesquisa Praias",
 }) => {
+  const NAVIGATE = useNavigate();
+  const navigateTo = (destination) => {
+    NAVIGATE(destination);
+    window.scrollTo(0, 0);
+  };
   return (
     <Container>
       <TwoColumn>
@@ -74,12 +82,12 @@ export default ({
             <Heading>{heading}</Heading>
             <Paragraph>{description}</Paragraph>
             <Actions>
-              <a href={primaryActionUrl} className="action primaryAction">
+              <button onClick={() => navigateTo(primaryActionUrl)} className="action primaryAction">
                 {primaryActionText}
-              </a>
-              <a href={secondaryActionUrl} className="action secondaryAction">
+              </button>
+              <button onClick={() => navigateTo(secondaryActionUrl)} className="action secondaryAction">
                 {secondaryActionText}
-              </a>
+              </button>
             </Actions>
           </Content>
         </LeftColumn>

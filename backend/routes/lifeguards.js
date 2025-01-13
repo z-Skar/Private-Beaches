@@ -9,14 +9,17 @@ ROUTER.get('/', (req, res) => {
     let SQL;
     
     if(onlyNecessary){
-        SQL = 'SELECT * FROM lifeguards;'
+        SQL = 'SELECT * FROM lifeguards';
     } else {
         SQL = 'SELECT LIFEGUARD_ID, FULL_NAME FROM Lifeguards';
     };
     DATABASE.query(SQL, (err, data) => {
         if(err) {
             return res.status(500).json(err);
-        } return res.status(200).json(data);
+        } else {
+            data = [...data, {LIFEGUARD_ID: null, FULL_NAME: 'Indisponível'}];
+            return res.status(200).json(data);
+        };
     });
 });
 

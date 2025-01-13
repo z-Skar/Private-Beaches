@@ -22,7 +22,9 @@
     "dayjs": "^1.11.13",
     "express": "^4.21.1",
     "feather-icons": "^4.29.0",
+    "file-saver": "^2.0.5",
     "framer-motion": "^7.3.2",
+    "multer": "^1.4.5-lts.1",
     "mysql": "^2.18.1",
     "nodemon": "^3.1.7",
     "react": "^18.0.0",
@@ -39,7 +41,8 @@
     "slick-carousel": "^1.8.1",
     "styled-components": "^5.3.5",
     "tailwindcss": "^3.0.0",
-    "twin.macro": "^3.0.0-rc.4"
+    "twin.macro": "^3.0.0-rc.4",
+    "xlsx": "^0.18.5"
   },
   "scripts": {
     "start": "SET NODE_OPTIONS=--openssl-legacy-provider && react-scripts start",

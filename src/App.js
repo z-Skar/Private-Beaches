@@ -111,7 +111,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { StyledEngineProvider } from '@mui/joy/styles';
 import AdminDashbord from "components/admin/AdminDahsbord";
-import MyProfile from "components/admin/adminComponents/MyProfile";
+
 
 export default function App() {
   // If you want to disable the animation just use the disabled `prop` like below on your page's component
@@ -135,7 +135,6 @@ export default function App() {
               <Route path="/Beaches.js" element={<TabGrid />} />
               <Route path="/Lifeguards.js" element={<TwoColContactUsWithIllustrationFullForm />} />
               <Route path="/Admin.js" element={<AdminDashbord />} />
-              <Route path="/Profile/:entity/:id" element={<MyProfile />} />
             </Routes>
           </Router>
         </StyledEngineProvider>

@@ -6,6 +6,7 @@ const APP = EXPRESS();
 
 APP.use(CORS());
 APP.use(EXPRESS.json());
+APP.use(EXPRESS.urlencoded({ extended: true })); // Sem isto o ficheiro não é reconhecido no backend.
 
 const BEACHES_ROUTE = require('./routes/beaches');
 const BILLS_ROUTE = require('./routes/bills');
