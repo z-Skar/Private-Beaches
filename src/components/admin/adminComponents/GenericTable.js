@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
+import ReactDOM from "react-dom"
 import Avatar from "@mui/joy/Avatar"
 import Box from "@mui/joy/Box"
 import Chip from "@mui/joy/Chip"
@@ -23,8 +24,13 @@ import { Modal } from '@material-ui/core';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { Button } from "@mui/joy"
 
-import { getColumns } from "../utils"
-import { useNavigate } from "react-router-dom"
+import { entitiesAndNames, getColumns } from "../utils"
+import { BeachForm } from "./BeachForm"
+
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+
+import axios from "axios"
 
 function RowMenu() {
   return (
@@ -64,29 +70,51 @@ function descendingComparator(a, b, orderBy) {
 
 const GenericTable = ({ entity }) => {
     const [order, setOrder] = useState("desc");
-    const [data, setData] = useState([{}]);
-    const [selectedIDs, setSelectedIDs] = useState([]);
+    const [data, setData] = useState([]);
+
+    // Estados para facilmente acessar os registos pelo ID selecionado.
+    const [selectedIDsToDelete, setSelectedIDsToDelete] = useState([]);
+    const [selectedIDToEdit, setSelectedIDToEdit] = useState(null);
 
     // Control the opening of Modals.
     const [deletetionModalOpen, setDeletetionModalOpen] = useState(false);
     const [editionModalOpen, setEditionModalOpen] = useState(false)
 
-    const navigate = useNavigate();
+
+    const dataToExcelRef = useRef(null);
     
     useEffect(() => {
       const getData = async () => {
         try {
-          const query_parameters = new URLSearchParams();
-  
-          const response = await fetch(`http://localhost:5000/${entity}/admin`); 
-          const DATA = await response.json();
+          const DATA = (await (axios.get(`http://localhost:5000/${entity}/admin`))).data;
+          dataToExcelRef.current = DATA;
           setData(DATA);
         } catch (error) {
           console.error(error);
         };
       };
       getData();
-      setSelectedIDs([]);
+      setSelectedIDsToDelete([]);
+
+      const newBeach = document.getElementsByClassName('MuiList-root MuiList-vertical MuiList-variantPlain MuiList-colorNeutral MuiList-nesting css-1jdlr5h-JoyList-root')[0] || null;
+      const exportToExcelButton = document.getElementsByClassName('MuiButton-root MuiButton-variantSolid MuiButton-colorPrimary MuiButton-sizeSm css-ful1vf-JoyButton-root')[0] || null;
+
+      if (newBeach) {
+          newBeach.addEventListener('click', () => handleClickForEdit(null));
+      };
+    
+      if (exportToExcelButton) {
+          exportToExcelButton.addEventListener('click', exportToExcel);
+      };
+
+      return () => {
+        if(newBeach) {
+            newBeach.removeEventListener('click', () => handleClickForEdit(null));
+        };
+        if (exportToExcelButton) {
+            exportToExcelButton.removeEventListener('click', exportToExcel);
+        };
+      };
     }, [entity]);
   
     const deleteRecord = async (entity, id) => {
@@ -108,25 +136,46 @@ const GenericTable = ({ entity }) => {
     const ENTITY_COLUMN_KEYS = data.length > 0 ? Object.keys(data[0]) : [];
 
     const handleClickForDelete = (id) => {
-        !selectedIDs.includes(id) && setSelectedIDs(prevIDs => [...prevIDs, id]);
+        !selectedIDsToDelete.includes(id) && setSelectedIDsToDelete(prevIDs => [...prevIDs, id]);
         setDeletetionModalOpen(true);
     };
 
     const handleDelete = () => {
-        if (selectedIDs.length > 0) {
-            selectedIDs.forEach(ID => {
+        if (selectedIDsToDelete.length > 0) {
+            selectedIDsToDelete.forEach(ID => {
                 deleteRecord(entity, ID);
             });
             setDeletetionModalOpen(false);
-            setData(prevData => prevData.filter(record => !selectedIDs.includes(record[ENTITY_COLUMN_KEYS[0]])));
-            setSelectedIDs([]);
+            setSelectedIDsToDelete([]);
         };
     };
 
     const handleClickForEdit = (id) => {
-        navigate(`/Profile/${entity}/${id}`);
+        setSelectedIDToEdit(id);
+        setEditionModalOpen(true);
     };
 
+    const handleEdition = () => {
+        setEditionModalOpen(false);
+        setSelectedIDToEdit(null);
+    };
+
+    const exportToExcel = () => {
+        if (!Array.isArray(dataToExcelRef.current) || dataToExcelRef.current.length === 0) {
+            console.error('Dados inexistentes.');
+        };
+
+        const worksheetData = XLSX.utils.json_to_sheet(dataToExcelRef.current); // Converte os dados JSON para dados em planilha.
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheetData, entity);
+        const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+        const blob = new Blob([excelBuffer], { 
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' 
+        });
+        
+        saveAs(blob, `${entitiesAndNames()[entity].toLowerCase()}.xlsx`);
+    };
+    
     return (
         <>
             <Table
@@ -151,16 +200,16 @@ const GenericTable = ({ entity }) => {
                     <Checkbox
                         size="sm"
                         indeterminate={
-                        selectedIDs.length > 0 && selectedIDs.length !== data.length
+                        selectedIDsToDelete.length > 0 && selectedIDsToDelete.length !== data.length
                         }
-                        checked={selectedIDs.length === data.length}
+                        checked={selectedIDsToDelete.length === data.length}
                         onChange={event => {
-                        setSelectedIDs(
+                        setSelectedIDsToDelete (
                             event.target.checked ? data.map(row => row[ENTITY_COLUMN_KEYS[0]]) : []
                         )
                         }}
                         color={
-                        selectedIDs.length > 0 || selectedIDs.length === data.length
+                        selectedIDsToDelete.length > 0 || selectedIDsToDelete.length === data.length
                             ? "primary"
                             : undefined
                         }
@@ -210,10 +259,10 @@ const GenericTable = ({ entity }) => {
                     {<td style={{ textAlign: "center", width: 120 }}>
                         <Checkbox
                         size="sm"
-                        checked={selectedIDs.includes(row[ENTITY_COLUMN_KEYS[0]])}
-                        color={selectedIDs.includes(row[ENTITY_COLUMN_KEYS[0]]) ? "primary" : undefined}
+                        checked={selectedIDsToDelete.includes(row[ENTITY_COLUMN_KEYS[0]])}
+                        color={selectedIDsToDelete.includes(row[ENTITY_COLUMN_KEYS[0]]) ? "primary" : undefined}
                         onChange={event => {
-                            setSelectedIDs(ids =>
+                            setSelectedIDsToDelete(ids =>
                             event.target.checked
                                 ? ids.concat(row[ENTITY_COLUMN_KEYS[0]])
                                 : ids.filter(itemId => itemId !== row[ENTITY_COLUMN_KEYS[0]])
@@ -293,7 +342,10 @@ const GenericTable = ({ entity }) => {
             </Table>
             <Modal
                 open={deletetionModalOpen}
-                onClose={() => setDeletetionModalOpen(false)}
+                onClose={() => {
+                    setDeletetionModalOpen(false);
+                    selectedIDsToDelete.pop();
+                }}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
@@ -316,7 +368,11 @@ const GenericTable = ({ entity }) => {
                             Tens a certeza que desejas eliminar o registo?
                         </Typography>
                         <IconButton>
-                            <CloseRoundedIcon onClick={() => setDeletetionModalOpen(false)}/>
+                            <CloseRoundedIcon onClick={() => {
+                                setDeletetionModalOpen(false);
+                                selectedIDsToDelete.pop();
+                            }}
+                        />
                         </IconButton>
                     </div>
                     <Typography id="modal-modal-title" variant="h6" component="h2" fontFamily={'sans-serif'}>
@@ -331,7 +387,11 @@ const GenericTable = ({ entity }) => {
                                 backgroundColor: '#718096 !important',
                                 transition: 'background-color 300ms !important',
                             },
-                        }} onClick={() => setDeletetionModalOpen(false)}
+                            }}
+                            onClick={() => {
+                                setDeletetionModalOpen(false);
+                                selectedIDsToDelete.pop();
+                            }}
                         >
                             CANCELAR
                         </Button>
@@ -349,6 +409,25 @@ const GenericTable = ({ entity }) => {
                         </Button>
                     </div>
                 </div>
+            </Modal>
+            <Modal
+                open={editionModalOpen}
+                onClose={() => setEditionModalOpen(false)}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box
+                    sx={{
+                        position: 'relative',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        overflowY: 'auto',
+                        width: '100%'
+                    }}
+                >
+                    <BeachForm entity={entity} id={selectedIDToEdit} setEditionModalOpen={setEditionModalOpen} handleEdition={handleEdition} />
+                </Box>
             </Modal>
         </>
     );

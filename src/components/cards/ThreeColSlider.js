@@ -9,6 +9,7 @@ import { ReactComponent as LocationIcon } from "feather-icons/dist/icons/map-pin
 import { ReactComponent as StarIcon } from "feather-icons/dist/icons/star.svg";
 import { ReactComponent as ChevronLeftIcon } from "feather-icons/dist/icons/chevron-left.svg";
 import { ReactComponent as ChevronRightIcon } from "feather-icons/dist/icons/chevron-right.svg";
+import { useNavigate } from "react-router-dom";
 
 const Container = tw.div`relative`;
 const Content = tw.div`max-w-screen-xl mx-auto py-16 lg:py-20`;
@@ -160,6 +161,8 @@ export default () => {
     rating: beach.SCORE || 'N/A'
   })) : [];
 
+  const NAVIGATE = useNavigate();
+
   return (
     <Container>
       <Content>
@@ -198,7 +201,13 @@ export default () => {
                 </SecondaryInfoContainer>
                 <Description>{card.description}</Description>
               </TextInfo>
-              <PrimaryButton>Reserve Agora</PrimaryButton>
+              <PrimaryButton
+                onClick={() => {
+                  NAVIGATE('/Beaches.js')
+                  window.scrollTo(0, 0);
+              }}>
+                Reserve Agora
+              </PrimaryButton>
             </Card>
           ))}
         </CardSlider>

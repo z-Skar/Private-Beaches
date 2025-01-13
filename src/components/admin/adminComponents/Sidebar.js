@@ -1,4 +1,4 @@
-import * as React from "react"
+import { useState } from "react"
 import GlobalStyles from "@mui/joy/GlobalStyles"
 import Avatar from "@mui/joy/Avatar"
 import Box from "@mui/joy/Box"
@@ -34,14 +34,17 @@ import BrightnessAutoRoundedIcon from "@mui/icons-material/BrightnessAutoRounded
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown"
 import logo from "../../../images/logo192.png";
 
+import Modal from '@mui/joy/Modal'
+import { BeachForm } from "./BeachForm"
 import { closeSidebar } from "../utils"
+import { useNavigate } from "react-router-dom"
 
 function Toggler({ defaultExpanded = false, renderToggle, children }) {
-  const [open, setOpen] = React.useState(defaultExpanded);
+  const [open, setOpen] = useState(defaultExpanded);
 
 
   return (
-    <React.Fragment>
+    <>
       {renderToggle({ open, setOpen })}
       <Box
         sx={[
@@ -57,11 +60,12 @@ function Toggler({ defaultExpanded = false, renderToggle, children }) {
       >
         {children}
       </Box>
-    </React.Fragment>
+    </>
   );
 }
 
 export default function Sidebar({ selectedEntity, onSelectEntity }) {
+  const NAVIGATE = useNavigate();
   return (
     <Sheet
       className="Sidebar"
@@ -115,7 +119,12 @@ export default function Sidebar({ selectedEntity, onSelectEntity }) {
       />
       <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
         <IconButton variant="soft" color="primary" size="sm">
-          <BrightnessAutoRoundedIcon />
+          <BrightnessAutoRoundedIcon
+            onClick={() => {
+              NAVIGATE('/');
+              window.scrollTo(0, 0);
+            }}
+          />
         </IconButton>
         <Typography level="title-lg">Tropical Dreams</Typography>
       </Box>
@@ -179,9 +188,7 @@ export default function Sidebar({ selectedEntity, onSelectEntity }) {
             >
               <List sx={{ gap: 0.5 }}>
                 <ListItem sx={{ mt: 0.5 }}>
-                  <ListItemButton
-                    onClick={null}
-                  >
+                  <ListItemButton>
                     Criar nova Praia
                   </ListItemButton>
                 </ListItem>

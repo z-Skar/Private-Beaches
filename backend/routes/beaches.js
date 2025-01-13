@@ -1,7 +1,6 @@
 const EXPRESS = require('express');
 const ROUTER = EXPRESS.Router();
 const DATABASE = require('../database/db-connection')
-const UPLOAD_IMAGE = require('../middlewares/imageUploader');
 
 ROUTER.get('/', (req, res) => {
     const ORDER_PARAMETER = req.query.orderBy || 'Evaluations.SCORE';
@@ -71,7 +70,7 @@ ROUTER.get('/services', (req, res) => {
 
 ROUTER.get('/admin', (req, res) => {
     const SQL = `SELECT Beaches.BEACH_ID, BEACH_NAME, DESCRIPTION, CITY_LOCATION, COUNTRY_LOCATION, 
-                 RESERVATION_COST, COALESCE(Lifeguards.FULL_NAME, 'INDISPONÍVEL') AS FULL_NAME, 
+                 RESERVATION_COST, COALESCE(Lifeguards.FULL_NAME, 'Indisponível') AS FULL_NAME, 
                  SERVICE_TYPE, COALESCE(AVG(Evaluations.SCORE), 0) AS SCORE
                  FROM BEACHES 
                  LEFT JOIN Evaluations ON beaches.BEACH_ID = Evaluations.BEACH_ID 
@@ -91,23 +90,7 @@ ROUTER.get('/admin', (req, res) => {
     });
 });
 
-ROUTER.delete('/delete/:id', (req, res) => {
-    const { id } = req.params;
-
-    if (!id || isNaN(id)) {
-        return res.status(400).send('ID inválido.')
-    };
-
-    const SQL = `DELETE FROM Beaches WHERE BEACH_ID = ?`;
-
-    DATABASE.query(SQL, [id], (err, result) => {
-        if (err) {
-            return res.status(500).json(err);
-        } return res.status(200).json({success: 'Registo eliminado com sucesso.'});
-    });
-});
-
-ROUTER.get('/:id', (req, res) => {
+ROUTER.get('/read/:id', (req, res) => {
     const { id } = req.params;
     const SQL = `SELECT * FROM Beaches WHERE BEACH_ID = ?`;
 
@@ -123,29 +106,5 @@ ROUTER.get('/:id', (req, res) => {
         };
     });
 });
-
-ROUTER.post('/edit/:id', (req, res, next) => {
-    const { BEACH_ID, BEACH_NAME, DESCRIPTION, CITY_LOCATION, COUNTRY_LOCATION, 
-        RESERVATION_COST, SERVICE_TYPE, PICTURE } = req.body;
-    
-    const SQL = `UPDATE Beaches SET 
-                    BEACH_NAME = ?, 
-                    DESCRIPTION = ?, 
-                    CITY_LOCATION = ?, 
-                    COUNTRY_LOCATION = ?, 
-                    RESERVATION_COST = ?, 
-                    SERVICE_TYPE = ? 
-                    WHERE BEACH_ID = ?`;
-    DATABASE.query(SQL, [BEACH_NAME, DESCRIPTION, CITY_LOCATION, COUNTRY_LOCATION, 
-                         RESERVATION_COST, SERVICE_TYPE, BEACH_ID], 
-        (err, data) => {
-            if(err) {
-                return res.status(500).json(err);
-            } else {
-                next();
-                return res.status(200).json({ success: 'Registo atualizado com sucesso.' });
-            };
-        });
-}, UPLOAD_IMAGE.single('beachImage'));
 
 module.exports = ROUTER;

@@ -39,31 +39,64 @@ import EditorToolbar from "./EditorToolbar"
 import { useParams, useNavigate } from "react-router-dom";
 import InputAdornment from "@mui/material/InputAdornment";
 import { checkOnlyNumbers } from "validation/validationFunctions";
-import { Autocomplete } from "@mui/joy";
+import { Autocomplete, List, ListItem } from "@mui/joy";
+import zIndex from "@mui/material/styles/zIndex";
 
 
-export default function MyProfile() {
-  const { entity, id } = useParams();
+export const BeachForm = ({ entity, id, setEditionModalOpen }) => {
   const [data, setData] = useState({});
+  const [imagePreview, setImagePreview] = useState(data.PICTURE);
   const [lifeguardOptions, setLifeguardOptions] = useState([]);
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  // Controlam a abertura das opções de cada input com uma dropdown box.
+  const [lifeguardAutocomplete, setLifeguardAutocomplete] = useState(false);
+  const [serviceTypeAutocomplete, setServiceTypeAutocomplete] = useState(false)
 
   useEffect(() => {
     const getBeachData = async () => {
       try {
+<<<<<<< HEAD:src/components/admin/adminComponents/MyProfile.js
         const BEACH_DATA_RESPONSE = (await axios.get(`http://localhost:5000/${entity}/${id}`)).data[0];
+=======
+        const RESPONSE = (await axios.get(`http://localhost:5000/${entity}/read/${id}`)).data[0];
+>>>>>>> 2bb6295f744d936d33455b932ad850b603fae928:src/components/admin/adminComponents/BeachForm.js
         setData({
           ...BEACH_DATA_RESPONSE,
           SERVICE_TYPE: serviceTypeOptions.find(option => option.value === BEACH_DATA_RESPONSE.SERVICE_TYPE)
         });
-
-        const LIFEGUARDS_DATA_RESPONSE = (await axios.get(`http://localhost:5000/lifeguards/?onlyNecessary=true`)).data;
-        const LIFEGUARDS_OPTIONS = LIFEGUARDS_DATA_RESPONSE.map(lifeguard => ({ label: lifeguard.FULL_NAME, value: lifeguard.LIFEGUARD_ID }));
-        setLifeguardOptions([{ label: 'Indiponível', value: null }, ...LIFEGUARDS_OPTIONS]);
       } catch (error) {
         console.log(error);
       };
     };
+<<<<<<< HEAD:src/components/admin/adminComponents/MyProfile.js
     getBeachData();
+=======
+
+    const getLifeguardData = async () => {
+      try {
+        const LIFEGUARDS_DATA_RESPONSE = (await axios.get(`http://localhost:5000/lifeguards/?onlyNecessary=true`)).data;
+        const LIFEGUARDS_OPTIONS = LIFEGUARDS_DATA_RESPONSE.map(lifeguard => ({ label: lifeguard.FULL_NAME, value: lifeguard.LIFEGUARD_ID }));
+        setLifeguardOptions(LIFEGUARDS_OPTIONS);
+      } catch (error) {
+        console.log(error);
+      };
+    };
+
+    id && getUserData();
+    getLifeguardData();
+
+    const ModalCard = document.querySelector('.MuiCard-root')
+    if (ModalCard) {
+      ModalCard.addEventListener('scroll', setServiceTypeAutocomplete(false), setLifeguardAutocomplete(false));
+    };
+
+    return () => {
+      if (ModalCard) {
+        ModalCard.addEventListener('scroll', setServiceTypeAutocomplete(false), setLifeguardAutocomplete(false));
+      };
+    };
+>>>>>>> 2bb6295f744d936d33455b932ad850b603fae928:src/components/admin/adminComponents/BeachForm.js
   }, [id, entity]);
 
   const serviceTypeOptions = [
@@ -71,11 +104,74 @@ export default function MyProfile() {
     { label: "Premium", value: "Premium" },
   ];
 
+<<<<<<< HEAD:src/components/admin/adminComponents/MyProfile.js
   const handleImageChange = (image) => {
     setData({ ...data, PICTURE: image });
   };
 
   const navigate = useNavigate();
+=======
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSubmit = async () => {
+    const formData = new FormData();
+
+    formData.append('BEACH_NAME', data.BEACH_NAME);
+    formData.append('COUNTRY_LOCATION', data.COUNTRY_LOCATION);
+    formData.append('CITY_LOCATION', data.CITY_LOCATION);
+    formData.append('DESCRIPTION', data.DESCRIPTION);
+    formData.append('SERVICE_TYPE', data.SERVICE_TYPE.value);
+    formData.append('RESERVATION_COST', data.RESERVATION_COST);
+    formData.append('LIFEGUARD_ID', data.LIFEGUARD_ID);
+    if (selectedFile) {
+      formData.append('beachImage', selectedFile);
+    };
+
+    formData.forEach((value, key) => {
+      console.log(`${key}: ${value}`);
+    });
+
+    try {
+      if (id) {
+        const RESPONSE = await fetch(`http://localhost:5000/beaches/edit/${data.BEACH_ID}`, {
+          method: 'PUT',
+          body: formData
+        });
+      } else {
+        const RESPONSE = await fetch(`http://localhost:5000/beaches/add`, {
+          method: 'POST',
+          body: formData
+        });
+      };
+    } catch (error) {
+      console.log(error);
+    };
+  };
+
+  const slotProps = {
+    listbox: {
+      sx: {
+        position: 'fixed',
+        zIndex: 1300,
+      },
+    },
+    input: {
+      autoComplete: "new-password" // disable autocomplete and autofill
+    },
+  };
+
+  const NAVIGATE = useNavigate();
+>>>>>>> 2bb6295f744d936d33455b932ad850b603fae928:src/components/admin/adminComponents/BeachForm.js
 
   return (
     <Box sx={{ flex: 1, width: "100%" }}>
@@ -84,7 +180,6 @@ export default function MyProfile() {
           position: "sticky",
           top: { sm: -100, md: -110 },
           bgcolor: "background.body",
-          zIndex: 9995
         }}
       >
 
@@ -99,7 +194,17 @@ export default function MyProfile() {
           py: { xs: 2, md: 3 }
         }}
       >
-        <Card>
+        <Card 
+          sx={{
+              overflowY: "auto",
+              maxHeight: "70vh",
+              width: '80vh',
+          }}
+          onScroll={() => {
+            setServiceTypeAutocomplete(false);
+            setLifeguardAutocomplete(false);
+          }}
+        >
           <Box sx={{ mb: 1 }}>
             <Typography level="title-md">Informação relativa à Praia</Typography>
             <Typography level="body-sm">
@@ -123,7 +228,7 @@ export default function MyProfile() {
                   <FormLabel>Nome da Praia</FormLabel>
                   <Input size="sm" placeholder="Praia da Fonte da Telha"
                     value={data.BEACH_NAME || ''}
-                    onChange={(e) => setData({...data, FULL_NAME: e.target.value})}
+                    onChange={(e) => setData({...data, BEACH_NAME: e.target.value})}
                   />
                 </FormControl>
                 <FormControl>
@@ -136,11 +241,11 @@ export default function MyProfile() {
                     onChange={(event, newValue) => setData({ ...data, SERVICE_TYPE: newValue})}
                     options={serviceTypeOptions}
                     placeholder={'Económico'}
-                    slotProps={{
-                      input: {
-                        autoComplete: "new-password" // disable autocomplete and autofill
-                      }
-                    }}
+                    noOptionsText={'Sem opções'}
+                    open={serviceTypeAutocomplete}
+                    onOpen={() => setServiceTypeAutocomplete(true)}
+                    onClose={() => setServiceTypeAutocomplete(false)}
+                    slotProps={slotProps}
                   />
                 </FormControl>
               </Stack>
@@ -171,8 +276,9 @@ export default function MyProfile() {
                     placeholder="Praia com areia fina e água cristalina"
                     value={data.DESCRIPTION || ''}
                     onChange={(e) => {
-                      if (data.DESCRIPTION.length < 301 || e.nativeEvent.inputType === 'deleteContentBackward') {
-                        setData({ ...data, DESCRIPTION: e.target.value });
+                      const newValue = e.target.value;
+                      if (newValue.length <= 300) {
+                        setData({ ...data, DESCRIPTION: newValue });
                       }
                     }}
                   />
@@ -187,10 +293,10 @@ export default function MyProfile() {
                     endDecorator='€'
                     value={data.RESERVATION_COST || ''}
                     onChange={(e) => {
-                      if ((checkOnlyNumbers(e.target.value) || (e.target.value === '')) && 
-                          (data.RESERVATION_COST.toString().length <= 4 || e.nativeEvent.inputType === 'deleteContentBackward')) {
-                          setData({ ...data, RESERVATION_COST: e.target.value })
-                      };
+                      const newValue = e.target.value;
+                      if (newValue.length <= 5 && checkOnlyNumbers(newValue)) {
+                        setData({ ...data, RESERVATION_COST: newValue });
+                      }
                     }}
                   />
                 </FormControl>
@@ -203,12 +309,12 @@ export default function MyProfile() {
                     options={lifeguardOptions}
                     value={lifeguardOptions.find(lifeguard => lifeguard.value === data.LIFEGUARD_ID) || null }
                     onChange={(event, newValue) => setData({ ...data, LIFEGUARD_ID: newValue ? newValue.value : null })}
+                    open={lifeguardAutocomplete}
+                    onOpen={() => setLifeguardAutocomplete(true)}
+                    onClose={() => setLifeguardAutocomplete(false)}
                     placeholder={'António Manuel'}
-                    slotProps={{
-                      input: {
-                        autoComplete: "new-password" // disable autocomplete and autofill
-                      }
-                    }}
+                    noOptionsText={'Sem opções'}
+                    slotProps={slotProps}
                   />
                 </FormControl>
               </Stack>
@@ -240,16 +346,16 @@ export default function MyProfile() {
               <Input size="sm" defaultValue="UI Developer" />
             </FormControl>
           </Stack>
-          <Box sx={{ mb: 1 }}>
+          <Box sx={{ mb: 1, mt: 2}}>
             <Typography level="title-md">Imagem da Praia</Typography>
           </Box>
           <Divider />
           <Stack spacing={2} sx={{ my: 1 }}>
-            <DropZone imgSrc={data.PICTURE} />
+            <DropZone imgSrc={data.PICTURE} onChange={handleFileChange} imagePreview={imagePreview} setImagePreview={setImagePreview} />
           </Stack>
           <CardOverflow sx={{ borderTop: "1px solid", borderColor: "divider" }}>
             <CardActions sx={{ alignSelf: "flex-end", pt: 2 }}>
-              <Button size="sm" variant="outlined" color="neutral" onClick={() => navigate(-1)}>
+              <Button size="sm" variant="outlined" color="neutral" onClick={() => setEditionModalOpen(false)}>
                 Cancelar
               </Button>
               <Button size="sm"
@@ -258,6 +364,7 @@ export default function MyProfile() {
                         backgroundColor: '#cc4100 !important',
                         transition: 'background-color 300ms !important'
                       }
+<<<<<<< HEAD:src/components/admin/adminComponents/MyProfile.js
                   }}
                   onClick={() => {
                     axios.put(`http://localhost:5000/${entity}/edit/${id}`, data)
@@ -266,6 +373,16 @@ export default function MyProfile() {
                   }}
                 >
                 Salvar
+=======
+                }}
+                onClick={() => {
+                  handleSubmit();
+                  NAVIGATE(0);
+                  window.scrollTo(0, 0);
+                }}
+              >
+                {id ? 'Salvar' : 'Criar'}
+>>>>>>> 2bb6295f744d936d33455b932ad850b603fae928:src/components/admin/adminComponents/BeachForm.js
               </Button>
             </CardActions>
           </CardOverflow>
