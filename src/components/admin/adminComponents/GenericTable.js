@@ -278,7 +278,7 @@ const GenericTable = ({ entity }) => {
                     </td>}
                     {ENTITY_COLUMN_KEYS.map(column => (
                         <td key={column}>
-                            {column === 'DESCRIPTION' ? (
+                            {column === 'DESCRIPTION' || column === 'EMAIL' ? (
                                 <Typography level="body-xs"
                                     style={{
                                         textAlign: 'center', whiteSpace: 'nowrap', 
