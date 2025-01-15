@@ -226,7 +226,7 @@ export default function OrderTable({ entity, entityName }) {
 
   const renderFilters = () => (
     <React.Fragment>
-      <FormControl size="sm">
+      {/*<FormControl size="sm">
         <FormLabel>Status</FormLabel>
         <Select
           size="sm"
@@ -259,7 +259,7 @@ export default function OrderTable({ entity, entityName }) {
           <Option value="charles">Charles Fulton</Option>
           <Option value="jay">Jay Hoper</Option>
         </Select>
-      </FormControl>
+      </FormControl>*/}
     </React.Fragment>
   )
   return (
@@ -357,7 +357,7 @@ export default function OrderTable({ entity, entityName }) {
         </Button>
 
         <Box sx={{ flex: 1 }} />
-        {["1", "2", "3", "…", "8", "9", "10"].map(page => (
+        {["1"].map(page => (
           <IconButton
             key={page}
             size="sm"

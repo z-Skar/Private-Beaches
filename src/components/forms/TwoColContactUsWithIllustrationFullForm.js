@@ -147,7 +147,20 @@ export default ({
 
   // Funções para o Profile
   const [avatarUrl, setAvatarUrl] = useState(ProfilePicture);
+  const [selectedFile, setSelectedFile] = useState(null);
   const [modalOpen, setModalOpen]  = useState(false);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const updateAvatar = (imgSrc) => {
     setAvatarUrl(imgSrc);
@@ -229,6 +242,7 @@ export default ({
                     },
                   }}
                 />
+                {console.log(lifeguardData.YEAR_OF_BIRTH, error.YEAR_OF_BIRTH)}
                 {error.YEAR_OF_BIRTH && <p tw="text-red-700 text-xs pl-1 pt-1">{error.YEAR_OF_BIRTH}</p>}
                 <SubmitButton type="submit">{submitButtonText}</SubmitButton>
               </Form>

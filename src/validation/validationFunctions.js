@@ -89,20 +89,20 @@ export const validateLifeguardFields = (data) => {
         errors.NAME = 'O nome completo é necessário.';
     };
 
-
     // EMAIL VALIDATION
     setEmailError(errors, (data.EMAIL || '').trim());
-
     
     // CONTACT VALIDATION
-    if(data.CONTACT.length < 9) {
+    if(data.CONTACT.length < 9 ) {
         errors.CONTACT = 'O número de telemóvel é inválido (9 caracteres necessários).';
     };
-    if(!checkOnlyNumbers((data.CONTACT || '').trim()))
 
+    if(!checkOnlyNumbers((data.CONTACT || '').trim())) {
+        errors.CONTACT = 'O número de telemóvel é inválido (Apenas números são permitidos).'
+    };
 
-    // YEAR OF BIRTH VALIDATION 
-    if (getAge(data.YEAR_OF_BIRTH) <= 18) {
+    // YEAR OF BIRTH VALIDATION
+    if (getAge(data.YEAR_OF_BIRTH) < 18) {
         errors.YEAR_OF_BIRTH = 'Apenas salva-vidas maiores de 18 anos podem se candidatar.';
     };
     //--
