@@ -25,7 +25,7 @@ ROUTER.post('/register', async (req, res) => {
             if (err) {
                 return res.status(500).json({error: 'Falha ao adicionar cliente.'});
             };
-            res.status(201).json({message: 'Cliente adicionado com sucesso.', data});
+            res.status(200).json({message: 'Cliente adicionado com sucesso.', data});
         });
     } catch (error) {
         res.status(500).json({error : 'Erro interno do servidor'});
