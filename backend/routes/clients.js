@@ -15,13 +15,13 @@ ROUTER.get('/', (req, res) => {
 });
 
 ROUTER.post('/register', async (req, res) => {
-    const { EMAIL, PASSWORD } = req.body;
+    const { FULL_NAME, EMAIL, PASSWORD } = req.body;
     try {
         const SALT_ROUNDS = 10;
         const HASHED_PASSWORD = await BCRYPT.hash(PASSWORD, SALT_ROUNDS);
-        const SQL = 'INSERT INTO Clients (EMAIL, PASSWORD) VALUES (?, ?)';
+        const SQL = 'INSERT INTO Clients (FULL_NAME, EMAIL, PASSWORD) VALUES (?, ?, ?)';
 
-        DATABASE.query(SQL, [EMAIL, HASHED_PASSWORD], (err, data) => {
+        DATABASE.query(SQL, [FULL_NAME, EMAIL, HASHED_PASSWORD], (err, data) => {
             if (err) {
                 return res.status(500).json({error: 'Falha ao adicionar cliente.'});
             };
@@ -30,6 +30,36 @@ ROUTER.post('/register', async (req, res) => {
     } catch (error) {
         res.status(500).json({error : 'Erro interno do servidor'});
     };
+});
+
+ROUTER.post('login', (req, res) => {
+    const { EMAIL, PASSWORD } = req.body;
+    const SQL = 'SELECT * FROM Clients WHERE EMAIL = ?';
+
+    DATABASE.query(SQL, [EMAIL], async (err, data) => {
+        if (err) {
+            return res.status(500).json({ error: 'Erro ao consultar a base de dados.' });
+        };
+
+        if (data.length === 0) {
+            return res.status(404).json({ error: 'Utilizador não encontrado.' });
+        };
+
+        const CLIENT = data[0];
+
+        const isPasswordValid = await BCRYPT.compare(PASSWORD, CLIENT.PASSWORD);
+        if (!isPasswordValid) {
+            return res.status(401).json({ error: 'Password incorreta.' });
+        }
+
+        const JWT = require('jsonwebtoken');
+        const token = JWT.sign({ email: CLIENT.EMAIL, PICTURE: CLIENT.PROFILE_PICTURE }, 'secret_key', { expiresIn: '1h' });
+
+        res.status(200).json({
+            message: 'Login bem-sucedido!',
+            token: token
+        });
+    });
 });
 
 ROUTER.get('/admin', (req, res) => {

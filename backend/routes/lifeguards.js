@@ -79,7 +79,6 @@ ROUTER.get('/admin', (req, res) => {
 
     if (searchTerm) {
         const searchColumns = [
-            "LIFEGUARD_NIF",
             "FULL_NAME",
             "EMAIL",
             "CONTACT",

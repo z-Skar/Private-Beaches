@@ -10,6 +10,7 @@ import googleIconImageSrc from "images/google-icon.png";
 import twitterIconImageSrc from "images/twitter-icon.png";
 import { ReactComponent as SignUpIcon } from "feather-icons/dist/icons/user-plus.svg";
 import { validateSignUpFields } from "validation/validationFunctions";
+import { useNavigate } from "react-router-dom";
 
 const Container = tw(ContainerBase)`min-h-screen bg-primary-900 text-white font-medium flex justify-center -m-8`;
 const Content = tw.div`max-w-screen-xl m-0 sm:mx-20 sm:my-16 bg-white text-gray-900 shadow sm:rounded-lg flex justify-center flex-1`;
@@ -55,6 +56,7 @@ const IllustrationImage = styled.div`
 `;
 
 export default (props) => {
+  const NAVIGATE = useNavigate();
   const {
     logoLinkUrl = "/",
     illustrationImageSrc = illustration,
@@ -91,7 +93,6 @@ export default (props) => {
           body: JSON.stringify(clientData)
         }
       );
-      console.log(response.json());
     } catch (error) {
       console.log('Fetch Error: ', error);
     };
@@ -115,15 +116,15 @@ export default (props) => {
   const  handleSubmit = async (e) => {
     e.preventDefault();
     const ERRORS = validateSignUpFields(clientData);
+    setError(ERRORS);
 
-    if(Object.keys(ERRORS).length > 0) {
-      setError(ERRORS);
-      return;
-    };
+    const HAS_ERRORS = Object.values(ERRORS).some((error) => error !== "");
+    if (HAS_ERRORS) return;
 
     try {
-      // await addClient();
-      window.location.href = 'http://localhost:3000/';
+      await addClient();
+      NAVIGATE('/');
+      window.scrollTo(0, 0);
     } catch (error) {
       console.log(error);
     };
@@ -156,7 +157,7 @@ export default (props) => {
                 <Form onSubmit={handleSubmit}>
                   <Input
                     type="text"
-                    name='NAME'
+                    name='FULL_NAME'
                     placeholder="Nome Completo"
                     onChange={handleInputChange}
                   />

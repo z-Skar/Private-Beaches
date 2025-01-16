@@ -94,8 +94,8 @@ export default ({
                 <DividerText>Ou faz login com o teu e-mail</DividerText>
               </DividerTextContainer>
               <Form>
-                <Input type="email" placeholder="Email" />
-                <Input type="password" placeholder="Password" />
+                <Input type="email" placeholder="Email" name='EMAIL' />
+                <Input type="password" placeholder="Password" name='PASSWORD' />
                 <SubmitButton type="submit">
                   <SubmitButtonIcon className="icon" />
                   <span className="text">{submitButtonText}</span>
