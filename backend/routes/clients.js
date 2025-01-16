@@ -32,7 +32,7 @@ ROUTER.post('/register', async (req, res) => {
     };
 });
 
-ROUTER.post('login', (req, res) => {
+ROUTER.post('/login', (req, res) => {
     const { EMAIL, PASSWORD } = req.body;
     const SQL = 'SELECT * FROM Clients WHERE EMAIL = ?';
 
@@ -40,24 +40,26 @@ ROUTER.post('login', (req, res) => {
         if (err) {
             return res.status(500).json({ error: 'Erro ao consultar a base de dados.' });
         };
-
+        console.log(data);
         if (data.length === 0) {
-            return res.status(404).json({ error: 'Utilizador não encontrado.' });
+            return res.status(404).json({ EMAIL: '', PASSWORD: 'Utilizador não encontrado.' });
         };
 
         const CLIENT = data[0];
 
         const isPasswordValid = await BCRYPT.compare(PASSWORD, CLIENT.PASSWORD);
         if (!isPasswordValid) {
-            return res.status(401).json({ error: 'Password incorreta.' });
-        }
+            return res.status(401).json({ EMAIL: '', PASSWORD: 'Password incorreta.' });
+        };
 
         const JWT = require('jsonwebtoken');
-        const token = JWT.sign({ email: CLIENT.EMAIL, PICTURE: CLIENT.PROFILE_PICTURE }, 'secret_key', { expiresIn: '1h' });
+        const TOKEN = JWT.sign({ email: CLIENT.EMAIL, PICTURE: CLIENT.PROFILE_PICTURE }, 'secret_key', { expiresIn: '1h' });
 
         res.status(200).json({
             message: 'Login bem-sucedido!',
-            token: token
+            token: TOKEN,
+            EMAIL: CLIENT.EMAIL,
+            PICTURE: CLIENT.PROFILE_PICTURE
         });
     });
 });

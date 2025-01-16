@@ -9,6 +9,10 @@ import logo from "images/logo192.png";
 import googleIconImageSrc from "images/google-icon.png";
 import twitterIconImageSrc from "images/twitter-icon.png";
 import { ReactComponent as LoginIcon } from "feather-icons/dist/icons/log-in.svg";
+import { useState } from "react";
+import { validateLoginFields } from "validation/validationFunctions";
+import { useAuth } from "contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Container = tw(ContainerBase)`min-h-screen bg-primary-900 text-white font-medium flex justify-center -m-8`;
 const Content = tw.div`max-w-screen-xl m-0 sm:mx-20 sm:my-16 bg-white text-gray-900 shadow sm:rounded-lg flex justify-center flex-1`;
@@ -69,56 +73,139 @@ export default ({
   forgotPasswordUrl = "#",
   signupUrl = "/Signup.js",
 
-}) => (
-  <AnimationRevealPage>
-    <Container>
-      <Content>
-        <MainContainer>
-          <LogoLink href={logoLinkUrl}>
-            <LogoImage src={logo} />
-          </LogoLink>
-          <MainContent>
-            <Heading>{headingText}</Heading>
-            <FormContainer>
-              <SocialButtonsContainer>
-                {socialButtons.map((socialButton, index) => (
-                  <SocialButton key={index} href={socialButton.url}>
-                    <span className="iconContainer">
-                      <img src={socialButton.iconImageSrc} className="icon" alt=""/>
-                    </span>
-                    <span className="text">{socialButton.text}</span>
-                  </SocialButton>
-                ))}
-              </SocialButtonsContainer>
-              <DividerTextContainer>
-                <DividerText>Ou faz login com o teu e-mail</DividerText>
-              </DividerTextContainer>
-              <Form>
-                <Input type="email" placeholder="Email" name='EMAIL' />
-                <Input type="password" placeholder="Password" name='PASSWORD' />
-                <SubmitButton type="submit">
-                  <SubmitButtonIcon className="icon" />
-                  <span className="text">{submitButtonText}</span>
-                </SubmitButton>
-              </Form>
-              <p tw="mt-6 text-xs text-gray-600 text-center">
-                <a href={forgotPasswordUrl} tw="border-b border-gray-500 border-dotted">
-                  Esqueceste da Password ?
-                </a>
-              </p>
-              <p tw="mt-8 text-sm text-gray-600 text-center">
-                Não tens uma conta?{" "}
-                <a href={signupUrl} tw="border-b border-gray-500 border-dotted">
-                  Registar
-                </a>
-              </p>
-            </FormContainer>
-          </MainContent>
-        </MainContainer>
-        <IllustrationContainer>
-          <IllustrationImage imageSrc={illustrationImageSrc} />
-        </IllustrationContainer>
-      </Content>
-    </Container>
-  </AnimationRevealPage>
-);
+}) => {
+  const { login } = useAuth();
+
+  const NAVIGATE = useNavigate();
+  const [loginData, setLoginData] = useState({
+    EMAIL: '',
+    PASSWORD: ''
+  });
+
+  const [error, setError] = useState({
+    EMAIL: "",
+    PASSWORD: "",
+  });
+
+  const handleInputChange = (e) => {
+    if(error[e.target.name]) {
+      setError({
+        ...error,
+        [e.target.name]: undefined
+      });
+    };
+
+    setLoginData({
+      ...loginData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const Login = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/clients/login',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(loginData)
+        }
+      );
+
+      const data = await response.json();
+      console.log(data);
+      if (!response.ok) {
+        setError(data);
+        return;
+      };
+
+      const { token, email, profile_picture } = data;
+      console.log()
+      login(token, email, profile_picture);
+    } catch (error) {
+      console.log('Fetch Error: ', error);
+    };
+  };
+
+  const removeLocalStorage = (e) => {
+    localStorage.removeItem('EMAIL');
+    localStorage.removeItem('PROFILE_PICTURE');
+    localStorage.removeItem('AUTH_TOKEN');
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const ERRORS = validateLoginFields(loginData)
+    setError(ERRORS);
+
+    const HAS_ERRORS = Object.values(ERRORS).some((error) => error !== "");
+    if (HAS_ERRORS) return;
+
+    try {
+      const RESPONSE = await Login();
+      if (error.EMAIL === '' && error.PASSWORD === '') {
+        NAVIGATE('/');
+        window.scrollTo(0, 0);
+      };
+    } catch (error) {
+      console.log(error);
+    };
+  };
+
+  return (
+    <AnimationRevealPage>
+      <Container>
+        <Content>
+          <MainContainer>
+            <LogoLink href={logoLinkUrl}>
+              <LogoImage src={logo} />
+            </LogoLink>
+            <MainContent>
+              <Heading>{headingText}</Heading>
+              <FormContainer>
+                <SocialButtonsContainer>
+                  {socialButtons.map((socialButton, index) => (
+                    <SocialButton key={index} href={socialButton.url}>
+                      <span className="iconContainer">
+                        <img src={socialButton.iconImageSrc} className="icon" alt=""/>
+                      </span>
+                      <span className="text">{socialButton.text}</span>
+                    </SocialButton>
+                  ))}
+                </SocialButtonsContainer>
+                <DividerTextContainer>
+                  <DividerText>Ou faz login com o teu e-mail</DividerText>
+                </DividerTextContainer>
+                <Form onSubmit={handleSubmit}>
+                  <Input value={loginData.EMAIL} type="text" placeholder="Email" name='EMAIL' onChange={handleInputChange} />
+                  {error.EMAIL && <p tw="text-red-700 text-xs pl-1 pt-1">{error.EMAIL}</p>}
+                  <Input value={loginData.PASSWORD} type="password" placeholder="Password" name='PASSWORD' onChange={handleInputChange} />
+                  {error.PASSWORD && <p tw="text-red-700 text-xs pl-1 pt-1">{error.PASSWORD}</p>}
+                  <SubmitButton type="submit">
+                    <SubmitButtonIcon className="icon" />
+                    <span className="text">{submitButtonText}</span>
+                  </SubmitButton>
+                </Form>
+                <p tw="mt-6 text-xs text-gray-600 text-center">
+                  <a href={forgotPasswordUrl} tw="border-b border-gray-500 border-dotted">
+                    Esqueceste da Password ?
+                  </a>
+                </p>
+                <p tw="mt-8 text-sm text-gray-600 text-center">
+                  Não tens uma conta?{" "}
+                  <a href={signupUrl} tw="border-b border-gray-500 border-dotted">
+                    Registar
+                  </a>
+                </p>
+              </FormContainer>
+            </MainContent>
+          </MainContainer>
+          <IllustrationContainer>
+            <IllustrationImage imageSrc={illustrationImageSrc} />
+          </IllustrationContainer>
+        </Content>
+      </Container>
+    </AnimationRevealPage>
+  )
+};

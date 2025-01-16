@@ -34,7 +34,7 @@ const setEmailError = (errors, email) => {
     // ([\w-]+\.)+ Uma seccção que aceita um caractér alfanumérico, o hifen e em seguida, obrigatoriamente um ponto, essa captura tem de ocorrer pelo menos uma vez.
     // [\w-]{2,4}$ Aceita uma string alfanumérica e/ou hifen entre 2 a 4 caractéres e tem de estar no fim da string.
     // /g Fim da expressão regex com uma flag que mantém o indice do último match.
-    if(!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(email)) {
+    if(!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(email || '')) {
         errors.EMAIL = 'O email inserido é inválido.';
     };
 };
@@ -55,6 +55,21 @@ export const validateSignUpFields = (data) => {
         PASSWORD: ''
     };
 
+    setEmailError(errors, (data.EMAIL || '').trim());
+
+    if (data.PASSWORD.trim().length < 4) {
+        errors.PASSWORD = 'A password tem de ter no minímo 4 caractéres.';
+    };
+
+    setMandatoryMessageErrors(errors, data)
+    return errors;
+};
+
+export const validateLoginFields = (data) => {
+    const errors = {
+        EMAIL: '',
+        PASSWORD: ''
+    };
     setEmailError(errors, (data.EMAIL || '').trim());
 
     if (data.PASSWORD.trim().length < 4) {
