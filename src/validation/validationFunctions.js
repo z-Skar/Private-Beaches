@@ -86,7 +86,7 @@ export const validateLifeguardFields = (data) => {
 
     // FULL NAME VALIDATION
     if (data.FULL_NAME.length < 5) {
-        errors.NAME = 'O nome completo é necessário.';
+        errors.FULL_NAME = 'O nome completo é necessário.';
     };
 
     // EMAIL VALIDATION

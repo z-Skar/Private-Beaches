@@ -15,6 +15,7 @@ import PencilIcon from "../my_components/PencilIcon";
 import Modal from "../my_components/Modal";
 import ProfilePicture from '../../images/default-profile-picture.webp'
 import Footer from "components/footers/MiniCenteredFooter.js";
+import { useNavigate } from "react-router-dom";
 
 const Container = tw.div`relative`;
 const TwoColumn = tw.div`flex flex-col md:flex-row justify-between max-w-screen-xl mx-auto py-20 md:py-24`;
@@ -73,14 +74,13 @@ export default ({
   textOnLeft = true,
 }) => {
   // The textOnLeft boolean prop can be used to display either the text on left or right side of the image.
-
+  const NAVIGATE = useNavigate();
   const [lifeguardData, setLifeguardData] = useState({
     NIF: '',
     FULL_NAME: '',
     YEAR_OF_BIRTH: '',
     EMAIL: '',
     CONTACT: '',
-    PROFILE_PICTURE: 'default-profile-picture.webp'
   });
   const [error, setError] = useState({});
 
@@ -113,16 +113,14 @@ export default ({
 
   const addLifeguard = async (data) => {
     try {
-      const response = await fetch('http://localhost:5000/clients/register',
+      const response = await fetch('http://localhost:5000/lifeguards/register',
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(data)
+          body: data
         }
       );
-      console.log(response.json());
+      const result = await response.json();
+      console.log(result);
     } catch (error) {
       console.log('Fetch Error: ', error)
     };
@@ -131,17 +129,26 @@ export default ({
   const handleSubmit = async (e) => {
     e.preventDefault();
     const ERRORS = validateLifeguardFields(lifeguardData);
+    setError(ERRORS);
 
-    if(Object.keys(ERRORS).length > 0) {
-      setError(ERRORS);
-      return;
-    };
+    const HAS_ERRORS = Object.values(ERRORS).some((error) => error !== "");
+    if (HAS_ERRORS) return;
 
     try {
-      // await addLifeguard();
-      // document.location.href = 'http://localhost:3000/';
+      const formData = new FormData();
+
+      for (const key in lifeguardData) {
+        formData.append(key, lifeguardData[key]);
+      };
+
+      if (selectedFile) {
+        formData.append("PICTURE", selectedFile);
+      };
+      await addLifeguard(formData);
+      NAVIGATE('/');
+      window.scrollTo(0, 0);
     } catch (error) {
-      alert(error);
+      console.log(error);
     };
   };
 
@@ -149,18 +156,6 @@ export default ({
   const [avatarUrl, setAvatarUrl] = useState(ProfilePicture);
   const [selectedFile, setSelectedFile] = useState(null);
   const [modalOpen, setModalOpen]  = useState(false);
-
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedFile(file);
-      const reader = new FileReader();
-      reader.onload = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   const updateAvatar = (imgSrc) => {
     setAvatarUrl(imgSrc);
@@ -201,6 +196,7 @@ export default ({
                   {modalOpen && (
                     <Modal
                       updateAvatar={updateAvatar}
+                      setSelectedFile={setSelectedFile}
                       closeModal={() => setModalOpen(false)}
                     />
                   )}
@@ -242,7 +238,6 @@ export default ({
                     },
                   }}
                 />
-                {console.log(lifeguardData.YEAR_OF_BIRTH, error.YEAR_OF_BIRTH)}
                 {error.YEAR_OF_BIRTH && <p tw="text-red-700 text-xs pl-1 pt-1">{error.YEAR_OF_BIRTH}</p>}
                 <SubmitButton type="submit">{submitButtonText}</SubmitButton>
               </Form>

@@ -12,14 +12,32 @@ ROUTER.get('/', (req, res) => {
 });
 
 ROUTER.get('/admin', (req, res) => {
-    const SQL = `SELECT RESERVATION_ID, Clients.FULL_NAME, COALESCE(Beaches.BEACH_NAME, '[N/A]') AS BEACH_NAME, 
-                 RESERVATION_END, RESERVATION_START 
-                 FROM Reservations 
-                 INNER JOIN Clients ON Reservations.CLIENT_ID = Clients.CLIENT_ID 
-                 LEFT JOIN Beaches ON Reservations.BEACH_ID = Beaches.BEACH_ID 
-                 ORDER BY RESERVATION_ID DESC`;
+    const searchTerm = req.query.search || '';
 
-    DATABASE.query(SQL, (err, data) => {
+    let SQL = `
+        SELECT RESERVATION_ID, Clients.FULL_NAME, COALESCE(Beaches.BEACH_NAME, '[N/A]') AS BEACH_NAME, 
+               RESERVATION_END, RESERVATION_START 
+        FROM Reservations 
+        INNER JOIN Clients ON Reservations.CLIENT_ID = Clients.CLIENT_ID 
+        LEFT JOIN Beaches ON Reservations.BEACH_ID = Beaches.BEACH_ID
+    `;
+
+    const queryParams = [];
+
+    if (searchTerm) {
+        const searchColumns = [
+            "Clients.FULL_NAME",
+            "Beaches.BEACH_NAME",
+        ];
+        const likeClauses = searchColumns.map(col => `${col} LIKE ?`).join(' OR ');
+        SQL += ` WHERE ${likeClauses}`;
+        searchColumns.forEach(() => queryParams.push(`%${searchTerm}%`));
+    }
+
+    // Ordenação
+    SQL += ` ORDER BY RESERVATION_ID DESC`;
+
+    DATABASE.query(SQL, queryParams, (err, data) => {
         if(err) {
             return res.status(500).json(err);
         } else {

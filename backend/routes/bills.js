@@ -14,12 +14,26 @@ ROUTER.get('/', (req, res) => {
 });
 
 ROUTER.get('/admin', (req, res) => {
-    const SQL = `SELECT BILL_ID, RESERVATION_ID, CREDIT_CARD_NUMBER, BILL_COST 
-                 FROM BILLS
-                 ORDER BY BILL_ID DESC`;
-    
-    
-    DATABASE.query(SQL, (err, data) => {
+    const searchTerm = req.query.search || '';
+
+    let SQL = `
+        SELECT BILL_ID, RESERVATION_ID, CREDIT_CARD_NUMBER, BILL_COST 
+        FROM BILLS
+    `;
+
+    const queryParams = [];
+
+    if (searchTerm) {
+        const searchColumns = [
+            "BILL_COST",
+        ];
+        const likeClauses = searchColumns.map(col => `${col} LIKE ?`).join(' OR ');
+        SQL += ` WHERE ${likeClauses}`;
+        searchColumns.forEach(() => queryParams.push(`%${searchTerm}%`));
+    }
+
+    SQL += ` ORDER BY BILL_ID DESC`;
+    DATABASE.query(SQL, queryParams, (err, data) => {
         if(err) {
             return res.status(500).json(err);
         } else {

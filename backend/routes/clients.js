@@ -33,10 +33,29 @@ ROUTER.post('/register', async (req, res) => {
 });
 
 ROUTER.get('/admin', (req, res) => {
-    const SQL = `SELECT CLIENT_ID, FULL_NAME, EMAIL, YEAR_OF_BIRTH, CONTACT 
-                 FROM clients
-                 ORDER BY CLIENT_ID DESC;`;
-    DATABASE.query(SQL, (err, data) => {
+    const searchTerm = req.query.search || '';
+
+    let SQL = `
+        SELECT CLIENT_ID, FULL_NAME, EMAIL, YEAR_OF_BIRTH, CONTACT 
+        FROM clients
+    `;
+
+    const queryParams = [];
+
+    if (searchTerm) {
+        const searchColumns = [
+            "FULL_NAME",
+            "EMAIL",
+            "CONTACT"
+        ];
+        const likeClauses = searchColumns.map(col => `${col} LIKE ?`).join(' OR ');
+        SQL += ` WHERE ${likeClauses}`;
+        searchColumns.forEach(() => queryParams.push(`%${searchTerm}%`));
+    }
+
+    SQL += ` ORDER BY CLIENT_ID DESC`;
+
+    DATABASE.query(SQL, queryParams, (err, data) => {
         if(err) {
             return res.status(500).json(err);
         } else {

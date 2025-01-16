@@ -18,7 +18,7 @@ const Container = tw.div`flex flex-col items-center`;
 const Button = tw.button`text-white text-xs py-2 px-4 rounded-2xl mt-4 bg-[color: rgb(56 166 220)]`;
 const Canvas = tw.canvas`mt-4 hidden border border-black object-contain w-[150px] h-[150px]`;
 
-const ImageCropper = ({ closeModal, updateAvatar }) => {
+const ImageCropper = ({ closeModal, updateAvatar, setSelectedFile }) => {
   const imgRef = useRef(null);
   const previewCanvasRef = useRef(null);
   const [imgSrc, setImgSrc] = useState("");
@@ -71,6 +71,7 @@ const ImageCropper = ({ closeModal, updateAvatar }) => {
         <span className="sr-only">Escolhe a foto de perfil </span>
         <Input
           type="file"
+          name="PICTURE"
           accept="image/*"
           onChange={onSelectFile}
         />
@@ -106,6 +107,11 @@ const ImageCropper = ({ closeModal, updateAvatar }) => {
                 )
               );
               const dataUrl = previewCanvasRef.current.toDataURL();
+
+              fetch(dataUrl).then((res) => res.blob()).then((blob) => {
+                const file = new File([blob], "cropped-image.jpg", { type: "image/jpeg" });
+                setSelectedFile(file);
+              });
               updateAvatar(dataUrl);
               closeModal();
             }}

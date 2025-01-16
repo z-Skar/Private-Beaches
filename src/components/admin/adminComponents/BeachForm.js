@@ -68,7 +68,7 @@ export const BeachForm = ({ entity, id, setEditionModalOpen }) => {
         setServiceTypeAutocomplete(false);
         setLifeguardAutocomplete(false);
       });
-    }
+    };
 
     return () => {
       if (ModalCard) {
@@ -99,6 +99,13 @@ export const BeachForm = ({ entity, id, setEditionModalOpen }) => {
   };
 
   const handleSubmit = async () => {
+    const DATA_TO_VALIDATE = { ...data, SERVICE_TYPE: data.SERVICE_TYPE?.value, PICTURE: selectedFile ||  data.PICTURE }
+    const ERRORS = validateBeachFormFields(DATA_TO_VALIDATE);
+    setErrors(ERRORS);
+
+    const HAS_ERRORS = Object.values(ERRORS).some((error) => error !== "");
+    if (HAS_ERRORS) return;
+
     const formData = new FormData();
 
     formData.append("BEACH_NAME", data.BEACH_NAME);
@@ -109,16 +116,9 @@ export const BeachForm = ({ entity, id, setEditionModalOpen }) => {
     formData.append("RESERVATION_COST", data.RESERVATION_COST);
     formData.append("LIFEGUARD_ID", data.LIFEGUARD_ID);
     if (selectedFile) {
-      formData.append("beachImage", selectedFile);
+      formData.append("PICTURE", selectedFile);
     };
-
-    const DATA_TO_VALIDATE = { ...data, SERVICE_TYPE: data.SERVICE_TYPE?.value, PICTURE: selectedFile ||  data.PICTURE }
-    const ERRORS = validateBeachFormFields(DATA_TO_VALIDATE);
-    setErrors(ERRORS);
-
-    const HAS_ERRORS = Object.values(ERRORS).some((error) => error !== "");
-    if (HAS_ERRORS) return;
-
+    
     try {
       if (id) {
         await fetch(`http://localhost:5000/beaches/edit/${data.BEACH_ID}`, {

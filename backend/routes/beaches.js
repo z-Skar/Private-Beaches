@@ -1,7 +1,7 @@
 const EXPRESS = require('express');
 const ROUTER = EXPRESS.Router();
 const DATABASE = require('../database/db-connection');
-const IMAGE_UPLOAD = require('../middlewares/imageUploader');
+const UPLOAD_BEACH_IMAGE = require('../middlewares/imageUploader');
 const PATH = require('path');
 const FS = require('fs');
 
@@ -73,15 +73,39 @@ ROUTER.get('/services', (req, res) => {
 });
 
 ROUTER.get('/admin', (req, res) => {
-    const SQL = `SELECT Beaches.BEACH_ID, BEACH_NAME, DESCRIPTION, CITY_LOCATION, COUNTRY_LOCATION, 
-                 RESERVATION_COST, COALESCE(Lifeguards.FULL_NAME, 'Indisponível') AS FULL_NAME, 
-                 SERVICE_TYPE, COALESCE(AVG(Evaluations.SCORE), 0) AS SCORE
-                 FROM BEACHES 
-                 LEFT JOIN Evaluations ON beaches.BEACH_ID = Evaluations.BEACH_ID 
-                 LEFT JOIN Lifeguards ON beaches.LIFEGUARD_ID = Lifeguards.LIFEGUARD_ID 
-                 GROUP BY Beaches.BEACH_ID 
-                 ORDER BY BEACH_ID DESC`;
-    DATABASE.query(SQL, (err, data) => {
+    let SQL = `
+        SELECT Beaches.BEACH_ID, BEACH_NAME, DESCRIPTION, CITY_LOCATION, COUNTRY_LOCATION, 
+               RESERVATION_COST, COALESCE(Lifeguards.FULL_NAME, 'Indisponível') AS FULL_NAME, 
+               SERVICE_TYPE, COALESCE(AVG(Evaluations.SCORE), 0) AS SCORE
+        FROM BEACHES 
+        LEFT JOIN Evaluations ON Beaches.BEACH_ID = Evaluations.BEACH_ID 
+        LEFT JOIN Lifeguards ON Beaches.LIFEGUARD_ID = Lifeguards.LIFEGUARD_ID 
+    `;
+
+    const queryParams = [];
+    const searchTerm = req.query.search || '';
+
+    if (searchTerm) {
+        const searchColumns = [
+            "BEACH_NAME", 
+            "DESCRIPTION", 
+            "CITY_LOCATION", 
+            "COUNTRY_LOCATION", 
+            "RESERVATION_COST", 
+            "SERVICE_TYPE", 
+            "COALESCE(Lifeguards.FULL_NAME, 'Indisponível')"
+        ];
+
+        const likeClauses = searchColumns.map(col => `${col} LIKE ?`).join(' OR ');
+        SQL += ` WHERE ${likeClauses}`;
+        searchColumns.forEach(() => queryParams.push(`%${searchTerm}%`));
+    };
+
+    SQL += `
+        GROUP BY Beaches.BEACH_ID 
+        ORDER BY BEACH_ID DESC
+    `;
+    DATABASE.query(SQL, queryParams, (err, data) => {
         if(err) {
             return res.status(500).json(err);
         } else {
@@ -111,7 +135,7 @@ ROUTER.get('/read/:id', (req, res) => {
     });
 });
 
-ROUTER.post('/add', IMAGE_UPLOAD.single('beachImage'), (req, res) => {
+ROUTER.post('/add', UPLOAD_BEACH_IMAGE.single('PICTURE'), (req, res) => {
     let { BEACH_NAME, COUNTRY_LOCATION, CITY_LOCATION, DESCRIPTION,
         SERVICE_TYPE, RESERVATION_COST, LIFEGUARD_ID } = req.body;
     const SQL = `INSERT INTO Beaches (BEACH_NAME, COUNTRY_LOCATION, CITY_LOCATION, DESCRIPTION, 
@@ -123,20 +147,20 @@ ROUTER.post('/add', IMAGE_UPLOAD.single('beachImage'), (req, res) => {
     const VALUES = [BEACH_NAME, COUNTRY_LOCATION, CITY_LOCATION, DESCRIPTION,
                     SERVICE_TYPE, RESERVATION_COST, LIFEGUARD_ID];
     
-    const beachImage = req.file ? req.file.filename : null;
+    const PICTURE = req.file ? req.file.filename : null;
     DATABASE.query(SQL, VALUES, (err, DBres) => {
-        const TMP_FILE_PATH = beachImage ? PATH.join(__dirname, '../images/tmp', beachImage) : null;
+        const TMP_FILE_PATH = PICTURE ? PATH.join(__dirname, '../images/tmp', PICTURE) : null;
         if (err) {
             console.error(err);
-            if (beachImage) {
+            if (PICTURE) {
                 FS.unlinkSync(TMP_FILE_PATH);
             };
             return res.status(500).json({ error: 'Erro adicionar os dados principais.', details: err });
         };
         const BEACH_ID = DBres.insertId;
-        if (beachImage) {
-            const FINAL_FILE_PATH = PATH.join(__dirname, '../images', beachImage);
-            const IMAGE_PATH = `/images/${beachImage}`;
+        if (PICTURE) {
+            const FINAL_FILE_PATH = PATH.join(__dirname, '../images', PICTURE);
+            const IMAGE_PATH = `/images/${PICTURE}`;
             const SQL_UPDATE_IMAGE = `UPDATE Beaches SET PICTURE = ? WHERE BEACH_ID = ?`;
             try {
                 FS.renameSync(TMP_FILE_PATH, FINAL_FILE_PATH);  // Mover a imagem para o diretório final
@@ -157,7 +181,7 @@ ROUTER.post('/add', IMAGE_UPLOAD.single('beachImage'), (req, res) => {
     });
 });
 
-ROUTER.put('/edit/:id', IMAGE_UPLOAD.single('beachImage'), (req, res) => {
+ROUTER.put('/edit/:id', UPLOAD_BEACH_IMAGE.single('PICTURE'), (req, res) => {
     let { BEACH_NAME, COUNTRY_LOCATION, CITY_LOCATION, DESCRIPTION,
             SERVICE_TYPE, RESERVATION_COST, LIFEGUARD_ID } = req.body;
     
@@ -171,26 +195,26 @@ ROUTER.put('/edit/:id', IMAGE_UPLOAD.single('beachImage'), (req, res) => {
                  SERVICE_TYPE = ?, RESERVATION_COST = ?, LIFEGUARD_ID = ? WHERE BEACH_ID = ?`;
     const VALUES = [BEACH_NAME, COUNTRY_LOCATION, CITY_LOCATION, DESCRIPTION,
                     SERVICE_TYPE, RESERVATION_COST, LIFEGUARD_ID, BEACH_ID];
-    const beachImage = req.file ? req.file.filename : null;
+    const PICTURE = req.file ? req.file.filename : null;
     
     DATABASE.query(SQL, VALUES, (err, DBres) => {
-        const TMP_FILE_PATH = beachImage ? PATH.join(__dirname, '../images/tmp', beachImage) : null;
+        const TMP_FILE_PATH = PICTURE ? PATH.join(__dirname, '../images/tmp', PICTURE) : null;
         if (err) {
             console.error(err);
-            if (beachImage) {
+            if (PICTURE) {
                 FS.unlinkSync(TMP_FILE_PATH);
             };
             return res.status(500).json({ error: 'Erro ao atualizar os dados principais.', details: err });
         };
         if (DBres.affectedRows === 0) {
-            if (beachImage) {
+            if (PICTURE) {
                 FS.unlinkSync(TMP_FILE_PATH);
             };
             return res.status(400).json({ error: 'Nenhuma praia encontrada com esse ID para atualizar.' });
         };
-        if (beachImage) {
-            const FINAL_FILE_PATH = PATH.join(__dirname, '../images', beachImage);
-            const IMAGE_PATH = `/images/${beachImage}`;
+        if (PICTURE) {
+            const FINAL_FILE_PATH = PATH.join(__dirname, '../images', PICTURE);
+            const IMAGE_PATH = `/images/${PICTURE}`;
             const SQL_UPDATE_IMAGE = `UPDATE Beaches SET PICTURE = ? WHERE BEACH_ID = ?`;
             try {
                 FS.renameSync(TMP_FILE_PATH, FINAL_FILE_PATH);

@@ -50,7 +50,7 @@ export default function DropZone(props) {
             Clica para carregar uma imagem
             <input
               type="file"
-              name="beachImage"
+              name="PICTURE"
               accept="image/*"
               onChange={handleFileChange}
               style={{ display: "none" }}

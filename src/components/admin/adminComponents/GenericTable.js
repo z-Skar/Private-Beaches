@@ -69,7 +69,7 @@ function descendingComparator(a, b, orderBy) {
       : (a, b) => -descendingComparator(a, b, orderBy);
   }
 
-const GenericTable = ({ entity }) => {
+const GenericTable = ({ entity, search}) => {
     const [order, setOrder] = useState("desc");
     const [data, setData] = useState([]);
 
@@ -77,17 +77,18 @@ const GenericTable = ({ entity }) => {
     const [selectedIDsToDelete, setSelectedIDsToDelete] = useState([]);
     const [selectedIDToEdit, setSelectedIDToEdit] = useState(null);
 
-    // Control the opening of Modals.
+    // Estados que controlagem a abertura dos Modals.
     const [deletetionModalOpen, setDeletetionModalOpen] = useState(false);
-    const [editionModalOpen, setEditionModalOpen] = useState(false)
+    const [editionModalOpen, setEditionModalOpen] = useState(false);
 
+    // Estado que conterá o input principal que filtrará pelos registos.
 
     const dataToExcelRef = useRef(null);
     
     useEffect(() => {
       const getData = async () => {
         try {
-          const DATA = (await (axios.get(`http://localhost:5000/${entity}/admin`))).data;
+          const DATA = (await (axios.get(`http://localhost:5000/${entity}/admin?search=${search}`))).data;
           dataToExcelRef.current = DATA;
           setData(DATA);
         } catch (error) {
@@ -116,7 +117,7 @@ const GenericTable = ({ entity }) => {
             exportToExcelButton.removeEventListener('click', exportToExcel);
         };
       };
-    }, [entity]);
+    }, [entity, search]);
   
     const deleteRecord = async (entity, id) => {
       try {
@@ -284,6 +285,7 @@ const GenericTable = ({ entity }) => {
                                         textAlign: 'center', whiteSpace: 'nowrap', 
                                         overflow: 'hidden', textOverflow: 'ellipsis'
                                     }}
+                                    title={row[column]}
                                 >
                                     {row[column]}
                                 </Typography>

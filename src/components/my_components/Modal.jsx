@@ -11,7 +11,7 @@ const ModalHeader = tw.div`px-5 py-4`;
 const CloseButton = tw.button`rounded-md p-1 inline-flex items-center justify-center text-gray-600 hover:bg-gray-500 focus:outline-none absolute top-[0.5rem] right-[0.5rem]`;
 
 
-const Modal = ({ updateAvatar, closeModal }) => {
+const Modal = ({ updateAvatar, closeModal, setSelectedFile }) => {
   return (
     <ModalContainer aria-labelledby="crop-image-dialog" role="dialog" aria-modal="true">
       <Overlay />
@@ -23,7 +23,7 @@ const Modal = ({ updateAvatar, closeModal }) => {
                 <span tw="sr-only">Fechar menu</span>
                 <CloseIcon />
               </CloseButton>
-              <ImageCropper updateAvatar={updateAvatar} closeModal={closeModal} />
+              <ImageCropper updateAvatar={updateAvatar} closeModal={closeModal} setSelectedFile={setSelectedFile} />
             </ModalHeader>
           </ModalBox>
         </ModalWrapper>

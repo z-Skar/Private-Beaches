@@ -9,6 +9,7 @@ import { ReactComponent as LocationIcon } from "feather-icons/dist/icons/map-pin
 import { ReactComponent as TimeIcon } from "feather-icons/dist/icons/clock.svg";
 import { ReactComponent as TrendingIcon } from "feather-icons/dist/icons/trending-up.svg";
 import { ReactComponent as ArrowRightIcon } from "images/arrow-right-icon.svg";
+import { useNavigate } from "react-router-dom";
 
 const Container = tw.div`relative`;
 const Content = tw.div`max-w-screen-xl mx-auto py-20 lg:py-24`;
@@ -55,10 +56,9 @@ const CardMetaFeature = styled.div`
 `;
 const CardAction = tw(PrimaryButtonBase)`w-full mt-8`;
 
-
-
 export default () => {
   const [luxuryTravelData, setLuxuryTravelData] = useState([{}]);
+  const NAVIGATE = useNavigate();
 
   useEffect(() => {
     const getLuxuryTravelsData = async () => {
@@ -140,7 +140,12 @@ export default () => {
                       <LocationIcon /> {card.locationText}
                     </CardMetaFeature>
                   </CardMeta>
-                  <CardAction>Reserva Agora</CardAction>
+                  <CardAction onClick={() => {
+                    NAVIGATE('/Beaches.js');
+                    window.scrollTo(0, 0);
+                  }}>
+                    Reserva Agora
+                  </CardAction>
                 </CardText>
               </Card>
             </CardColumn>

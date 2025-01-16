@@ -223,6 +223,7 @@ const rows = [
 
 export default function OrderTable({ entity, entityName }) {
   const [open, setOpen] = React.useState(false);
+  const [search, setSearch] = React.useState('')
 
   const renderFilters = () => (
     <React.Fragment>
@@ -270,7 +271,7 @@ export default function OrderTable({ entity, entityName }) {
       >
         <Input
           size="sm"
-          placeholder="Search"
+          placeholder="Pesquisar"
           startDecorator={<SearchIcon />}
           sx={{ flexGrow: 1 }}
         />
@@ -316,6 +317,9 @@ export default function OrderTable({ entity, entityName }) {
           <Input
             size="sm"
             placeholder="Pesquisar"
+            onChange={(e) => {
+              setSearch(e.target.value);
+            }}
             startDecorator={<SearchIcon />}
           />
         </FormControl>
@@ -333,7 +337,7 @@ export default function OrderTable({ entity, entityName }) {
           minHeight: 0
         }}
       >
-        <GenericTable entity={entity} />
+        <GenericTable entity={entity} search={search}/>
       </Sheet>
       <Box
         className="Pagination-laptopUp"
