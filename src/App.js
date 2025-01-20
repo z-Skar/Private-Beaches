@@ -111,36 +111,32 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { StyledEngineProvider } from '@mui/joy/styles';
 import AdminDashbord from "components/admin/AdminDahsbord";
-
-import { AuthProvider } from "contexts/AuthContext";
-
+import { useAuth } from "contexts/AuthContext";
 
 export default function App() {
   // If you want to disable the animation just use the disabled `prop` like below on your page's component
   // return <AnimationRevealPage disabled>xxxxxxxxxx</AnimationRevealPage>;
-
+  const { token } = useAuth();
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <GlobalStyles />
         <StyledEngineProvider>
-          <AuthProvider>
             <Router>
               <Routes>
                 <Route path="/components/:type/:subtype/:name" element={<ComponentRenderer />} />
                 <Route path="/components/:type/:name" element={<ComponentRenderer />} />
                 <Route path="/thank-you" element={<ThankYouPage />} />
                 <Route path="/" element={<HotelTravelLandingPage />} />
-                <Route path="/Login.js" element={<LoginPage />} />
-                <Route path="/Signup.js" element={<SignupPage />} />
+                {!token && <Route path="/Login.js" element={<LoginPage />} />}
+                {!token && <Route path="/Signup.js" element={<SignupPage />} />}
                 <Route path="/TermsOfService.js" element={<TermsOfServicePage />} />
                 <Route path="/PrivacyPolicy.js" element={<PrivacyPolicyPage />} />
                 <Route path="/Beaches.js" element={<TabGrid />} />
                 <Route path="/Lifeguards.js" element={<TwoColContactUsWithIllustrationFullForm />} />
-                <Route path="/Admin.js" element={<AdminDashbord />} />
+                {token && <Route path="/Admin.js" element={<AdminDashbord />} />}
               </Routes>
             </Router>
-          </AuthProvider>
         </StyledEngineProvider>
       </LocalizationProvider>
     </>

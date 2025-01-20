@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import GlobalStyles from "@mui/joy/GlobalStyles"
 import Avatar from "@mui/joy/Avatar"
 import Box from "@mui/joy/Box"
@@ -32,17 +32,12 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded"
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded"
 import BrightnessAutoRoundedIcon from "@mui/icons-material/BrightnessAutoRounded"
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown"
-import logo from "../../../images/logo192.png";
-
-import Modal from '@mui/joy/Modal'
-import { BeachForm } from "./BeachForm"
 import { closeSidebar } from "../utils"
 import { useNavigate } from "react-router-dom"
+import { useAuth } from "contexts/AuthContext"
 
 function Toggler({ defaultExpanded = false, renderToggle, children }) {
   const [open, setOpen] = useState(defaultExpanded);
-
-
   return (
     <>
       {renderToggle({ open, setOpen })}
@@ -65,7 +60,16 @@ function Toggler({ defaultExpanded = false, renderToggle, children }) {
 }
 
 export default function Sidebar({ selectedEntity, onSelectEntity }) {
+  const { email, fullName, profilePicture, logout } = useAuth();
   const NAVIGATE = useNavigate();
+
+  const overflowStyle = {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    display: 'block'
+  };
+
   return (
     <Sheet
       className="Sidebar"
@@ -343,19 +347,23 @@ export default function Sidebar({ selectedEntity, onSelectEntity }) {
       </Box>
       <Divider />
       <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-        {/*<Avatar
+        <Avatar
           variant="outlined"
           size="sm"
-          src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286"
+          src={`http://localhost:5000/${profilePicture}`}
         />
         <Box sx={{ minWidth: 0, flex: 1 }}>
-          <Typography level="title-sm">Siriwat K.</Typography>
-          <Typography level="body-xs">siriwatk@test.com</Typography>
+          <Typography level="title-sm" title={fullName} sx={overflowStyle}>{fullName}</Typography>
+          <Typography level="body-xs" title={email} sx={overflowStyle}>
+            {email}
+          </Typography>
         </Box>
-        <IconButton size="sm" variant="plain" color="neutral">
+        <IconButton size="sm" variant="plain" color="neutral" onClick={() => {
+          logout();
+          NAVIGATE('/');
+        }}>
           <LogoutRoundedIcon />
-        </IconButton>*/}
-        <Typography level="title-md">Placeholder -- versão 1.0</Typography>
+        </IconButton>
       </Box>
     </Sheet>
   )

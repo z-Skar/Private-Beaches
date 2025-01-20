@@ -365,7 +365,7 @@ export default ({
                 borderRadius: '10px',
                 marginTop: '1.5rem',
                 marginBottom: '-3.5rem',
-                width: '90rem'
+                maxWidth: '1200px',
               }}>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
@@ -378,10 +378,8 @@ export default ({
                     MAIS FILTROS
                 </Typography>
               </AccordionSummary>
-              <AccordionDetails
-                style={{ borderTopWidth: '2px', display: 'flex', justifyContent: 'space-between'}}
-              >
-                <div>
+              <AccordionDetails>
+                <div style={{ borderTopWidth: '2px', display: 'flex', justifyContent: 'center', alignContent: 'center', flexWrap: 'wrap', gap: '0.5rem'}}>
                   <Autocomplete options={countries} sx={{ width: '14rem', ...commonStyles}}
                     value={country}
                     renderInput={(params) => <TextField {...params} label="País" />}
@@ -389,78 +387,86 @@ export default ({
                     onChange={(event, newValue) => setCountry(newValue)}
                     id="country"
                   />
-                  <div tw='flex mt-3 justify-between'>
-                    <Button sx={{
-                        backgroundColor: tw`bg-primary-500`,
-                        color: tw`text-white`,
-                        ":hover": tw`hover:bg-primary-900 transition duration-300`,
-                      }}
-                      disableRipple
-                      onClick={SEARCH}
-                    >
-                      PESQUISAR
-                    </Button>
-                    <Button sx={{
-                        backgroundColor: tw`bg-gray-500`,
-                        color: tw`text-white`,
-                        ":hover": tw`hover:bg-gray-600 transition duration-300`,
-                      }}
-                      disableRipple
-                      onClick={CLEAR_INPUTS}
-                    >
-                      LIMPAR
-                    </Button>
-                  </div> 
-                </div>
-                <Autocomplete options={cities} sx={{ width: '14rem', ...commonStyles}}
-                  value={city}
-                  renderInput={(params) => <TextField {...params} label="Cidade" />}
-                  noOptionsText='Sem opções'
-                  onChange={(event, newValue) => setCity(newValue)}
-                  id="city"
-                />
-                <Autocomplete options={serviceTypes} sx={{ width: '14rem', ...commonStyles}}
-                  value={serviceType}
-                  renderInput={(params) => <TextField {...params} label="Serviço" />}
-                  noOptionsText='Sem opções'
-                  onChange={(event, newValue) =>setServiceType(newValue)}
-                  id="serviceType"
-                />
-                <div>
-                  <TextField label='Preço minímo' sx={{marginTop: '0.5rem', ...commonStyles }} placeholder="Valor em euros (ex: 100)"
-                    slotProps={{
-                      input: {
-                        endAdornment: <InputAdornment position="end">€</InputAdornment>
-                      },
-                      htmlInput: {
-                        maxLength: 6
-                      },
-                    }}
-                    onChange={event => {
-                      errors.minCostMessage = '';
-                      setMinCost(event.target.value);
-                    }}
-                    id="minCost"
+                  <Autocomplete options={cities} sx={{ width: '14rem', ...commonStyles}}
+                    value={city}
+                    renderInput={(params) => <TextField {...params} label="Cidade" />}
+                    noOptionsText='Sem opções'
+                    onChange={(event, newValue) => setCity(newValue)}
+                    id="city"
                   />
-                  {errors.minCostMessage && <p tw="text-red-700 text-xs pt-1">{errors.minCostMessage}</p>}
-                </div>
-                <div>
-                  <TextField label='Preço máximo' sx={{marginTop: '0.5rem', ...commonStyles }} placeholder="Valor em euros (ex: 750)"
-                    slotProps={{
-                      input: {
-                        endAdornment: <InputAdornment position="end">€</InputAdornment>
-                      },
-                      htmlInput: {
-                        maxLength: 6
-                      },
-                    }}
-                    onChange={event => {
-                      errors.maxCostMessage = '';
-                      setMaxCost(event.target.value);
-                    }}
-                    id='maxCost'
+                  <Autocomplete options={serviceTypes} sx={{ width: '14rem', ...commonStyles}}
+                    value={serviceType}
+                    renderInput={(params) => <TextField {...params} label="Serviço" />}
+                    noOptionsText='Sem opções'
+                    onChange={(event, newValue) =>setServiceType(newValue)}
+                    id="serviceType"
                   />
-                  {errors.maxCostMessage && <p tw="text-red-700 text-xs pt-1">{errors.maxCostMessage}</p>}
+                  <div>
+                    <TextField label='Preço minímo' sx={{marginTop: '0.5rem', ...commonStyles }} placeholder="Valor em euros (ex: 100)"
+                      slotProps={{
+                        input: {
+                          endAdornment: <InputAdornment position="end">€</InputAdornment>
+                        },
+                        htmlInput: {
+                          maxLength: 6
+                        },
+                      }}
+                      onChange={event => {
+                        errors.minCostMessage = '';
+                        setMinCost(event.target.value);
+                      }}
+                      id="minCost"
+                    />
+                    {errors.minCostMessage && <p tw="text-red-700 text-xs pt-1">{errors.minCostMessage}</p>}
+                  </div>
+                  <div>
+                    <TextField label='Preço máximo' sx={{marginTop: '0.5rem', ...commonStyles }} placeholder="Valor em euros (ex: 750)"
+                      slotProps={{
+                        input: {
+                          endAdornment: <InputAdornment position="end">€</InputAdornment>
+                        },
+                        htmlInput: {
+                          maxLength: 6
+                        },
+                      }}
+                      onChange={event => {
+                        errors.maxCostMessage = '';
+                        setMaxCost(event.target.value);
+                      }}
+                      id='maxCost'
+                    />
+                    {errors.maxCostMessage && <p tw="text-red-700 text-xs pt-1">{errors.maxCostMessage}</p>}
+                  </div>
+                </div>
+                <div
+                style={{
+                    bottom: '1rem', // Distância do fundo
+                    left: '1rem', // Alinha à esquerda com uma margem
+                    display: 'flex',
+                    gap: '1rem',
+                    marginTop: '1rem',
+                  }}
+                >
+                  <Button sx={{
+                      backgroundColor: tw`bg-primary-500`,
+                      color: tw`text-white`,
+                      ":hover": tw`hover:bg-primary-900 transition duration-300`,
+                    }}
+                    disableRipple
+                    onClick={SEARCH}
+                  >
+                    PESQUISAR
+                  </Button>
+                  <Button sx={{
+                      backgroundColor: tw`bg-gray-500`,
+                      color: tw`text-white`,
+                      ":hover": tw`hover:bg-gray-600 transition duration-300`,
+                    }}
+                    disableRipple
+                    onClick={CLEAR_INPUTS}
+                  >
+                    LIMPAR
+                  </Button>
                 </div>
               </AccordionDetails>
             </Accordion>

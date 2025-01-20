@@ -168,7 +168,7 @@ export default ({
   return (
     <AnimationRevealPage>
       <Container>
-        <Header tw="mt-4"/>
+        <Header tw="mt-4" lifeguardLink={false} />
         <TwoColumn tw="pt-10">
           <ImageColumn>
             <Image imageSrc={EmailIllustrationSrc} />

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import AnimationRevealPage from "helpers/AnimationRevealPage.js";
 import { Container as ContainerBase } from "components/misc/Layouts";
 import tw from "twin.macro";
@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 const Container = tw(ContainerBase)`min-h-screen bg-primary-900 text-white font-medium flex justify-center -m-8`;
 const Content = tw.div`max-w-screen-xl m-0 sm:mx-20 sm:my-16 bg-white text-gray-900 shadow sm:rounded-lg flex justify-center flex-1`;
 const MainContainer = tw.div`lg:w-1/2 xl:w-5/12 p-6 sm:p-12`;
-const LogoLink = tw.a``;
+const LogoLink = tw.a`cursor-pointer`;
 const LogoImage = tw.img`h-12 mx-auto`;
 const MainContent = tw.div`mt-12 flex flex-col items-center`;
 const Heading = tw.h1`text-2xl xl:text-3xl font-extrabold text-center`;
@@ -87,6 +87,11 @@ export default ({
     PASSWORD: "",
   });
 
+  let ERRORS = {
+    EMAIL: '',
+    PASSWORD: ''
+  };
+
   const handleInputChange = (e) => {
     if(error[e.target.name]) {
       setError({
@@ -114,15 +119,14 @@ export default ({
       );
 
       const data = await response.json();
-      console.log(data);
       if (!response.ok) {
-        setError(data);
+        ERRORS = data;
+        setError(ERRORS);
         return;
       };
 
-      const { token, email, profile_picture } = data;
-      console.log()
-      login(token, email, profile_picture);
+      const { token, payload: {EMAIL, FULL_NAME, PICTURE}} = data;
+      login(token, FULL_NAME, EMAIL, PICTURE);
     } catch (error) {
       console.log('Fetch Error: ', error);
     };
@@ -136,7 +140,7 @@ export default ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const ERRORS = validateLoginFields(loginData)
+    ERRORS = validateLoginFields(loginData)
     setError(ERRORS);
 
     const HAS_ERRORS = Object.values(ERRORS).some((error) => error !== "");
@@ -144,7 +148,7 @@ export default ({
 
     try {
       const RESPONSE = await Login();
-      if (error.EMAIL === '' && error.PASSWORD === '') {
+      if (ERRORS.EMAIL === '' && ERRORS.PASSWORD === '') {
         NAVIGATE('/');
         window.scrollTo(0, 0);
       };
@@ -158,7 +162,7 @@ export default ({
       <Container>
         <Content>
           <MainContainer>
-            <LogoLink href={logoLinkUrl}>
+            <LogoLink onClick={() => NAVIGATE('/')}>
               <LogoImage src={logo} />
             </LogoLink>
             <MainContent>
@@ -194,7 +198,7 @@ export default ({
                 </p>
                 <p tw="mt-8 text-sm text-gray-600 text-center">
                   Não tens uma conta?{" "}
-                  <a href={signupUrl} tw="border-b border-gray-500 border-dotted">
+                  <a onClick={() => NAVIGATE('/Signup.js')} tw="border-b border-gray-500 border-dotted cursor-pointer">
                     Registar
                   </a>
                 </p>
@@ -207,5 +211,5 @@ export default ({
         </Content>
       </Container>
     </AnimationRevealPage>
-  )
+  );
 };

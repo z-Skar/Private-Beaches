@@ -16,16 +16,58 @@ ROUTER.get('/', (req, res) => {
 
 ROUTER.post('/register', async (req, res) => {
     const { FULL_NAME, EMAIL, PASSWORD } = req.body;
+    if (!FULL_NAME || !EMAIL || !PASSWORD) {
+        return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
+    };
+
     try {
+        const CONFIRM_EMAIL_SQL = 'SELECT EMAIL FROM Clients WHERE EMAIL = ?';
+        const emailExists = await new Promise((resolve, reject) => {
+            DATABASE.query(CONFIRM_EMAIL_SQL, [EMAIL], (err, data) => {
+                if (err) reject(err);
+                resolve(data.length !== 0);
+            });
+        });
+
+        if (emailExists) {
+            return res.status(400).json({ EMAIL: 'O email inserido já foi utilizado.' });
+        };
+        
         const SALT_ROUNDS = 10;
         const HASHED_PASSWORD = await BCRYPT.hash(PASSWORD, SALT_ROUNDS);
-        const SQL = 'INSERT INTO Clients (FULL_NAME, EMAIL, PASSWORD) VALUES (?, ?, ?)';
+        const REGISTER_SQL = 'INSERT INTO Clients (FULL_NAME, EMAIL, PASSWORD) VALUES (?, ?, ?)';
 
-        DATABASE.query(SQL, [FULL_NAME, EMAIL, HASHED_PASSWORD], (err, data) => {
+        
+        DATABASE.query(REGISTER_SQL, [FULL_NAME, EMAIL, HASHED_PASSWORD], (err, data) => {
             if (err) {
                 return res.status(500).json({error: 'Falha ao adicionar cliente.'});
             };
-            res.status(200).json({message: 'Cliente adicionado com sucesso.', data});
+            
+            const FETCH_PICTURE_SQL = 'SELECT * FROM Clients WHERE EMAIL = ?';
+            DATABASE.query(FETCH_PICTURE_SQL, [EMAIL], (err, data) => {
+                if (err) {
+                    return res.status(500).json({ error: 'Erro ao obter a imagem de perfil do cliente.' });
+                };
+
+                if (data.length === 0) {
+                    return res.status(404).json({ error: 'Utilizador não encontrado após registro.' });
+                };
+
+                const PICTURE = data[0].PROFILE_PICTURE;
+                const JWT = require('jsonwebtoken');
+                const PAYLOAD = {
+                    EMAIL: EMAIL,
+                    FULL_NAME: FULL_NAME,
+                    PICTURE: PICTURE
+                };
+                const TOKEN = JWT.sign(PAYLOAD, 'secret_key', { expiresIn: '1h' });
+    
+                res.status(200).json({
+                    message: 'Registro e login bem-sucedidos!',
+                    token: TOKEN,
+                    payload: PAYLOAD
+                });
+            });
         });
     } catch (error) {
         res.status(500).json({error : 'Erro interno do servidor'});
@@ -40,7 +82,7 @@ ROUTER.post('/login', (req, res) => {
         if (err) {
             return res.status(500).json({ error: 'Erro ao consultar a base de dados.' });
         };
-        console.log(data);
+
         if (data.length === 0) {
             return res.status(404).json({ EMAIL: '', PASSWORD: 'Utilizador não encontrado.' });
         };
@@ -53,13 +95,17 @@ ROUTER.post('/login', (req, res) => {
         };
 
         const JWT = require('jsonwebtoken');
-        const TOKEN = JWT.sign({ email: CLIENT.EMAIL, PICTURE: CLIENT.PROFILE_PICTURE }, 'secret_key', { expiresIn: '1h' });
+        const PAYLOAD = {
+            EMAIL: CLIENT.EMAIL,
+            FULL_NAME: CLIENT.FULL_NAME,
+            PICTURE: CLIENT.PROFILE_PICTURE
+        };
+        const TOKEN = JWT.sign(PAYLOAD, 'secret_key', { expiresIn: '1h' });
 
         res.status(200).json({
             message: 'Login bem-sucedido!',
             token: TOKEN,
-            EMAIL: CLIENT.EMAIL,
-            PICTURE: CLIENT.PROFILE_PICTURE
+            payload: PAYLOAD
         });
     });
 });

@@ -11,11 +11,12 @@ import twitterIconImageSrc from "images/twitter-icon.png";
 import { ReactComponent as SignUpIcon } from "feather-icons/dist/icons/user-plus.svg";
 import { validateSignUpFields } from "validation/validationFunctions";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "contexts/AuthContext";
 
 const Container = tw(ContainerBase)`min-h-screen bg-primary-900 text-white font-medium flex justify-center -m-8`;
 const Content = tw.div`max-w-screen-xl m-0 sm:mx-20 sm:my-16 bg-white text-gray-900 shadow sm:rounded-lg flex justify-center flex-1`;
 const MainContainer = tw.div`lg:w-1/2 xl:w-5/12 p-6 sm:p-12`;
-const LogoLink = tw.a``;
+const LogoLink = tw.a`cursor-pointer`;
 const LogoImage = tw.img`h-12 mx-auto`;
 const MainContent = tw.div`mt-12 flex flex-col items-center`;
 const Heading = tw.h1`text-2xl xl:text-3xl font-extrabold text-center`;
@@ -56,6 +57,7 @@ const IllustrationImage = styled.div`
 `;
 
 export default (props) => {
+  const { login } = useAuth();
   const NAVIGATE = useNavigate();
   const {
     logoLinkUrl = "/",
@@ -82,6 +84,12 @@ export default (props) => {
     PASSWORD: "",
   });
 
+  let ERRORS = {
+    FULL_NAME: '',
+    EMAIL: '',
+    PASSWORD: ''
+  };
+
   const addClient = async () => {
     try {
       const response = await fetch('http://localhost:5000/clients/register',
@@ -93,6 +101,18 @@ export default (props) => {
           body: JSON.stringify(clientData)
         }
       );
+
+      const data = await response.json();
+      if (!response.ok) {
+        ERRORS = data;
+        setError(ERRORS);
+        return;
+      };
+
+      const { token, payload: {EMAIL, FULL_NAME, PICTURE}} = data;
+      login(token, FULL_NAME, EMAIL, PICTURE);
+      NAVIGATE('/');
+      window.scrollTo(0, 0);
     } catch (error) {
       console.log('Fetch Error: ', error);
     };
@@ -113,7 +133,7 @@ export default (props) => {
     });
   };
 
-  const  handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const ERRORS = validateSignUpFields(clientData);
     setError(ERRORS);
@@ -123,8 +143,7 @@ export default (props) => {
 
     try {
       await addClient();
-      NAVIGATE('/');
-      window.scrollTo(0, 0);
+
     } catch (error) {
       console.log(error);
     };
@@ -135,7 +154,7 @@ export default (props) => {
       <Container>
         <Content>
           <MainContainer>
-            <LogoLink href={logoLinkUrl}>
+            <LogoLink onClick={() => NAVIGATE('/')}>
               <LogoImage src={logo} />
             </LogoLink>
             <MainContent>
@@ -181,11 +200,11 @@ export default (props) => {
                   </SubmitButton>
                   <p tw="mt-6 text-xs text-gray-600 text-center">
                     Concordo em cumprir os {" "}
-                    <a href={termsOfServiceUrl} tw="border-b border-gray-500 border-dotted">
+                    <a onClick={() => NAVIGATE(termsOfServiceUrl)} tw="border-b border-gray-500 border-dotted cursor-pointer">
                       Termos de Serviço
                     </a>{" "}
                     e a{" "}
-                    <a href={privacyPolicyUrl} tw="border-b border-gray-500 border-dotted">
+                    <a onClick={() => NAVIGATE(privacyPolicyUrl)} tw="border-b border-gray-500 border-dotted cursor-pointer">
                       Política de Privacidade
                     </a>{" "}
                     da Tropical Dreams
@@ -193,7 +212,7 @@ export default (props) => {
 
                   <p tw="mt-8 text-sm text-gray-600 text-center">
                     Já tens uma conta?{" "}
-                    <a href={signInUrl} tw="border-b border-gray-500 border-dotted">
+                    <a onClick={() => NAVIGATE(signInUrl)} tw="border-b border-gray-500 border-dotted cursor-pointer">
                       Entrar
                     </a>
                   </p>

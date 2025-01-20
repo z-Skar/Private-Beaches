@@ -263,18 +263,18 @@ const GenericTable = ({ entity, search}) => {
                     <tr key={row + index}>
                     {<td style={{ textAlign: "center", width: 120 }}>
                         <Checkbox
-                        size="sm"
-                        checked={selectedIDsToDelete.includes(row[ENTITY_COLUMN_KEYS[0]])}
-                        color={selectedIDsToDelete.includes(row[ENTITY_COLUMN_KEYS[0]]) ? "primary" : undefined}
-                        onChange={event => {
-                            setSelectedIDsToDelete(ids =>
-                            event.target.checked
-                                ? ids.concat(row[ENTITY_COLUMN_KEYS[0]])
-                                : ids.filter(itemId => itemId !== row[ENTITY_COLUMN_KEYS[0]])
-                            )
-                        }}
-                        slotProps={{ checkbox: { sx: { textAlign: "left" } } }}
-                        sx={{ verticalAlign: "text-bottom" }}
+                            size="sm"
+                            checked={selectedIDsToDelete.includes(row[ENTITY_COLUMN_KEYS[0]])}
+                            color={selectedIDsToDelete.includes(row[ENTITY_COLUMN_KEYS[0]]) ? "primary" : undefined}
+                            onChange={event => {
+                                setSelectedIDsToDelete(ids =>
+                                event.target.checked
+                                    ? ids.concat(row[ENTITY_COLUMN_KEYS[0]])
+                                    : ids.filter(itemId => itemId !== row[ENTITY_COLUMN_KEYS[0]])
+                                )
+                            }}
+                            slotProps={{ checkbox: { sx: { textAlign: "left" } } }}
+                            sx={{ verticalAlign: "text-bottom" }}
                         />
                     </td>}
                     {ENTITY_COLUMN_KEYS.map(column => (

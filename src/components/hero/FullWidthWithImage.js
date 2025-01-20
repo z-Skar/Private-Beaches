@@ -5,6 +5,7 @@ import { css } from "styled-components/macro"; //eslint-disable-line
 
 import Header, { LogoLink, NavLinks, NavLink as NavLinkBase } from "../headers/light.js";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "contexts/AuthContext.js";
 
 const StyledHeader = styled(Header)`
   ${tw`justify-between`}
@@ -45,14 +46,6 @@ const Actions = styled.div`
 
 
 export default ({
-  navLinks = [
-    <NavLinks key={1}>
-      <NavLink href="#">Sobre</NavLink>
-      <NavLink href="Admin.js">Admin</NavLink>
-      <NavLink href="/Lifeguards.js">Salva-vidas</NavLink>
-      <NavLink href="/Login.js">Login</NavLink>
-    </NavLinks>
-  ],
   heading = (
     <>
       Praias Privadas
@@ -68,11 +61,23 @@ export default ({
   secondaryActionUrl = "/Beaches.js",
   secondaryActionText = "Pesquisa Praias",
 }) => {
+  const { token } = useAuth();
+  
   const NAVIGATE = useNavigate();
   const navigateTo = (destination) => {
     NAVIGATE(destination);
     window.scrollTo(0, 0);
   };
+
+  const navLinks = [
+    <NavLinks key={1}>
+      <NavLink onClick={() => navigateTo('#')}>Sobre</NavLink>
+      {token && <NavLink onClick={() => navigateTo('/Admin.js')}>Admin</NavLink>}
+      <NavLink onClick={() => navigateTo('/Lifeguards.js')}>Salva-vidas</NavLink>
+      {!token && <NavLink onClick={() => navigateTo('/Login.js')}>Login</NavLink>}
+    </NavLinks>
+  ];
+
   return (
     <Container>
       <TwoColumn>
@@ -82,12 +87,21 @@ export default ({
             <Heading>{heading}</Heading>
             <Paragraph>{description}</Paragraph>
             <Actions>
-              <button onClick={() => navigateTo(primaryActionUrl)} className="action primaryAction">
-                {primaryActionText}
-              </button>
-              <button onClick={() => navigateTo(secondaryActionUrl)} className="action secondaryAction">
-                {secondaryActionText}
-              </button>
+              {!token ? (
+                <>
+                  <button onClick={() => navigateTo(primaryActionUrl)} className="action primaryAction">
+                    {primaryActionText}
+                  </button>
+                  <button onClick={() => navigateTo(secondaryActionUrl)} className="action secondaryAction">
+                    {secondaryActionText}
+                  </button>
+                </>
+                ) : (
+                  <button onClick={() => navigateTo(secondaryActionUrl)} className="action primaryAction">
+                    {secondaryActionText}
+                  </button>
+                )
+              }
             </Actions>
           </Content>
         </LeftColumn>
