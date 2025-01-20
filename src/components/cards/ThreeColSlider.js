@@ -99,7 +99,7 @@ export default () => {
 
         //-- PARÂMETROS DEFAULT.
         query_parameters.append('orderBy', 'Beaches.BEACH_ID');
-        query_parameters.append('orderDireciton', 'DESC')
+        query_parameters.append('orderDireciton', 'DESC');
 
         const response = await fetch(`http://localhost:5000/beaches?${query_parameters}`)
         const data = await response.json();

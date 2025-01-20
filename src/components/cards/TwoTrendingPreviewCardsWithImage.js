@@ -112,7 +112,7 @@ export default () => {
               Vive uma experiência inesquecível, com cada detalhe pensado para oferecer luxo e exclusividade. <br /><br />
               Descubre destinos deslumbrantes, acomodações impecáveis e serviços personalizados que superam as tuas expectativas.
               </HeadingDescription>
-              <PrimaryLink href='/Beaches.js'>
+              <PrimaryLink onClick={() => NAVIGATE('/Beaches.js')}>
                 Vê Todas as Praias <ArrowRightIcon />
               </PrimaryLink>
             </HeadingInfoContainer>

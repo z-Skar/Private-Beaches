@@ -365,7 +365,10 @@ export default ({
                 borderRadius: '10px',
                 marginTop: '1.5rem',
                 marginBottom: '-3.5rem',
+                width: '100%',
                 maxWidth: '1200px',
+                marginLeft: 'auto',
+                marginRight: 'auto'
               }}>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
@@ -448,9 +451,9 @@ export default ({
                   }}
                 >
                   <Button sx={{
-                      backgroundColor: tw`bg-primary-500`,
-                      color: tw`text-white`,
-                      ":hover": tw`hover:bg-primary-900 transition duration-300`,
+                      backgroundColor: tw`!bg-primary-500`,
+                      color: tw`!text-white`,
+                      ":hover": tw`hover:!bg-primary-900 transition duration-300`,
                     }}
                     disableRipple
                     onClick={SEARCH}
@@ -458,9 +461,9 @@ export default ({
                     PESQUISAR
                   </Button>
                   <Button sx={{
-                      backgroundColor: tw`bg-gray-500`,
-                      color: tw`text-white`,
-                      ":hover": tw`hover:bg-gray-600 transition duration-300`,
+                      backgroundColor: tw`!bg-gray-500`,
+                      color: tw`!text-white`,
+                      ":hover": tw`hover:!bg-gray-600 transition duration-300`,
                     }}
                     disableRipple
                     onClick={CLEAR_INPUTS}
@@ -520,7 +523,7 @@ export default ({
                       </CardImageContainer>
                       <CardText>
                         <CardTitle>{card.title}</CardTitle>
-                        <CardContent>{card.content}</CardContent>
+                        <CardContent title={card.content}>{card.content}</CardContent>
                         <CardPrice>{card.price}</CardPrice>
                       </CardText>
                     </Card>

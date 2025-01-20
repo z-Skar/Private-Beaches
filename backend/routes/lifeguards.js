@@ -14,7 +14,7 @@ ROUTER.get('/', (req, res) => {
     if(onlyNecessary){
         SQL = 'SELECT * FROM lifeguards';
     } else {
-        SQL = 'SELECT LIFEGUARD_ID, FULL_NAME FROM Lifeguards';
+        SQL = 'SELECT LIFEGUARD_ID, FULL_NAME FROM Lifeguards WHERE STATUS = "ATIVO"';
     };
     DATABASE.query(SQL, (err, data) => {
         if(err) {
