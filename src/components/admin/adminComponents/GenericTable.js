@@ -241,6 +241,7 @@ const GenericTable = ({ entity, search}) => {
                             ? { "& svg": { transform: "rotate(0deg)" } }
                             : { "& svg": { transform: "rotate(180deg)" } }
                         ]}
+                        title={ENTITY_COLUMN_NAMES[0].title}
                     >
                         {ENTITY_COLUMN_NAMES[0].title}
                     </Link>
@@ -250,11 +251,12 @@ const GenericTable = ({ entity, search}) => {
                             style={{ padding: "12px 6px" , textAlign: 'center', 
                                 ...(ENTITY_COLUMN_NAMES[index].title === 'DESCRIÇÃO' ? {width: '140px'} : {})
                             }}
+                            title={ENTITY_COLUMN_NAMES[index].title}
                         >
                             {ENTITY_COLUMN_NAMES[index].title}
                         </th>
                     ))}
-                    <th style={{ padding: "12px 6px" , textAlign: 'center'}}>Ações</th>
+                    <th style={{ padding: "12px 6px" , textAlign: 'center'}} title="Ações">Ações</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -290,7 +292,9 @@ const GenericTable = ({ entity, search}) => {
                                     {row[column]}
                                 </Typography>
                             ) : (
-                                <Typography level="body-xs" style={{ textAlign: 'center' }}>
+                                <Typography level="body-xs"
+                                            style={{ textAlign: 'center' }}
+                                            title={row[column]}>
                                     {row[column]}
                                 </Typography>
                             )}

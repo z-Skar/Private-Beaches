@@ -1,7 +1,7 @@
 const EXPRESS = require('express');
 const ROUTER = EXPRESS.Router();
 const DATABASE = require('../database/db-connection');
-const UPLOAD_LIFEGUARD_IMAGE = require('../middlewares/imageUploader');
+const UPLOAD = require('../middlewares/imageUploader');
 const PATH = require('path');
 const FS = require('fs');
 
@@ -26,7 +26,7 @@ ROUTER.get('/', (req, res) => {
     });
 });
 
-ROUTER.post('/register', UPLOAD_LIFEGUARD_IMAGE.single('PICTURE'), async (req, res) => {
+ROUTER.post('/register', UPLOAD.LIFEGUARD_IMAGE.single('PICTURE'), async (req, res) => {
     const { NIF, FULL_NAME, YEAR_OF_BIRTH, EMAIL, CONTACT } = req.body
     const SQL = 'INSERT INTO Lifeguards (LIFEGUARD_NIF, FULL_NAME, YEAR_OF_BIRTH, EMAIL, CONTACT) VALUES (?, ?, ?, ?, ?)';
     const VALUES = [NIF, FULL_NAME, YEAR_OF_BIRTH, EMAIL, CONTACT];

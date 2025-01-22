@@ -42,8 +42,10 @@ const lifeguardStorage = MULTER.diskStorage({
     },
 });
 
-const UPLOAD_BEACH_IMAGE = MULTER({ storage: beachStorage });
-const UPLOAD_LIFEGUARD_IMAGE = MULTER({ storage: lifeguardStorage });
+const BEACH_IMAGE = MULTER({ storage: beachStorage });
+const LIFEGUARD_IMAGE = MULTER({ storage: lifeguardStorage });
 
-module.exports = UPLOAD_BEACH_IMAGE;
-module.exports = UPLOAD_LIFEGUARD_IMAGE;
+module.exports = {
+    BEACH_IMAGE,
+    LIFEGUARD_IMAGE,
+};

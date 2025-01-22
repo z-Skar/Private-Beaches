@@ -98,7 +98,7 @@ export default () => {
         const query_parameters = new URLSearchParams();
 
         //-- PARÂMETROS DEFAULT.
-        query_parameters.append('orderBy', 'Beaches.BEACH_ID');
+        query_parameters.append('orderBy', 'Evaluations.SCORE');
         query_parameters.append('orderDireciton', 'DESC');
 
         const response = await fetch(`http://localhost:5000/beaches?${query_parameters}`)

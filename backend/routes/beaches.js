@@ -1,7 +1,7 @@
 const EXPRESS = require('express');
 const ROUTER = EXPRESS.Router();
 const DATABASE = require('../database/db-connection');
-const UPLOAD_BEACH_IMAGE = require('../middlewares/imageUploader');
+const UPLOAD = require('../middlewares/imageUploader');
 const PATH = require('path');
 const FS = require('fs');
 
@@ -135,7 +135,7 @@ ROUTER.get('/read/:id', (req, res) => {
     });
 });
 
-ROUTER.post('/add', UPLOAD_BEACH_IMAGE.single('PICTURE'), (req, res) => {
+ROUTER.post('/add', UPLOAD.BEACH_IMAGE.single('PICTURE'), (req, res) => {
     let { BEACH_NAME, COUNTRY_LOCATION, CITY_LOCATION, DESCRIPTION,
         SERVICE_TYPE, RESERVATION_COST, LIFEGUARD_ID } = req.body;
     const SQL = `INSERT INTO Beaches (BEACH_NAME, COUNTRY_LOCATION, CITY_LOCATION, DESCRIPTION, 
@@ -181,7 +181,7 @@ ROUTER.post('/add', UPLOAD_BEACH_IMAGE.single('PICTURE'), (req, res) => {
     });
 });
 
-ROUTER.put('/edit/:id', UPLOAD_BEACH_IMAGE.single('PICTURE'), (req, res) => {
+ROUTER.put('/edit/:id', UPLOAD.BEACH_IMAGE.single('PICTURE'), (req, res) => {
     let { BEACH_NAME, COUNTRY_LOCATION, CITY_LOCATION, DESCRIPTION,
             SERVICE_TYPE, RESERVATION_COST, LIFEGUARD_ID } = req.body;
     

@@ -320,15 +320,15 @@ export default ({
 
     setTrigger(Date.now());
   };
-
+  console.log(beaches);
   const tabs = beaches.length > 0 ? {
     Starters: beaches.map(beach => ({
       imageSrc: beach.PICTURE || 'Imagem indisponível',
       title: beach.BEACH_NAME || 'Título indisponível',
       content: beach.DESCRIPTION || 'Descrição indisponível',
       price: `€${beach.RESERVATION_COST}` || 'Preço indisponível',
-      rating: beach.SCORE || '[N/A]',
-      Evaluations: beach.EVALUATIONS || '[N/A]',
+      rating: beach.SCORE || '...',
+      Evaluations: beach.EVALUATIONS || '0',
       url: '#'
     }))
   } : {};
