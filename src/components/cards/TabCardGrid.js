@@ -327,7 +327,7 @@ export default ({
       title: beach.BEACH_NAME || 'Título indisponível',
       content: beach.DESCRIPTION || 'Descrição indisponível',
       price: `€${beach.RESERVATION_COST}` || 'Preço indisponível',
-      rating: beach.SCORE || '...',
+      rating: beach.SCORE || 'Sem Classificação',
       Evaluations: beach.EVALUATIONS || '0',
       url: '#'
     }))
