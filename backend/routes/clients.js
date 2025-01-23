@@ -114,7 +114,11 @@ ROUTER.get('/admin', (req, res) => {
     const searchTerm = req.query.search || '';
 
     let SQL = `
-        SELECT CLIENT_ID, FULL_NAME, EMAIL, YEAR_OF_BIRTH, CONTACT 
+        SELECT CLIENT_ID AS 'Cliente-ID', 
+               FULL_NAME AS 'Nome', 
+               EMAIL AS 'Email', 
+               YEAR_OF_BIRTH AS 'Data de Nascimento', 
+               CONTACT AS 'Contacto'
         FROM clients
     `;
 
@@ -137,11 +141,14 @@ ROUTER.get('/admin', (req, res) => {
         if(err) {
             return res.status(500).json(err);
         } else {
+            const FULL_NAME = 'Nome';
+            const CONTACT = 'Contacto';
+            const YEAR_OF_BIRTH = 'Data de Nascimento';
             data = data.map(record => ({
                 ...record,
-                FULL_NAME: record.FULL_NAME ? record.FULL_NAME : 'NÃO DEFINIDO',
-                CONTACT: record.CONTACT ? record.CONTACT : 'NÃO DEFINIDO',
-                YEAR_OF_BIRTH: record.YEAR_OF_BIRTH ? record.YEAR_OF_BIRTH.toISOString().split('T')[0] : 'NÃO DEFINIDO'
+                [FULL_NAME]: record[FULL_NAME] ? record[FULL_NAME] : 'NÃO DEFINIDO',
+                [CONTACT]: record[CONTACT] ? record[CONTACT] : 'NÃO DEFINIDO',
+                [YEAR_OF_BIRTH]: record[YEAR_OF_BIRTH] ? record[YEAR_OF_BIRTH].toISOString().split('T')[0] : 'NÃO DEFINIDO'
             }));
             return res.status(200).json(data);
         };

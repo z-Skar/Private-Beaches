@@ -74,9 +74,14 @@ ROUTER.get('/services', (req, res) => {
 
 ROUTER.get('/admin', (req, res) => {
     let SQL = `
-        SELECT Beaches.BEACH_ID, BEACH_NAME, DESCRIPTION, CITY_LOCATION, COUNTRY_LOCATION, 
-               RESERVATION_COST, COALESCE(Lifeguards.FULL_NAME, 'Indisponível') AS FULL_NAME, 
-               SERVICE_TYPE, COALESCE(AVG(Evaluations.SCORE), 0) AS SCORE
+        SELECT Beaches.BEACH_ID AS 'Praia-ID', 
+               BEACH_NAME AS Nome, 
+               DESCRIPTION AS Descrição, 
+               CITY_LOCATION AS Cidade, 
+               COUNTRY_LOCATION AS País, 
+               RESERVATION_COST AS 'Custo de Reserva', 
+               COALESCE(Lifeguards.FULL_NAME, 'Indisponível') AS 'Salva-Vidas', 
+               SERVICE_TYPE AS Serviço, COALESCE(AVG(Evaluations.SCORE), 0) AS 'Avaliação (Média)' 
         FROM BEACHES 
         LEFT JOIN Evaluations ON Beaches.BEACH_ID = Evaluations.BEACH_ID 
         LEFT JOIN Lifeguards ON Beaches.LIFEGUARD_ID = Lifeguards.LIFEGUARD_ID 
@@ -103,15 +108,16 @@ ROUTER.get('/admin', (req, res) => {
 
     SQL += `
         GROUP BY Beaches.BEACH_ID 
-        ORDER BY BEACH_ID DESC
+        ORDER BY Beaches.BEACH_ID DESC
     `;
     DATABASE.query(SQL, queryParams, (err, data) => {
         if(err) {
             return res.status(500).json(err);
         } else {
+            const RESERVATION_COST = 'Custo de Reserva';
             data = data.map(record => ({
                 ...record,
-                RESERVATION_COST: record.RESERVATION_COST + '€',
+                [RESERVATION_COST]: record[RESERVATION_COST] + '€',
             }));
             return res.status(200).json(data);
         };

@@ -134,7 +134,6 @@ const GenericTable = ({ entity, search}) => {
       };
     };
     
-    const ENTITY_COLUMN_NAMES = getColumns(entity);
     const ENTITY_COLUMN_KEYS = data.length > 0 ? Object.keys(data[0]) : [];
 
     const handleClickForDelete = (id) => {
@@ -170,7 +169,7 @@ const GenericTable = ({ entity, search}) => {
 
         const worksheetData = XLSX.utils.json_to_sheet(dataToExcelRef.current); // Converte os dados JSON para dados em planilha.
         const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheetData, entity);
+        XLSX.utils.book_append_sheet(workbook, worksheetData, entitiesAndNames()[entity] /* Nome da entidade em Português */);
         const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
         const blob = new Blob([excelBuffer], { 
             type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' 
@@ -210,7 +209,7 @@ const GenericTable = ({ entity, search}) => {
                         checked={selectedIDsToDelete.length === data.length}
                         onChange={event => {
                         setSelectedIDsToDelete (
-                            event.target.checked ? data.map(row => row[ENTITY_COLUMN_KEYS[0]]) : []
+                            event.target.checked ? data.map(row => row[0]) : []
                         )
                         }}
                         color={
@@ -241,19 +240,19 @@ const GenericTable = ({ entity, search}) => {
                             ? { "& svg": { transform: "rotate(0deg)" } }
                             : { "& svg": { transform: "rotate(180deg)" } }
                         ]}
-                        title={ENTITY_COLUMN_NAMES[0].title}
+                        title={[ENTITY_COLUMN_KEYS[0]]}
                     >
-                        {ENTITY_COLUMN_NAMES[0].title}
+                        {ENTITY_COLUMN_KEYS[0]}
                     </Link>
                     </th>
-                    {Object.keys(ENTITY_COLUMN_NAMES).slice(1).map(index => (
-                        <th key={index + ENTITY_COLUMN_NAMES[index].field}
+                    {Object.keys(ENTITY_COLUMN_KEYS).slice(1).map(index => (
+                        <th key={index + ENTITY_COLUMN_KEYS[index]}
                             style={{ padding: "12px 6px" , textAlign: 'center', 
-                                ...(ENTITY_COLUMN_NAMES[index].title === 'DESCRIÇÃO' ? {width: '140px'} : {})
+                                ...(ENTITY_COLUMN_KEYS[index] === 'Descrição' ? {width: '140px'} : {})
                             }}
-                            title={ENTITY_COLUMN_NAMES[index].title}
+                            title={ENTITY_COLUMN_KEYS[index]}
                         >
-                            {ENTITY_COLUMN_NAMES[index].title}
+                            {ENTITY_COLUMN_KEYS[index]}
                         </th>
                     ))}
                     <th style={{ padding: "12px 6px" , textAlign: 'center'}} title="Ações">Ações</th>
@@ -281,7 +280,7 @@ const GenericTable = ({ entity, search}) => {
                     </td>}
                     {ENTITY_COLUMN_KEYS.map(column => (
                         <td key={column}>
-                            {column === 'DESCRIPTION' || column === 'EMAIL' ? (
+                            {column === 'Descrição' || column === 'Email' ? (
                                 <Typography level="body-xs"
                                     style={{
                                         textAlign: 'center', whiteSpace: 'nowrap', 

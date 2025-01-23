@@ -15,8 +15,11 @@ ROUTER.get('/admin', (req, res) => {
     const searchTerm = req.query.search || '';
 
     let SQL = `
-        SELECT RESERVATION_ID, Clients.FULL_NAME, COALESCE(Beaches.BEACH_NAME, '[N/A]') AS BEACH_NAME, 
-               RESERVATION_END, RESERVATION_START 
+        SELECT RESERVATION_ID AS 'Reserva-ID', 
+               Clients.FULL_NAME AS Cliente, 
+               COALESCE(Beaches.BEACH_NAME, '[N/A]') AS Praia, 
+               RESERVATION_END AS 'Data de Início', 
+               RESERVATION_START AS 'Data de Fim' 
         FROM Reservations 
         INNER JOIN Clients ON Reservations.CLIENT_ID = Clients.CLIENT_ID 
         LEFT JOIN Beaches ON Reservations.BEACH_ID = Beaches.BEACH_ID
@@ -41,10 +44,12 @@ ROUTER.get('/admin', (req, res) => {
         if(err) {
             return res.status(500).json(err);
         } else {
+            const RESERVATION_START = 'Data de Início';
+            const RESERVATION_END = 'Data de Fim';
             data = data.map(record => ({
                 ...record,
-                RESERVATION_START: record.RESERVATION_START.toISOString().split('T')[0],
-                RESERVATION_END: record.RESERVATION_END.toISOString().split('T')[0]
+                [RESERVATION_START]: record[RESERVATION_START].toISOString().split('T')[0],
+                [RESERVATION_END]: record[RESERVATION_END].toISOString().split('T')[0]
             }));
             return res.status(200).json(data);
         };

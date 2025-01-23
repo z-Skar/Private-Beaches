@@ -17,7 +17,10 @@ ROUTER.get('/admin', (req, res) => {
     const searchTerm = req.query.search || '';
 
     let SQL = `
-        SELECT BILL_ID, RESERVATION_ID, CREDIT_CARD_NUMBER, BILL_COST 
+        SELECT BILL_ID AS 'Pagamento-ID', 
+               RESERVATION_ID AS 'Reserva-ID', 
+               CREDIT_CARD_NUMBER AS 'Número de Cartão de Crédito', 
+               BILL_COST AS 'Pagamento Total' 
         FROM BILLS
     `;
 
@@ -37,10 +40,12 @@ ROUTER.get('/admin', (req, res) => {
         if(err) {
             return res.status(500).json(err);
         } else {
+            const CREDIT_CARD_NUMBER = 'Número de Cartão de Crédito';
+            const BILL_COST = 'Pagamento Total';
             data = data.map((record) => ({
                 ...record,
-                CREDIT_CARD_NUMBER: CensorField(record.CREDIT_CARD_NUMBER),
-                BILL_COST: record.BILL_COST + '€'
+                [CREDIT_CARD_NUMBER]: CensorField(record[CREDIT_CARD_NUMBER]),
+                [BILL_COST]: record[BILL_COST] + '€'
             }));
             return res.status(200).json(data);
         };

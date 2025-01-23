@@ -15,7 +15,10 @@ ROUTER.get('/admin', (req, res) => {
     const searchTerm = req.query.search || '';
 
     let SQL = `
-        SELECT EVALUATION_ID, Clients.FULL_NAME, COALESCE(Beaches.BEACH_NAME, '[N/A]') AS BEACH_NAME, SCORE 
+        SELECT EVALUATION_ID AS 'Avaliação-ID', 
+               Clients.FULL_NAME AS 'Cliente', 
+               COALESCE(Beaches.BEACH_NAME, '[N/A]') AS Praia, 
+               SCORE AS 'Avaliação' 
         FROM Evaluations
         INNER JOIN Clients ON Evaluations.CLIENT_ID = Clients.CLIENT_ID 
         LEFT JOIN Beaches ON Evaluations.BEACH_ID = Beaches.BEACH_ID

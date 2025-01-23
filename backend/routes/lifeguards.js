@@ -70,8 +70,14 @@ ROUTER.get('/admin', (req, res) => {
     const searchTerm = req.query.search || '';
 
     let SQL = `
-        SELECT LIFEGUARD_ID, LIFEGUARD_NIF, FULL_NAME, YEAR_OF_BIRTH, 
-               EMAIL, CONTACT, SALARY, STATUS 
+        SELECT LIFEGUARD_ID AS 'Salva-Vidas-ID', 
+               LIFEGUARD_NIF AS NIF, 
+               FULL_NAME AS Nome, 
+               YEAR_OF_BIRTH AS 'Data de Nascimento', 
+               EMAIL AS Email, 
+               CONTACT AS Contacto, 
+               SALARY AS Salário, 
+               STATUS AS Estado 
         FROM Lifeguards
     `;
 
@@ -97,9 +103,9 @@ ROUTER.get('/admin', (req, res) => {
         } else {
             data = data.map(record => ({
                 ...record,
-                LIFEGUARD_NIF: CensorField(record.LIFEGUARD_NIF),
-                YEAR_OF_BIRTH: record.YEAR_OF_BIRTH.toISOString().split('T')[0],
-                SALARY: Number(record.SALARY).toFixed(2) + '€'
+                NIF: CensorField(record.NIF),
+                'Data de Nascimento': record['Data de Nascimento'].toISOString().split('T')[0],
+                Salário: Number(record.Salário).toFixed(2) + '€'
             }));
             return res.status(200).json(data);
         };
