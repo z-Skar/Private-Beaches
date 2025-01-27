@@ -72,6 +72,7 @@ function descendingComparator(a, b, orderBy) {
 const GenericTable = ({ entity, search}) => {
     const [order, setOrder] = useState("desc");
     const [data, setData] = useState([]);
+    const [columns, setColumns] = useState([]);
 
     // Estados para facilmente acessar os registos pelo ID selecionado.
     const [selectedIDsToDelete, setSelectedIDsToDelete] = useState([]);
@@ -81,10 +82,8 @@ const GenericTable = ({ entity, search}) => {
     const [deletetionModalOpen, setDeletetionModalOpen] = useState(false);
     const [editionModalOpen, setEditionModalOpen] = useState(false);
 
-    // Estado que conterá o input principal que filtrará pelos registos.
-
     const dataToExcelRef = useRef(null);
-    
+    let COLUMNS;
     useEffect(() => {
       const getData = async () => {
         try {
@@ -118,6 +117,19 @@ const GenericTable = ({ entity, search}) => {
         };
       };
     }, [entity, search]);
+
+    useEffect(() => {
+        const getColumns = async () => {
+          try {
+            const DATA = (await (axios.get(`http://localhost:5000/${entity}/columns`))).data;
+            COLUMNS = Object.keys(DATA[0]);
+            setColumns(COLUMNS);
+          } catch (error) {
+            console.error(error);
+          };
+        };
+        getColumns();
+    }, []);
   
     const deleteRecord = async (entity, id) => {
       try {
@@ -135,7 +147,7 @@ const GenericTable = ({ entity, search}) => {
     };
     
     const ENTITY_COLUMN_KEYS = data.length > 0 ? Object.keys(data[0]) : [];
-
+    
     const handleClickForDelete = (id) => {
         !selectedIDsToDelete.includes(id) && setSelectedIDsToDelete(prevIDs => [...prevIDs, id]);
         setDeletetionModalOpen(true);
@@ -240,19 +252,19 @@ const GenericTable = ({ entity, search}) => {
                             ? { "& svg": { transform: "rotate(0deg)" } }
                             : { "& svg": { transform: "rotate(180deg)" } }
                         ]}
-                        title={[ENTITY_COLUMN_KEYS[0]]}
+                        title={columns[0]}
                     >
-                        {ENTITY_COLUMN_KEYS[0]}
+                        {columns[0]}
                     </Link>
                     </th>
-                    {Object.keys(ENTITY_COLUMN_KEYS).slice(1).map(index => (
-                        <th key={index + ENTITY_COLUMN_KEYS[index]}
+                    {Object.keys(columns).slice(1).map(index => (
+                        <th key={index + columns[index]}
                             style={{ padding: "12px 6px" , textAlign: 'center', 
-                                ...(ENTITY_COLUMN_KEYS[index] === 'Descrição' ? {width: '140px'} : {})
+                                ...(columns[index] === 'Descrição' ? {width: '140px'} : {})
                             }}
-                            title={ENTITY_COLUMN_KEYS[index]}
+                            title={columns[index]}
                         >
-                            {ENTITY_COLUMN_KEYS[index]}
+                            {columns[index]}
                         </th>
                     ))}
                     <th style={{ padding: "12px 6px" , textAlign: 'center'}} title="Ações">Ações</th>
@@ -260,25 +272,25 @@ const GenericTable = ({ entity, search}) => {
                 </thead>
                 <tbody>
                 {//[...rows].sort(getComparator(order, "id")).map(row => (
-                [...data].sort(getComparator(order, ENTITY_COLUMN_KEYS[0])).map((row, index) => (
+                [...data].sort(getComparator(order, columns[0])).map((row, index) => (
                     <tr key={row + index}>
                     {<td style={{ textAlign: "center", width: 120 }}>
                         <Checkbox
                             size="sm"
-                            checked={selectedIDsToDelete.includes(row[ENTITY_COLUMN_KEYS[0]])}
-                            color={selectedIDsToDelete.includes(row[ENTITY_COLUMN_KEYS[0]]) ? "primary" : undefined}
+                            checked={selectedIDsToDelete.includes(row[columns[0]])}
+                            color={selectedIDsToDelete.includes(row[columns[0]]) ? "primary" : undefined}
                             onChange={event => {
                                 setSelectedIDsToDelete(ids =>
                                 event.target.checked
-                                    ? ids.concat(row[ENTITY_COLUMN_KEYS[0]])
-                                    : ids.filter(itemId => itemId !== row[ENTITY_COLUMN_KEYS[0]])
+                                    ? ids.concat(row[columns[0]])
+                                    : ids.filter(itemId => itemId !== row[columns[0]])
                                 )
                             }}
                             slotProps={{ checkbox: { sx: { textAlign: "left" } } }}
                             sx={{ verticalAlign: "text-bottom" }}
                         />
                     </td>}
-                    {ENTITY_COLUMN_KEYS.map(column => (
+                    {columns.map(column => (
                         <td key={column}>
                             {column === 'Descrição' || column === 'Email' ? (
                                 <Typography level="body-xs"
@@ -340,8 +352,8 @@ const GenericTable = ({ entity, search}) => {
                     <td>
                         <Box sx={{ display: "flex", gap: 2, alignItems: "center", justifyContent: 'center'}}>
                             <AllowedActions entity={entity} 
-                                deletionModalOpen={() => handleClickForDelete(row[ENTITY_COLUMN_KEYS[0]])}
-                                editionModalOpen={() => handleClickForEdit(row[ENTITY_COLUMN_KEYS[0]])}
+                                deletionModalOpen={() => handleClickForDelete(row[columns[0]])}
+                                editionModalOpen={() => handleClickForEdit(row[columns[0]])}
                             />
                         </Box>
                     </td>

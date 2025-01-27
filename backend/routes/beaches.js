@@ -72,6 +72,30 @@ ROUTER.get('/services', (req, res) => {
     });
 });
 
+ROUTER.get('/columns' , (req, res) => {
+    const SQL = `
+        SELECT Beaches.BEACH_ID AS 'Praia-ID', 
+               BEACH_NAME AS Nome, 
+               DESCRIPTION AS Descrição, 
+               CITY_LOCATION AS Cidade, 
+               COUNTRY_LOCATION AS País, 
+               RESERVATION_COST AS 'Custo de Reserva', 
+               COALESCE(Lifeguards.FULL_NAME, 'Indisponível') AS 'Salva-Vidas', 
+               SERVICE_TYPE AS Serviço, 
+               COALESCE(AVG(Evaluations.SCORE), 0) AS 'Avaliação (Média)' 
+        FROM BEACHES 
+        LEFT JOIN Evaluations ON Beaches.BEACH_ID = Evaluations.BEACH_ID 
+        LEFT JOIN Lifeguards ON Beaches.LIFEGUARD_ID = Lifeguards.LIFEGUARD_ID 
+        GROUP BY Beaches.BEACH_ID 
+        ORDER BY Beaches.BEACH_ID DESC 
+        LIMIT 1`;
+    DATABASE.query(SQL, (err, data) => {
+        if(err) {
+            return res.status(500).json(err);
+        } return res.status(200).json(data);
+    });
+});
+
 ROUTER.get('/admin', (req, res) => {
     let SQL = `
         SELECT Beaches.BEACH_ID AS 'Praia-ID', 
@@ -81,7 +105,8 @@ ROUTER.get('/admin', (req, res) => {
                COUNTRY_LOCATION AS País, 
                RESERVATION_COST AS 'Custo de Reserva', 
                COALESCE(Lifeguards.FULL_NAME, 'Indisponível') AS 'Salva-Vidas', 
-               SERVICE_TYPE AS Serviço, COALESCE(AVG(Evaluations.SCORE), 0) AS 'Avaliação (Média)' 
+               SERVICE_TYPE AS Serviço, 
+               COALESCE(AVG(Evaluations.SCORE), 0) AS 'Avaliação (Média)' 
         FROM BEACHES 
         LEFT JOIN Evaluations ON Beaches.BEACH_ID = Evaluations.BEACH_ID 
         LEFT JOIN Lifeguards ON Beaches.LIFEGUARD_ID = Lifeguards.LIFEGUARD_ID 
