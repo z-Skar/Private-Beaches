@@ -35,6 +35,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown"
 import { closeSidebar } from "../utils"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "contexts/AuthContext"
+import TropicalDreamsIcon from "../../../images/logo192.png"
 
 function Toggler({ defaultExpanded = false, renderToggle, children }) {
   const [open, setOpen] = useState(defaultExpanded);
@@ -123,12 +124,15 @@ export default function Sidebar({ selectedEntity, onSelectEntity }) {
       />
       <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
         <IconButton variant="soft" color="primary" size="sm">
-          <BrightnessAutoRoundedIcon
-            onClick={() => {
+        <img
+          src={TropicalDreamsIcon}
+          alt="Tropical Dreams"
+          style={{ width: '2rem', objectFit: 'contain' }}
+          onClick={() => {
               NAVIGATE('/');
               window.scrollTo(0, 0);
-            }}
-          />
+          }}
+        />
         </IconButton>
         <Typography level="title-lg">Tropical Dreams</Typography>
       </Box>
