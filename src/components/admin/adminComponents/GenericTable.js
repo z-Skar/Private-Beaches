@@ -69,7 +69,7 @@ function descendingComparator(a, b, orderBy) {
       : (a, b) => -descendingComparator(a, b, orderBy);
   }
 
-const GenericTable = ({ entity, search}) => {
+const GenericTable = ({ entity, search }) => {
     const [order, setOrder] = useState("desc");
     const [data, setData] = useState([]);
     const [columns, setColumns] = useState([]);
@@ -90,6 +90,8 @@ const GenericTable = ({ entity, search}) => {
           const DATA = (await (axios.get(`http://localhost:5000/${entity}/admin?search=${search}`))).data;
           dataToExcelRef.current = DATA;
           setData(DATA);
+          COLUMNS = Object.keys(DATA[0]);
+          setColumns(COLUMNS);
         } catch (error) {
           console.error(error);
         };
@@ -117,19 +119,6 @@ const GenericTable = ({ entity, search}) => {
         };
       };
     }, [entity, search]);
-
-    useEffect(() => {
-        const getColumns = async () => {
-          try {
-            const DATA = (await (axios.get(`http://localhost:5000/${entity}/columns`))).data;
-            COLUMNS = Object.keys(DATA[0]);
-            setColumns(COLUMNS);
-          } catch (error) {
-            console.error(error);
-          };
-        };
-        getColumns();
-    }, []);
   
     const deleteRecord = async (entity, id) => {
       try {
@@ -145,8 +134,6 @@ const GenericTable = ({ entity, search}) => {
         console.log('Fetch Error: ', error);
       };
     };
-    
-    const ENTITY_COLUMN_KEYS = data.length > 0 ? Object.keys(data[0]) : [];
     
     const handleClickForDelete = (id) => {
         !selectedIDsToDelete.includes(id) && setSelectedIDsToDelete(prevIDs => [...prevIDs, id]);
@@ -216,18 +203,17 @@ const GenericTable = ({ entity, search}) => {
                     <Checkbox
                         size="sm"
                         indeterminate={
-                        selectedIDsToDelete.length > 0 && selectedIDsToDelete.length !== data.length
+                            selectedIDsToDelete.length > 0 && selectedIDsToDelete.length !== data.length
                         }
                         checked={selectedIDsToDelete.length === data.length}
                         onChange={event => {
-                        setSelectedIDsToDelete (
-                            event.target.checked ? data.map(row => row[0]) : []
-                        )
+                            setSelectedIDsToDelete (
+                                event.target.checked ? data.map(row => row[columns[0]]) : []
+                            );
                         }}
                         color={
-                        selectedIDsToDelete.length > 0 || selectedIDsToDelete.length === data.length
-                            ? "primary"
-                            : undefined
+                            selectedIDsToDelete.length > 0 || selectedIDsToDelete.length === data.length
+                            ? "primary" : undefined
                         }
                         sx={{ verticalAlign: "text-bottom" }}
                     />

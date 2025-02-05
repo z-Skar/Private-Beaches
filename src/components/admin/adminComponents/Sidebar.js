@@ -36,6 +36,9 @@ import { closeSidebar } from "../utils"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "contexts/AuthContext"
 import TropicalDreamsIcon from "../../../images/logo192.png"
+import tw from "twin.macro"
+
+const Logo = tw.img`w-[1.9rem] object-contain hover:cursor-pointer`
 
 function Toggler({ defaultExpanded = false, renderToggle, children }) {
   const [open, setOpen] = useState(defaultExpanded);
@@ -123,17 +126,14 @@ export default function Sidebar({ selectedEntity, onSelectEntity }) {
         onClick={() => closeSidebar()}
       />
       <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-        <IconButton variant="soft" color="primary" size="sm">
-        <img
+        <Logo
           src={TropicalDreamsIcon}
           alt="Tropical Dreams"
-          style={{ width: '2rem', objectFit: 'contain' }}
           onClick={() => {
               NAVIGATE('/');
               window.scrollTo(0, 0);
           }}
         />
-        </IconButton>
         <Typography level="title-lg">Tropical Dreams</Typography>
       </Box>
       <Input
