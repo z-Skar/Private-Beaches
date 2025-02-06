@@ -110,11 +110,13 @@ ROUTER.get('/admin', (req, res) => {
         FROM BEACHES 
         LEFT JOIN Evaluations ON Beaches.BEACH_ID = Evaluations.BEACH_ID 
         LEFT JOIN Lifeguards ON Beaches.LIFEGUARD_ID = Lifeguards.LIFEGUARD_ID 
+        GROUP BY Beaches.BEACH_ID 
+        ORDER BY Beaches.BEACH_ID DESC
     `;
 
     const queryParams = [];
+    /*
     const searchTerm = req.query.search || '';
-
     if (searchTerm) {
         const searchColumns = [
             "BEACH_NAME", 
@@ -134,7 +136,7 @@ ROUTER.get('/admin', (req, res) => {
     SQL += `
         GROUP BY Beaches.BEACH_ID 
         ORDER BY Beaches.BEACH_ID DESC
-    `;
+    `;*/
     DATABASE.query(SQL, queryParams, (err, data) => {
         if(err) {
             return res.status(500).json(err);

@@ -26,12 +26,15 @@ import { Button } from "@mui/joy"
 
 import { entitiesAndNames, getColumns } from "../utils"
 import { BeachForm } from "./BeachForm"
+import { DeleteConfirmation } from "./DeleteConfirmation"
 
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
+
+import { normalizeString } from "../utils"
 
 function RowMenu() {
   return (
@@ -87,9 +90,19 @@ const GenericTable = ({ entity, search }) => {
     useEffect(() => {
       const getData = async () => {
         try {
-          const DATA = (await (axios.get(`http://localhost:5000/${entity}/admin?search=${search}`))).data;
-          dataToExcelRef.current = DATA;
-          setData(DATA);
+          const DATA = (await (axios.get(`http://localhost:5000/${entity}/admin`))).data;
+          if (search === '') {
+            dataToExcelRef.current = DATA;
+            setData(DATA);
+          } else {
+            const FILTERED_DATA = DATA.filter(record => {
+              return Object.values(record).some(value => {
+                return normalizeString(String(value).toLowerCase()).includes(normalizeString(search.toLowerCase()));
+              });
+            });
+            dataToExcelRef.current = FILTERED_DATA;
+            setData(FILTERED_DATA);
+          };
           COLUMNS = Object.keys(DATA[0]);
           setColumns(COLUMNS);
         } catch (error) {
@@ -356,66 +369,24 @@ const GenericTable = ({ entity, search }) => {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <div style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    bgcolor: 'background.paper',
-                    backgroundColor: 'white',
-                    border: '2px solid #ACACAC',
-                    borderRadius: '10px',
-                    boxShadow: 24,
-                    p: 4,
-                    width: '25%',
-                    padding: '0.5rem 0.5rem 0.5rem 0.5rem'
-                }}>
-                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                        <Typography id="modal-modal-title" variant="h6" component="h2" fontFamily={'sans-serif'} fontWeight={'bold'}>
-                            Tens a certeza que desejas eliminar o registo?
-                        </Typography>
-                        <IconButton>
-                            <CloseRoundedIcon onClick={() => {
-                                setDeletetionModalOpen(false);
-                                selectedIDsToDelete.pop();
-                            }}
-                        />
-                        </IconButton>
-                    </div>
-                    <Typography id="modal-modal-title" variant="h6" component="h2" fontFamily={'sans-serif'}>
-                        Esta ação é <Typography textColor="#C80000">IRREVERSÍVEL</Typography> e não pode ser desfeita, além disso, tabelas relacionadas poderão ter os seus registos alterados ou excluídos.
-                    </Typography>
-                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1rem'}}>
-                        <Button sx={{
-                            backgroundColor: '#a0aec0 !important',
-                            color: 'white',
-                            width: '40%',
-                            '&:hover': {
-                                backgroundColor: '#718096 !important',
-                                transition: 'background-color 300ms !important',
-                            },
-                            }}
-                            onClick={() => {
-                                setDeletetionModalOpen(false);
-                                selectedIDsToDelete.pop();
-                            }}
-                        >
-                            CANCELAR
-                        </Button>
-                        <Button sx={{
-                            backgroundColor: '#FF0000 !important',
-                            color: 'white',
-                            width: '40%',
-                            '&:hover': {
-                                backgroundColor: '#C80000 !important',
-                                transition: 'background-color 300ms !important',
-                            },
-                        }} onClick={handleDelete}
-                        >
-                            APAGAR
-                        </Button>
-                    </div>
-                </div>
+                <Box
+                    sx={{
+                        position: 'relative',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        overflowY: 'auto',
+                        width: '100%'
+                    }}
+                >
+                    <DeleteConfirmation 
+                        entity={entity}
+                        setSelectedIDsToDelete={setSelectedIDsToDelete}
+                        selectedIDsToDelete={selectedIDsToDelete}
+                        setDeletetionModalOpen={setDeletetionModalOpen}
+                        handleDelete={handleDelete}
+                    />
+                </Box>
             </Modal>
             <Modal
                 open={editionModalOpen}
