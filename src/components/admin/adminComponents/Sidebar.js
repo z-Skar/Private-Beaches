@@ -37,6 +37,8 @@ import { useNavigate } from "react-router-dom"
 import { useAuth } from "contexts/AuthContext"
 import TropicalDreamsIcon from "../../../images/logo192.png"
 import tw from "twin.macro"
+import { Modal } from "@material-ui/core"
+import { LogoutConfirmationModal } from "./LogoutConfirmationModal"
 
 const Logo = tw.img`w-[1.9rem] object-contain hover:cursor-pointer`
 
@@ -64,7 +66,9 @@ function Toggler({ defaultExpanded = false, renderToggle, children }) {
 }
 
 export default function Sidebar({ selectedEntity, onSelectEntity }) {
-  const { email, fullName, profilePicture, logout } = useAuth();
+  const { email, fullName, profilePicture } = useAuth();
+  const [logoutModal, setLogoutModal] = useState(false);
+
   const NAVIGATE = useNavigate();
 
   const overflowStyle = {
@@ -75,300 +79,309 @@ export default function Sidebar({ selectedEntity, onSelectEntity }) {
   };
 
   return (
-    <Sheet
-      className="Sidebar"
-      sx={{
-        position: { xs: "fixed", md: "sticky" },
-        transform: {
-          xs: "translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1)))",
-          md: "none"
-        },
-        transition: "transform 0.4s, width 0.4s",
-        height: "100dvh",
-        width: "var(--Sidebar-width)",
-        top: 0,
-        p: 2,
-        flexShrink: 0,
-        display: "flex",
-        flexDirection: "column",
-        gap: 2,
-        borderRight: "1px solid",
-        borderColor: "divider"
-      }}
-    >
-      <GlobalStyles
-        styles={theme => ({
-          ":root": {
-            "--Sidebar-width": "220px",
-            [theme.breakpoints.up("lg")]: {
-              "--Sidebar-width": "240px"
-            }
-          }
-        })}
-      />
-      <Box
-        className="Sidebar-overlay"
+    <>
+      <Sheet
+        className="Sidebar"
         sx={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100vw",
-          height: "100vh",
-          opacity: "var(--SideNavigation-slideIn)",
-          backgroundColor: "var(--joy-palette-background-backdrop)",
-          transition: "opacity 0.4s",
+          position: { xs: "fixed", md: "sticky" },
           transform: {
-            xs:
-              "translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1) + var(--SideNavigation-slideIn, 0) * var(--Sidebar-width, 0px)))",
-            lg: "translateX(-100%)"
-          }
-        }}
-        onClick={() => closeSidebar()}
-      />
-      <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-        <Logo
-          src={TropicalDreamsIcon}
-          alt="Tropical Dreams"
-          onClick={() => {
-              NAVIGATE('/');
-              window.scrollTo(0, 0);
-          }}
-        />
-        <Typography level="title-lg">Tropical Dreams</Typography>
-      </Box>
-      <Input
-        size="sm"
-        startDecorator={<SearchRoundedIcon />}
-        placeholder="Pesquisar"
-      />
-      <Box
-        sx={{
-          minHeight: 0,
-          overflow: "hidden auto",
-          flexGrow: 1,
+            xs: "translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1)))",
+            md: "none"
+          },
+          transition: "transform 0.4s, width 0.4s",
+          height: "100dvh",
+          width: "var(--Sidebar-width)",
+          top: 0,
+          p: 2,
+          flexShrink: 0,
           display: "flex",
           flexDirection: "column",
-          [`& .${listItemButtonClasses.root}`]: {
-            gap: 1.5
-          }
+          gap: 2,
+          borderRight: "1px solid",
+          borderColor: "divider"
         }}
       >
-        <List size="sm" sx={{ gap: 1, "--List-nestedInsetStart": "30px", "--ListItem-radius": theme => theme.vars.radius.sm }}>
-          <ListItem key='home'>
-            <ListItemButton
-              selected={selectedEntity === 'home' && true}
-              onClick={() => onSelectEntity('home')}
-            >
-              <HomeRoundedIcon style={selectedEntity === 'home' ? {color: '#ff5a00'} : {}}/>
-              <ListItemContent>
-                <Typography level="title-sm">Home</Typography>
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem nested key='beaches'>
-          <Toggler
-              renderToggle={({ open, setOpen }) => (
-                <ListItemButton
-                  selected={selectedEntity === 'beaches'}
-                  onClick={() => {
-                    setOpen(!open)
-                    onSelectEntity('beaches')
-                  }}
-                >
-                  <BeachAccessRoundedIcon style={selectedEntity === 'beaches' ? {color: '#ff5a00'} : {}}/>
-                  <ListItemContent>
-                    <Typography level="title-sm">Praias</Typography>
-                  </ListItemContent>
-                  <KeyboardArrowDownIcon
-                    sx={[
-                      open
-                        ? {
-                            transform: "rotate(180deg)"
-                          }
-                        : {
-                            transform: "none"
-                          }
-                    ]}
-                  />
-                </ListItemButton>
-              )}
-            >
-              <List sx={{ gap: 0.5 }}>
-                <ListItem sx={{ mt: 0.5 }}>
-                  <ListItemButton>
-                    Criar nova Praia
-                  </ListItemButton>
-                </ListItem>
-              </List>
-            </Toggler>
-          </ListItem>
-
-          <ListItem key='reservations'>
-            <ListItemButton
-              selected={selectedEntity === 'reservations' && true}
-              onClick={() => onSelectEntity('reservations')}
-            >
-              <ReceiptIcon style={selectedEntity === 'reservations' ? {color: '#ff5a00'} : {}}/>
-              <ListItemContent>
-                <Typography level="title-sm">Reservas</Typography>
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem>
-          <ListItem nested key='lifeguards'>
-            <Toggler
-              renderToggle={({ open, setOpen }) => (
-                <ListItemButton
-                  selected={selectedEntity === 'lifeguards' && true}
-                  onClick={() => {
-                    setOpen(!open)
-                    onSelectEntity('lifeguards')
-                  }}
-                >
-                  <SupportRoundedIcon style={selectedEntity === 'lifeguards' ? {color: '#ff5a00'} : {}}/>
-                  <ListItemContent>
-                    <Typography level="title-sm">Salva-vidas</Typography>
-                  </ListItemContent>
-                  {/*<KeyboardArrowDownIcon
-                    sx={[
-                      open
-                        ? {
-                            transform: "rotate(180deg)"
-                          }
-                        : {
-                            transform: "none"
-                          }
-                    ]}
-                  />*/}
-                </ListItemButton>
-              )}
-            >
-              {/*<List sx={{ gap: 0.5 }}>
-                <ListItem sx={{ mt: 0.5 }}>
-                  <ListItemButton>All tasks</ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>Backlog</ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>In progress</ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>Done</ListItemButton>
-                </ListItem>
-              </List>*/}
-            </Toggler>
-          </ListItem>
-          <ListItem key='bills'>
-            <ListItemButton
-                selected={selectedEntity === 'bills' && true}
-                onClick={() => onSelectEntity('bills')}
-            >
-              <AddCardRoundedIcon style={selectedEntity === 'bills' ? {color: '#ff5a00'} : {}}/>
-              <ListItemContent>
-                <Typography level="title-sm">Pagamentos</Typography>
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem key='evaluations'>
-            <ListItemButton
-              role="menuitem"
-              component="a"
-              selected={selectedEntity === 'evaluations' && true}
-              onClick={() => onSelectEntity('evaluations')}
-            >
-              <QuestionAnswerRoundedIcon style={selectedEntity === 'evaluations' ? {color: '#ff5a00'} : {}}/>
-              <ListItemContent>
-                <Typography level="title-sm">Avaliações</Typography>
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem>
-          <ListItem nested key='clients'>
-            <Toggler
-              renderToggle={({ open, setOpen }) => (
-                <ListItemButton
-                  selected={selectedEntity === 'clients' && true}
-                  onClick={() => {
-                    setOpen(!open)
-                    onSelectEntity('clients')
-                  }}
-                >
-                  <GroupRoundedIcon style={selectedEntity === 'clients' ? {color: '#ff5a00'} : {}}/>
-                  <ListItemContent>
-                    <Typography level="title-sm">Clientes</Typography>
-                  </ListItemContent>
-                  {/*<KeyboardArrowDownIcon
-                    sx={[
-                      open ? { transform: "rotate(180deg)" } : { transform: "none" }
-                    ]}
-                  />*/}
-                </ListItemButton>
-              )}
-            >
-              {/*<List sx={{ gap: 0.5 }}>
-                <ListItem sx={{ mt: 0.5 }}>
-                  <ListItemButton
-                    role="menuitem"
-                    component="a"
-                  >
-                    My profile
-                  </ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>Create a new user</ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>Roles & permission</ListItemButton>
-                </ListItem>
-              </List>*/}
-            </Toggler>
-          </ListItem>
-        </List>
-        <List
-          size="sm"
+        <GlobalStyles
+          styles={theme => ({
+            ":root": {
+              "--Sidebar-width": "220px",
+              [theme.breakpoints.up("lg")]: {
+                "--Sidebar-width": "240px"
+              }
+            }
+          })}
+        />
+        <Box
+          className="Sidebar-overlay"
           sx={{
-            mt: "auto",
-            flexGrow: 0,
-            "--ListItem-radius": theme => theme.vars.radius.sm,
-            "--List-gap": "8px",
-            //mb: 2
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            opacity: "var(--SideNavigation-slideIn)",
+            backgroundColor: "var(--joy-palette-background-backdrop)",
+            transition: "opacity 0.4s",
+            transform: {
+              xs:
+                "translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1) + var(--SideNavigation-slideIn, 0) * var(--Sidebar-width, 0px)))",
+              lg: "translateX(-100%)"
+            }
+          }}
+          onClick={() => closeSidebar()}
+        />
+        <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+          <Logo
+            src={TropicalDreamsIcon}
+            alt="Tropical Dreams"
+            onClick={() => {
+                NAVIGATE('/');
+                window.scrollTo(0, 0);
+            }}
+          />
+          <Typography level="title-lg">Tropical Dreams</Typography>
+        </Box>
+        <Input
+          size="sm"
+          startDecorator={<SearchRoundedIcon />}
+          placeholder="Pesquisar"
+        />
+        <Box
+          sx={{
+            minHeight: 0,
+            overflow: "hidden auto",
+            flexGrow: 1,
+            display: "flex",
+            flexDirection: "column",
+            [`& .${listItemButtonClasses.root}`]: {
+              gap: 1.5
+            }
           }}
         >
-          {/*<ListItem>
-            <ListItemButton>
-              <SupportRoundedIcon />
-              Support
-            </ListItemButton>
-          </ListItem>*/}
-          <ListItem>
-            <ListItemButton>
-              <SettingsRoundedIcon />
-              Definições
-            </ListItemButton>
-          </ListItem>
-        </List>
-      </Box>
-      <Divider />
-      <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-        <Avatar
-          variant="outlined"
-          size="sm"
-          src={`http://localhost:5000/${profilePicture}`}
-        />
-        <Box sx={{ minWidth: 0, flex: 1 }}>
-          <Typography level="title-sm" title={fullName} sx={overflowStyle}>{fullName}</Typography>
-          <Typography level="body-xs" title={email} sx={overflowStyle}>
-            {email}
-          </Typography>
+          <List size="sm" sx={{ gap: 1, "--List-nestedInsetStart": "30px", "--ListItem-radius": theme => theme.vars.radius.sm }}>
+            <ListItem key='home'>
+              <ListItemButton
+                selected={selectedEntity === 'home' && true}
+                onClick={() => onSelectEntity('home')}
+              >
+                <HomeRoundedIcon style={selectedEntity === 'home' ? {color: '#ff5a00'} : {}}/>
+                <ListItemContent>
+                  <Typography level="title-sm">Home</Typography>
+                </ListItemContent>
+              </ListItemButton>
+            </ListItem>
+
+            <ListItem nested key='beaches'>
+            <Toggler
+                renderToggle={({ open, setOpen }) => (
+                  <ListItemButton
+                    selected={selectedEntity === 'beaches'}
+                    onClick={() => {
+                      setOpen(!open)
+                      onSelectEntity('beaches')
+                    }}
+                  >
+                    <BeachAccessRoundedIcon style={selectedEntity === 'beaches' ? {color: '#ff5a00'} : {}}/>
+                    <ListItemContent>
+                      <Typography level="title-sm">Praias</Typography>
+                    </ListItemContent>
+                    <KeyboardArrowDownIcon
+                      sx={[
+                        open
+                          ? {
+                              transform: "rotate(180deg)"
+                            }
+                          : {
+                              transform: "none"
+                            }
+                      ]}
+                    />
+                  </ListItemButton>
+                )}
+              >
+                <List sx={{ gap: 0.5 }}>
+                  <ListItem sx={{ mt: 0.5 }}>
+                    <ListItemButton>
+                      Criar nova Praia
+                    </ListItemButton>
+                  </ListItem>
+                </List>
+              </Toggler>
+            </ListItem>
+
+            <ListItem key='reservations'>
+              <ListItemButton
+                selected={selectedEntity === 'reservations' && true}
+                onClick={() => onSelectEntity('reservations')}
+              >
+                <ReceiptIcon style={selectedEntity === 'reservations' ? {color: '#ff5a00'} : {}}/>
+                <ListItemContent>
+                  <Typography level="title-sm">Reservas</Typography>
+                </ListItemContent>
+              </ListItemButton>
+            </ListItem>
+            <ListItem nested key='lifeguards'>
+              <Toggler
+                renderToggle={({ open, setOpen }) => (
+                  <ListItemButton
+                    selected={selectedEntity === 'lifeguards' && true}
+                    onClick={() => {
+                      setOpen(!open)
+                      onSelectEntity('lifeguards')
+                    }}
+                  >
+                    <SupportRoundedIcon style={selectedEntity === 'lifeguards' ? {color: '#ff5a00'} : {}}/>
+                    <ListItemContent>
+                      <Typography level="title-sm">Salva-vidas</Typography>
+                    </ListItemContent>
+                    {/*<KeyboardArrowDownIcon
+                      sx={[
+                        open
+                          ? {
+                              transform: "rotate(180deg)"
+                            }
+                          : {
+                              transform: "none"
+                            }
+                      ]}
+                    />*/}
+                  </ListItemButton>
+                )}
+              >
+                {/*<List sx={{ gap: 0.5 }}>
+                  <ListItem sx={{ mt: 0.5 }}>
+                    <ListItemButton>All tasks</ListItemButton>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemButton>Backlog</ListItemButton>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemButton>In progress</ListItemButton>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemButton>Done</ListItemButton>
+                  </ListItem>
+                </List>*/}
+              </Toggler>
+            </ListItem>
+            <ListItem key='bills'>
+              <ListItemButton
+                  selected={selectedEntity === 'bills' && true}
+                  onClick={() => onSelectEntity('bills')}
+              >
+                <AddCardRoundedIcon style={selectedEntity === 'bills' ? {color: '#ff5a00'} : {}}/>
+                <ListItemContent>
+                  <Typography level="title-sm">Pagamentos</Typography>
+                </ListItemContent>
+              </ListItemButton>
+            </ListItem>
+
+            <ListItem key='evaluations'>
+              <ListItemButton
+                role="menuitem"
+                component="a"
+                selected={selectedEntity === 'evaluations' && true}
+                onClick={() => onSelectEntity('evaluations')}
+              >
+                <QuestionAnswerRoundedIcon style={selectedEntity === 'evaluations' ? {color: '#ff5a00'} : {}}/>
+                <ListItemContent>
+                  <Typography level="title-sm">Avaliações</Typography>
+                </ListItemContent>
+              </ListItemButton>
+            </ListItem>
+            <ListItem nested key='clients'>
+              <Toggler
+                renderToggle={({ open, setOpen }) => (
+                  <ListItemButton
+                    selected={selectedEntity === 'clients' && true}
+                    onClick={() => {
+                      setOpen(!open)
+                      onSelectEntity('clients')
+                    }}
+                  >
+                    <GroupRoundedIcon style={selectedEntity === 'clients' ? {color: '#ff5a00'} : {}}/>
+                    <ListItemContent>
+                      <Typography level="title-sm">Clientes</Typography>
+                    </ListItemContent>
+                    {/*<KeyboardArrowDownIcon
+                      sx={[
+                        open ? { transform: "rotate(180deg)" } : { transform: "none" }
+                      ]}
+                    />*/}
+                  </ListItemButton>
+                )}
+              >
+                {/*<List sx={{ gap: 0.5 }}>
+                  <ListItem sx={{ mt: 0.5 }}>
+                    <ListItemButton
+                      role="menuitem"
+                      component="a"
+                    >
+                      My profile
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemButton>Create a new user</ListItemButton>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemButton>Roles & permission</ListItemButton>
+                  </ListItem>
+                </List>*/}
+              </Toggler>
+            </ListItem>
+          </List>
+          <List
+            size="sm"
+            sx={{
+              mt: "auto",
+              flexGrow: 0,
+              "--ListItem-radius": theme => theme.vars.radius.sm,
+              "--List-gap": "8px",
+              //mb: 2
+            }}
+          >
+            {/*<ListItem>
+              <ListItemButton>
+                <SupportRoundedIcon />
+                Support
+              </ListItemButton>
+            </ListItem>*/}
+            <ListItem>
+              <ListItemButton>
+                <SettingsRoundedIcon />
+                Definições
+              </ListItemButton>
+            </ListItem>
+          </List>
         </Box>
-        <IconButton size="sm" variant="plain" color="neutral" onClick={() => {
-          logout();
-          NAVIGATE('/');
-        }}>
-          <LogoutRoundedIcon />
-        </IconButton>
-      </Box>
-    </Sheet>
+        <Divider />
+        <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+          <Avatar
+            variant="outlined"
+            size="sm"
+            src={`http://localhost:5000/${profilePicture}`}
+          />
+          <Box sx={{ minWidth: 0, flex: 1 }}>
+            <Typography level="title-sm" title={fullName} sx={overflowStyle}>{fullName}</Typography>
+            <Typography level="body-xs" title={email} sx={overflowStyle}>
+              {email}
+            </Typography>
+          </Box>
+          <IconButton size="sm" variant="plain" color="neutral" onClick={() => setLogoutModal(true)}>
+            <LogoutRoundedIcon />
+          </IconButton>
+        </Box>
+      </Sheet>
+      <Modal
+        open={logoutModal}
+        onClose={() => setLogoutModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <div>
+          <LogoutConfirmationModal setLogoutConfirmationModal={setLogoutModal}/>
+        </div>
+      </Modal>
+    </>
   )
 }

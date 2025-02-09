@@ -368,17 +368,8 @@ const GenericTable = ({ entity, search }) => {
                 }}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
-            >
-                <Box
-                    sx={{
-                        position: 'relative',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        overflowY: 'auto',
-                        width: '100%'
-                    }}
-                >
+            >   
+                <div>
                     <DeleteConfirmation 
                         entity={entity}
                         setSelectedIDsToDelete={setSelectedIDsToDelete}
@@ -386,7 +377,7 @@ const GenericTable = ({ entity, search }) => {
                         setDeletetionModalOpen={setDeletetionModalOpen}
                         handleDelete={handleDelete}
                     />
-                </Box>
+                </div>
             </Modal>
             <Modal
                 open={editionModalOpen}
