@@ -3,9 +3,9 @@ import Button from "@mui/joy/Button";
 import Card from "@mui/joy/Card";
 import CardActions from "@mui/joy/CardActions";
 import CardOverflow from "@mui/joy/CardOverflow";
-import Stack from "@mui/joy/Stack";
 import Typography from "@mui/joy/Typography";
 import { useAuth } from "contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const modalCentralization = {
     display: 'flex',
@@ -16,6 +16,7 @@ const modalCentralization = {
 
 export const LogoutConfirmationModal = ({ setLogoutConfirmationModal }) => {
     const { logout } = useAuth();
+    const NAVIGATE = useNavigate();
     return (
         <Box sx={modalCentralization}>
             <Card 
@@ -51,7 +52,10 @@ export const LogoutConfirmationModal = ({ setLogoutConfirmationModal }) => {
                                     transition: "background-color 300ms !important",
                                 },
                             }}
-                            onClick={logout}
+                            onClick={() => {
+                                logout();
+                                NAVIGATE('/');
+                            }}
                         >
                             Sair
                         </Button>

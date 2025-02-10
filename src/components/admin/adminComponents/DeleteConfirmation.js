@@ -46,6 +46,7 @@ export const DeleteConfirmation = ({ entity, setSelectedIDsToDelete, selectedIDs
                 onClick={() => {
                   setDeletetionModalOpen(false);
                   setSelectedIDsToDelete(selectedIDsToDelete.filter((id) => id !== entity.id));
+                  console.log(selectedIDsToDelete);
                 }}
               >
                 Cancelar
