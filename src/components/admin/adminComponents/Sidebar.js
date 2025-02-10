@@ -38,7 +38,7 @@ import { useAuth } from "contexts/AuthContext"
 import TropicalDreamsIcon from "../../../images/logo192.png"
 import tw from "twin.macro"
 import { Modal } from "@material-ui/core"
-import { LogoutConfirmationModal } from "./LogoutConfirmationModal"
+import { LogoutConfirmationModal } from "./Modals/LogoutConfirmationModal"
 
 const Logo = tw.img`w-[1.9rem] object-contain hover:cursor-pointer`
 

@@ -1,32 +1,26 @@
 import { useState, useEffect, useRef } from "react"
 import ReactDOM from "react-dom"
-import Avatar from "@mui/joy/Avatar"
 import Box from "@mui/joy/Box"
-import Chip from "@mui/joy/Chip"
 import Divider from "@mui/joy/Divider"
 import Link from "@mui/joy/Link"
 import Table from "@mui/joy/Table"
 import Checkbox from "@mui/joy/Checkbox"
-import IconButton, { iconButtonClasses } from "@mui/joy/IconButton"
+import IconButton from "@mui/joy/IconButton"
 import Typography from "@mui/joy/Typography"
 import Menu from "@mui/joy/Menu"
 import MenuButton from "@mui/joy/MenuButton"
 import MenuItem from "@mui/joy/MenuItem"
 import Dropdown from "@mui/joy/Dropdown"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
-import CheckRoundedIcon from "@mui/icons-material/CheckRounded"
-import BlockIcon from "@mui/icons-material/Block"
-import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded"
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded"
-import Tooltip from '@mui/material/Tooltip';
 import AllowedActions from "./AllowedActions"
 import { Modal } from '@material-ui/core';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import { Button } from "@mui/joy"
 
-import { entitiesAndNames, getColumns } from "../utils"
-import { BeachForm } from "./BeachForm"
-import { DeleteConfirmation } from "./DeleteConfirmation"
+
+import { entitiesAndNames } from "../utils"
+import { BeachForm } from "./Modals/BeachForm"
+import { ExcelMessageModal } from "./Modals/ExcelMessageModal"
+import { DeleteConfirmation } from "./Modals/DeleteConfirmation"
 
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
@@ -84,6 +78,7 @@ const GenericTable = ({ entity, search }) => {
     // Estados que controlagem a abertura dos Modals.
     const [deletetionModalOpen, setDeletetionModalOpen] = useState(false);
     const [editionModalOpen, setEditionModalOpen] = useState(false);
+    const [excelMessageModal, setExcelMessageModal] = useState(false);
 
     const dataToExcelRef = useRef(null);
     let COLUMNS;
@@ -176,7 +171,19 @@ const GenericTable = ({ entity, search }) => {
 
     const exportToExcel = () => {
         if (!Array.isArray(dataToExcelRef.current) || dataToExcelRef.current.length === 0) {
-            console.error('Dados inexistentes.');
+            ReactDOM.render(
+                <Modal
+                    open={excelMessageModal}
+                    onClose={() => setExcelMessageModal(false)}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <div>
+                        <ExcelMessageModal setExcelMessageModal={setExcelMessageModal} />,
+                    </div>
+                </Modal>
+            );
+            return;
         };
 
         const worksheetData = XLSX.utils.json_to_sheet(dataToExcelRef.current); // Converte os dados JSON para dados em planilha.
@@ -364,7 +371,6 @@ const GenericTable = ({ entity, search }) => {
                 open={deletetionModalOpen}
                 onClose={() => {
                     setDeletetionModalOpen(false);
-                    selectedIDsToDelete.pop();
                 }}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"

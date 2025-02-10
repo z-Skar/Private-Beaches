@@ -16,7 +16,7 @@ import CardActions from "@mui/joy/CardActions";
 import CardOverflow from "@mui/joy/CardOverflow";
 import { useNavigate } from "react-router-dom";
 import { checkOnlyNumbers, validateBeachFormFields } from "validation/validationFunctions";
-import DropZone from "./DropZone";
+import DropZone from "../DropZone";
 
 export const BeachForm = ({ entity, id, setEditionModalOpen }) => {
   const [data, setData] = useState({});
