@@ -8,53 +8,56 @@ import Typography from "@mui/joy/Typography";
 import { useAuth } from "contexts/AuthContext";
 
 const modalCentralization = {
-    
-}
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: '100vh'
+};
 
-export const LogoutConfirmationModal = (setLogoutConfirmationModal) => {
+export const LogoutConfirmationModal = ({ setLogoutConfirmationModal }) => {
     const { logout } = useAuth();
     return (
-        <div style={{ 
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            minHeight: '100vh'
-        }}>
-            <Card>
+        <Box sx={modalCentralization}>
+            <Card 
+                sx={{
+                    minHeight: "auto",
+                    width: "auto",
+                }}
+            >
                 <Box>
                     <Typography level="title-md">
                         Tens a certeza que desejas sair da tua conta?
                     </Typography>
                     <Typography level="body-sm">
-                        As alterações que fez serão salvas.
+                        Assim que desejáres voltar, terás de fazer login novamente.
                     </Typography>
-                    <CardOverflow sx={{ borderTop: "1px solid", borderColor: "divider" }}>
-                        <CardActions sx={{ alignSelf: "flex-end", pt: 2 }}>
-                            <Button
-                                size="sm"
-                                variant="outlined"
-                                color="neutral"
-                                onClick={() => setLogoutConfirmationModal(false)}
-                            >
-                                Cancelar
-                            </Button>
-                            <Button
-                                size="sm"
-                                sx={{
-                                backgroundColor: "red !important",
+                </Box>
+                <CardOverflow sx={{ borderTop: "1px solid", borderColor: "divider" }}>
+                    <CardActions sx={{ alignSelf: "flex-end", pt: 2 }}>
+                        <Button
+                            size="sm"
+                            variant="outlined"
+                            color="neutral"
+                            onClick={() => setLogoutConfirmationModal(false)}
+                        >
+                            Cancelar
+                        </Button>
+                        <Button
+                            size="sm"
+                            sx={{
+                                backgroundColor: "#ff5a00 !important",
                                 "&:hover": {
-                                    backgroundColor: "#ba0000 !important",
+                                    backgroundColor: "#e64d00 !important",
                                     transition: "background-color 300ms !important",
                                 },
-                                }}
-                                onClick={logout}
-                            >
-                                Apagar
-                            </Button>
-                        </CardActions>
-                    </CardOverflow>
-                </Box>
+                            }}
+                            onClick={logout}
+                        >
+                            Sair
+                        </Button>
+                    </CardActions>
+                </CardOverflow>
             </Card>
-        </div>
+        </Box>
     )
 };

@@ -153,14 +153,7 @@ export const BeachForm = ({ entity, id, setEditionModalOpen }) => {
   const navigate = useNavigate();
 
   return (
-    <Box sx={{ flex: 1, width: "100%" }}>
-      <Box
-        sx={{
-          position: "sticky",
-          top: { sm: -100, md: -110 },
-          bgcolor: "background.body",
-        }}
-      ></Box>
+    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh" }}>
       <Stack
         spacing={4}
         sx={{
@@ -175,7 +168,7 @@ export const BeachForm = ({ entity, id, setEditionModalOpen }) => {
           sx={{
             overflowY: "auto",
             maxHeight: "70vh",
-            width: "80vh",
+            minWidth: "80vh",
           }}
           onScroll={() => {
             setServiceTypeAutocomplete(false);
@@ -183,23 +176,23 @@ export const BeachForm = ({ entity, id, setEditionModalOpen }) => {
             }}
           >
             <Box sx={{ mb: 1 }}>
-            <Typography level="title-md">Informação relativa à Praia</Typography>
-            <Typography level="body-sm">
-              Costumiza a forma que a informação será apresentada.
-            </Typography>
+              <Typography level="title-md">Informação relativa à Praia</Typography>
+              <Typography level="body-sm">
+                Costumiza a forma que a informação será apresentada.
+              </Typography>
             </Box>
             <Divider />
             <Stack
-            direction="row"
-            spacing={3}
-            sx={{ display: { xs: "none", md: "flex" }, my: 1 }}
+              direction="row"
+              spacing={3}
+              sx={{ display: { md: "flex" }, my: 1 }}
             >
             <Stack spacing={2} sx={{ flexGrow: 1 }}>
               <Stack spacing={1} direction={{ xs: "column", md: "row" }}>
               <FormControl
                 sx={{
-                display: { sm: "flex-column", md: "flex-row" },
-                flexGrow: 1,
+                  display: { sm: "flex-column", md: "flex-row" },
+                  flexGrow: 1,
                 }}
               >
                 <FormLabel>Nome da Praia</FormLabel>

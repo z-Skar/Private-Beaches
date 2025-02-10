@@ -385,18 +385,14 @@ const GenericTable = ({ entity, search }) => {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box
-                    sx={{
-                        position: 'relative',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        overflowY: 'auto',
-                        width: '100%'
-                    }}
-                >
-                    <BeachForm entity={entity} id={selectedIDToEdit} setEditionModalOpen={setEditionModalOpen} handleEdition={handleEdition} />
-                </Box>
+                <div>
+                    <BeachForm
+                        entity={entity}
+                        id={selectedIDToEdit}
+                        setEditionModalOpen={setEditionModalOpen}
+                        handleEdition={handleEdition}
+                    />
+                </div>
             </Modal>
         </>
     );
