@@ -171,18 +171,7 @@ const GenericTable = ({ entity, search }) => {
 
     const exportToExcel = () => {
         if (!Array.isArray(dataToExcelRef.current) || dataToExcelRef.current.length === 0) {
-            ReactDOM.render(
-                <Modal
-                    open={excelMessageModal}
-                    onClose={() => setExcelMessageModal(false)}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                >
-                    <div>
-                        <ExcelMessageModal setExcelMessageModal={setExcelMessageModal} />,
-                    </div>
-                </Modal>
-            );
+            setExcelMessageModal(true);
             return;
         };
 
@@ -398,6 +387,16 @@ const GenericTable = ({ entity, search }) => {
                         setEditionModalOpen={setEditionModalOpen}
                         handleEdition={handleEdition}
                     />
+                </div>
+            </Modal>
+            <Modal
+                open={excelMessageModal}
+                onClose={() => setExcelMessageModal(false)}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <div>
+                    <ExcelMessageModal setExcelMessageModal={setExcelMessageModal} />,
                 </div>
             </Modal>
         </>

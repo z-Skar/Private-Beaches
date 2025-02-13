@@ -22,7 +22,7 @@ export const LogoutConfirmationModal = ({ setLogoutConfirmationModal }) => {
             <Card 
                 sx={{
                     minHeight: "auto",
-                    width: "auto",
+                    maxWidth: "30rem",
                 }}
             >
                 <Box>
@@ -30,7 +30,7 @@ export const LogoutConfirmationModal = ({ setLogoutConfirmationModal }) => {
                         Tens a certeza que desejas sair da tua conta?
                     </Typography>
                     <Typography level="body-sm">
-                        Assim que desejáres voltar, terás de fazer login novamente.
+                        Assim que desejares voltar, terás de fazer login novamente.
                     </Typography>
                 </Box>
                 <CardOverflow sx={{ borderTop: "1px solid", borderColor: "divider" }}>

@@ -28,7 +28,7 @@ export const DeleteConfirmation = ({ entity, setSelectedIDsToDelete, selectedIDs
         <Card
           sx={{
             minHeight: "auto",
-            width: "auto",
+            maxWidth: "30rem",
           }}
         >
           <Box sx={{ mb: 1 }}>

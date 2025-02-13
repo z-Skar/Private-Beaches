@@ -18,7 +18,7 @@ export const ExcelMessageModal = ({ setExcelMessageModal }) => {
             <Card 
                 sx={{
                     minHeight: "auto",
-                    width: "auto",
+                    maxWidth: "30rem",
                 }}
             >
                 <Box>
@@ -26,7 +26,7 @@ export const ExcelMessageModal = ({ setExcelMessageModal }) => {
                         Não foi possível exportar os dados para Excel.
                     </Typography>
                     <Typography level="body-sm">
-                        Para exportar dados para Excel, garante a existência de dados na sua tabela.
+                        Garante a existência de dados para exportação e tenta novamente.
                     </Typography>
                 </Box>
                 <CardOverflow sx={{ borderTop: "1px solid", borderColor: "divider" }}>
