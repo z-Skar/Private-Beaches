@@ -23,6 +23,7 @@ import Menu from "@mui/joy/Menu"
 import MenuButton from "@mui/joy/MenuButton"
 import MenuItem from "@mui/joy/MenuItem"
 import Dropdown from "@mui/joy/Dropdown"
+import { CityFilter } from "../filterComponents/City"
 
 import FilterAltIcon from "@mui/icons-material/FilterAlt"
 import SearchIcon from "@mui/icons-material/Search"
@@ -227,7 +228,7 @@ export default function OrderTable({ entity, entityName }) {
 
   const renderFilters = () => (
     <React.Fragment>
-      {/*<FormControl size="sm">
+      <FormControl size="sm">
         <FormLabel>Status</FormLabel>
         <Select
           size="sm"
@@ -249,18 +250,7 @@ export default function OrderTable({ entity, entityName }) {
           <Option value="debit">Debit</Option>
         </Select>
       </FormControl>
-      <FormControl size="sm">
-        <FormLabel>Customer</FormLabel>
-        <Select size="sm" placeholder="All">
-          <Option value="all">All</Option>
-          <Option value="olivia">Olivia Rhye</Option>
-          <Option value="steve">Steve Hampton</Option>
-          <Option value="ciaran">Ciaran Murray</Option>
-          <Option value="marina">Marina Macdonald</Option>
-          <Option value="charles">Charles Fulton</Option>
-          <Option value="jay">Jay Hoper</Option>
-        </Select>
-      </FormControl>*/}
+      <CityFilter />
     </React.Fragment>
   )
   return (

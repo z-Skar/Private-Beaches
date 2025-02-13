@@ -45,6 +45,7 @@ export function entitiesAndNames() {
   };
 };
 
+// Função utilizada para na filtragem de dados por texto no Admin Dashbord.
 export function normalizeString(string) {
   return string.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 };
