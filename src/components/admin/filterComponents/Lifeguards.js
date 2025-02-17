@@ -3,10 +3,10 @@ import FormLabel from "@mui/joy/FormLabel";
 import Select from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
 
-export const CityFilter = () => {
+export const LifeguardsFilter = () => {
     return (
         <FormControl size="sm">
-            <FormLabel>Cidade</FormLabel>
+            <FormLabel>Salva-vidas</FormLabel>
             <Select size="sm" placeholder="All">
                 <Option value="all">All</Option>
                 <Option value="olivia">Olivia Rhye</Option>

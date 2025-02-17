@@ -49,3 +49,26 @@ export function entitiesAndNames() {
 export function normalizeString(string) {
   return string.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 };
+
+export function searchText(entity) {
+  const InputLabelText = [
+    'Pesquisar por nome do cliente ou nome da praia',
+    'Pesquisar por nome ou email',
+    'Pesquisar por nome ou descrição',
+  ];
+
+  switch (entity) {
+    case ENTITIES.BEACHES:
+      return InputLabelText[2];
+    case ENTITIES.RESERVATIONS:
+      return InputLabelText[0];
+    case ENTITIES.LIFEGUARDS:
+      return InputLabelText[1];
+    case ENTITIES.RESERVATIONS:
+      return InputLabelText[0];
+    case ENTITIES.EVALUATIONS:
+      return InputLabelText[0];
+    case ENTITIES.CLIENTS:
+      return InputLabelText[1];
+  };
+};

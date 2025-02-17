@@ -1,43 +1,28 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import * as React from "react"
-import Avatar from "@mui/joy/Avatar"
+import React, { useState } from "react";
 import Box from "@mui/joy/Box"
 import Button from "@mui/joy/Button"
-import Chip from "@mui/joy/Chip"
 import Divider from "@mui/joy/Divider"
 import FormControl from "@mui/joy/FormControl"
 import FormLabel from "@mui/joy/FormLabel"
-import Link from "@mui/joy/Link"
 import Input from "@mui/joy/Input"
 import Modal from "@mui/joy/Modal"
 import ModalDialog from "@mui/joy/ModalDialog"
 import ModalClose from "@mui/joy/ModalClose"
 import Select from "@mui/joy/Select"
 import Option from "@mui/joy/Option"
-import Table from "@mui/joy/Table"
 import Sheet from "@mui/joy/Sheet"
-import Checkbox from "@mui/joy/Checkbox"
 import IconButton, { iconButtonClasses } from "@mui/joy/IconButton"
 import Typography from "@mui/joy/Typography"
-import Menu from "@mui/joy/Menu"
-import MenuButton from "@mui/joy/MenuButton"
-import MenuItem from "@mui/joy/MenuItem"
-import Dropdown from "@mui/joy/Dropdown"
 import { CityFilter } from "../filterComponents/City"
 
 import FilterAltIcon from "@mui/icons-material/FilterAlt"
 import SearchIcon from "@mui/icons-material/Search"
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
-import CheckRoundedIcon from "@mui/icons-material/CheckRounded"
-import BlockIcon from "@mui/icons-material/Block"
-import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded"
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight"
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft"
-import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded"
-
-import { getColumns } from "../utils"
 import GenericTable from "./GenericTable"
-import { Alert, AlertTitle } from "@mui/material"
+import { searchText } from "../utils";
+import { EntityFilter } from "../filterComponents/EntityFilter"
 
 const rows = [
   {
@@ -223,12 +208,12 @@ const rows = [
 ]
 
 export default function OrderTable({ entity, entityName }) {
-  const [open, setOpen] = React.useState(false);
-  const [search, setSearch] = React.useState('')
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState('')
 
   const renderFilters = () => (
-    <React.Fragment>
-      <FormControl size="sm">
+    <>
+      {/*<FormControl size="sm">
         <FormLabel>Status</FormLabel>
         <Select
           size="sm"
@@ -249,12 +234,12 @@ export default function OrderTable({ entity, entityName }) {
           <Option value="purchase">Purchase</Option>
           <Option value="debit">Debit</Option>
         </Select>
-      </FormControl>
-      <CityFilter />
-    </React.Fragment>
+      </FormControl>*/}
+      <EntityFilter entity={entity} />
+    </>
   )
   return (
-    <React.Fragment>
+    <>
       <Sheet
         className="SearchAndFilters-mobile"
         sx={{ display: { xs: "flex", sm: "none" }, my: 1, gap: 1 }}
@@ -306,7 +291,7 @@ export default function OrderTable({ entity, entityName }) {
           <FormLabel>Pesquisa por {entityName}</FormLabel>
           <Input
             size="sm"
-            placeholder="Pesquisar"
+            placeholder={searchText(entity)}
             onChange={(e) => {
               setSearch(e.target.value);
             }}
@@ -371,6 +356,6 @@ export default function OrderTable({ entity, entityName }) {
           Próximo
         </Button>
       </Box>
-    </React.Fragment>
+    </>
   )
 };
