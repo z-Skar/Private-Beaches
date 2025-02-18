@@ -53,7 +53,7 @@ export function normalizeString(string) {
 export function searchText(entity) {
   const InputLabelText = [
     'Pesquisar por nome do cliente ou nome da praia',
-    'Pesquisar por nome ou email',
+    'Pesquisar por nome, email ou contacto',
     'Pesquisar por nome ou descrição',
   ];
 

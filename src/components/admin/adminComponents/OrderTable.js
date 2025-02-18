@@ -22,7 +22,7 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight"
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft"
 import GenericTable from "./GenericTable"
 import { searchText } from "../utils";
-import { EntityFilter } from "../filterComponents/EntityFilter"
+import { EntityFilter } from "../filterComponents/EntityFilters/EntityFilter"
 
 const rows = [
   {
@@ -211,6 +211,8 @@ export default function OrderTable({ entity, entityName }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('')
 
+  //const GENERAL_INPUT_FILTER = document.getElementById('GeneralInputFilter');
+  //const GENERAL_INPUT_FILTER_WIDTH = GENERAL_INPUT_FILTER.getAttribute('placeholder').length;
   const renderFilters = () => (
     <>
       {/*<FormControl size="sm">
@@ -284,20 +286,24 @@ export default function OrderTable({ entity, entityName }) {
           gap: 1.5,
           "& > *": {
             minWidth: { xs: "120px", md: "160px" }
-          }
+          },
+          width: '100%'
         }}
       >
-        <FormControl sx={{ flex: 1 }} size="sm">
-          <FormLabel>Pesquisa por {entityName}</FormLabel>
-          <Input
-            size="sm"
-            placeholder={searchText(entity)}
-            onChange={(e) => {
-              setSearch(e.target.value);
-            }}
-            startDecorator={<SearchIcon />}
-          />
-        </FormControl>
+        {entity !== 'bills' && (
+          <FormControl sx={{ flex: 1 }} size="sm">
+            <FormLabel>Pesquisa por {entityName}</FormLabel>
+            <Input
+              id="GeneralInputFilter"
+              size="sm"
+              placeholder={searchText(entity)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+              }}
+              startDecorator={<SearchIcon />}
+            />
+          </FormControl>
+        )}
         {renderFilters()}
       </Box>
       <Sheet
