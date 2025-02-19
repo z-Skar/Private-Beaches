@@ -7,13 +7,13 @@ import { RatingFilter } from "../Rating";
 
 export const BeachFilter = () => {
     return (
-        <>
+        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'start', gap: '1rem', flexWrap: 'wrap' }}>
             <CityFilter />
             <CountryFilter />
             <ReservationCostFilter />
             <LifeguardsFilter />
             <ServicesFilter />
             <RatingFilter />
-        </>
+        </div>
     );
 };

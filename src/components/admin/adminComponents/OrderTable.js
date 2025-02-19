@@ -258,7 +258,7 @@ export default function OrderTable({ entity, entityName }) {
           "& > *": {
             minWidth: { xs: "120px", md: "160px" }
           },
-          width: '100%'
+          width: '100%',
         }}
       >
         {entity !== 'bills' && (
@@ -272,7 +272,7 @@ export default function OrderTable({ entity, entityName }) {
                 setSearch(e.target.value);
               }}
               startDecorator={<SearchIcon />}
-              sx={{ minWidth: '25rem' }}
+              sx={entity !== 'evaluations' ? { minWidth: '25rem', marginBottom: '1rem' } : { minWidth: '25rem' }}
             />
           </FormControl>
         )}

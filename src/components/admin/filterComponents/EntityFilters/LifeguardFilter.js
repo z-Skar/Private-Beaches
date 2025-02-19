@@ -3,7 +3,7 @@ import { Salary } from "../Salary"
 import { StatusFilter } from "../Status"
 
 export const LifeguardFilter = () => (
-    <div style={{ display: 'flex', gap: '1rem' }}>
+    <div style={{ minWidth: '10rem', display: 'flex', flexDirection: 'row', justifyContent: 'start', gap: '1rem', flexWrap: 'wrap' }}>
         <DateFilter />
         <Salary />
         <StatusFilter />

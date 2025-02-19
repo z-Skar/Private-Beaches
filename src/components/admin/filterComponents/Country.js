@@ -5,7 +5,7 @@ import Option from "@mui/joy/Option";
 
 export const CountryFilter = () => {
     return (
-        <FormControl size="sm">
+        <FormControl size="sm" sx={{ minWidth: '10rem' }}>
             <FormLabel>País</FormLabel>
             <Select size="sm" placeholder="All">
                 <Option value="all">All</Option>

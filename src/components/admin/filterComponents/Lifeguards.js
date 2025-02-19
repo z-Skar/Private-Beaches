@@ -5,7 +5,7 @@ import Option from "@mui/joy/Option";
 
 export const LifeguardsFilter = () => {
     return (
-        <FormControl size="sm">
+        <FormControl size="sm" sx={{ minWidth: '10rem' }}>
             <FormLabel>Salva-vidas</FormLabel>
             <Select size="sm" placeholder="All">
                 <Option value="all">All</Option>

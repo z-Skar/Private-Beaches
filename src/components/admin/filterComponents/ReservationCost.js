@@ -11,7 +11,7 @@ export const ReservationCostFilter = () => {
     };
 
     return (
-        <FormControl size="sm">
+        <FormControl size="sm" sx={{ minWidth: '10rem' }}>
             <FormLabel sx={{marginBottom: '-0.05rem'}}>Custo da Reserva</FormLabel>
             <Slider
                 sx={{
