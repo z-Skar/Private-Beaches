@@ -7,7 +7,7 @@ export const StatusFilter = () => {
     return (
         <FormControl size="sm">
             <FormLabel>Estado</FormLabel>
-            <Select size="sm" placeholder="All">
+            <Select size="sm" placeholder="All" sx={{ width: '10rem' }}>
                 <Option value="all">All</Option>
                 <Option value="usa">Ativo</Option>
                 <Option value="canada">Em espera</Option>

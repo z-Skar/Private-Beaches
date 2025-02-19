@@ -211,35 +211,6 @@ export default function OrderTable({ entity, entityName }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('')
 
-  //const GENERAL_INPUT_FILTER = document.getElementById('GeneralInputFilter');
-  //const GENERAL_INPUT_FILTER_WIDTH = GENERAL_INPUT_FILTER.getAttribute('placeholder').length;
-  const renderFilters = () => (
-    <>
-      {/*<FormControl size="sm">
-        <FormLabel>Status</FormLabel>
-        <Select
-          size="sm"
-          placeholder="Filter by status"
-          slotProps={{ button: { sx: { whiteSpace: "nowrap" } } }}
-        >
-          <Option value="paid">Paid</Option>
-          <Option value="pending">Pending</Option>
-          <Option value="refunded">Refunded</Option>
-          <Option value="cancelled">Cancelled</Option>
-        </Select>
-      </FormControl>
-      <FormControl size="sm">
-        <FormLabel>Category</FormLabel>
-        <Select size="sm" placeholder="All">
-          <Option value="all">All</Option>
-          <Option value="refund">Refund</Option>
-          <Option value="purchase">Purchase</Option>
-          <Option value="debit">Debit</Option>
-        </Select>
-      </FormControl>*/}
-      <EntityFilter entity={entity} />
-    </>
-  )
   return (
     <>
       <Sheet
@@ -268,7 +239,7 @@ export default function OrderTable({ entity, entityName }) {
             </Typography>
             <Divider sx={{ my: 2 }} />
             <Sheet sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              {renderFilters()}
+              <EntityFilter entity={entity} />
               <Button color="primary" onClick={() => setOpen(false)}>
                 Submit
               </Button>
@@ -282,8 +253,8 @@ export default function OrderTable({ entity, entityName }) {
           borderRadius: "sm",
           py: 2,
           display: { xs: "none", sm: "flex" },
+          justifyContent: 'space-between',
           flexWrap: "wrap",
-          gap: 1.5,
           "& > *": {
             minWidth: { xs: "120px", md: "160px" }
           },
@@ -291,7 +262,7 @@ export default function OrderTable({ entity, entityName }) {
         }}
       >
         {entity !== 'bills' && (
-          <FormControl sx={{ flex: 1 }} size="sm">
+          <FormControl sx={{ display: 'flex' }} size="sm">
             <FormLabel>Pesquisa por {entityName}</FormLabel>
             <Input
               id="GeneralInputFilter"
@@ -301,10 +272,11 @@ export default function OrderTable({ entity, entityName }) {
                 setSearch(e.target.value);
               }}
               startDecorator={<SearchIcon />}
+              sx={{ minWidth: '25rem' }}
             />
           </FormControl>
         )}
-        {renderFilters()}
+        <EntityFilter entity={entity} />
       </Box>
       <Sheet
         className="OrderTableContainer"

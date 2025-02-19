@@ -4,7 +4,7 @@ import FormLabel from '@mui/joy/FormLabel';
 import Slider from '@mui/joy/Slider'
 
 export const Salary = () => {
-    const [value, setValue] = useState([200, 1800]);
+    const [value, setValue] = useState([900, 2800]);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -28,12 +28,13 @@ export const Salary = () => {
                         border: '2px solid #ff5a00',
                         backgroundColor: 'white',
                     },
+                    width: '10rem'
                 }}
                 defaultValue={0}
                 value={value}
                 onChange={handleChange}
-                min={0}
-                max={2000}
+                min={800}
+                max={3000}
                 step={100}
                 valueLabelFormat={(value) => `${value}€`}
                 valueLabelDisplay='auto'

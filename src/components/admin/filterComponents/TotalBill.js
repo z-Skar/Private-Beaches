@@ -11,7 +11,7 @@ export const TotalBillFilter = () => {
     };
 
     return (
-        <FormControl size="sm" sx={{ marginBottom: '-0.6rem'}}>
+        <FormControl size="sm" sx={{ marginBottom: '-0.6rem', width: '100%'}}>
             <FormLabel>Pesquisa por pagamentos efetuados</FormLabel>
             <Slider
                 sx={{
@@ -28,7 +28,6 @@ export const TotalBillFilter = () => {
                         border: '2px solid #ff5a00',
                         backgroundColor: 'white',
                     },
-                    width: '160vh'
                 }}
                 defaultValue={0}
                 value={value}
