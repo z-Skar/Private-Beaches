@@ -5,18 +5,23 @@ import axios from "axios"
 const AdminDataContext = createContext();
 
 export const AdminDataProvider = ({ children }) => {
+    const [adminEntity, setAdminEntity] = useState('beaches');
     const [adminData, setAdminData] = useState([]);
 
-    const getAdminData = async ( entity ) => {
-        try {
-            return (await (axios.get(`http://localhost:5000/${entity}/admin`))).data;
-        } catch (error) {
-            console.log(error);
+    useEffect(() => {
+        const getAdminData = async () => {
+            try {
+                const DATA = (await (axios.get(`http://localhost:5000/${adminEntity}/admin`))).data;
+                setAdminData(DATA);
+            } catch (error) {
+                console.log(error);
+            };
         };
-    };
+        getAdminData();
+    }, [adminEntity]);
 
     return (
-        <AdminDataContext.Provider value={{ adminData, getAdminData}}>
+        <AdminDataContext.Provider value={{ adminEntity, setAdminEntity, adminData }}>
             {children}
         </AdminDataContext.Provider>
     );

@@ -69,7 +69,7 @@ function descendingComparator(a, b, orderBy) {
   }
 
 const GenericTable = ({ entity, search }) => {
-    const { getAdminData } = useAdminData();
+    const { setAdminEntity, adminData, adminEntity } = useAdminData();
 
     const [order, setOrder] = useState("desc");
     const [data, setData] = useState([]);
@@ -88,9 +88,9 @@ const GenericTable = ({ entity, search }) => {
     let COLUMNS;
     
     useEffect(() => {
+        setAdminEntity(entity);
+        const DATA = adminData;
         const getData = async () => {
-            const DATA = getAdminData(entity);
-            console.log(DATA);
             if (search === '') {
                 dataToExcelRef.current = DATA;
                 setData(DATA);
@@ -128,7 +128,7 @@ const GenericTable = ({ entity, search }) => {
             exportToExcelButton.removeEventListener('click', exportToExcel);
         };
       };
-    }, [entity, search]);
+    }, [entity, search, adminData]);
   
     const deleteRecord = async (entity, id) => {
       try {

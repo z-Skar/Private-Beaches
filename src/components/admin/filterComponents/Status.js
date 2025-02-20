@@ -7,12 +7,10 @@ export const StatusFilter = () => {
     return (
         <FormControl size="sm">
             <FormLabel>Estado</FormLabel>
-            <Select size="sm" placeholder="All" sx={{ width: '10rem' }}>
-                <Option value="all">All</Option>
-                <Option value="usa">Ativo</Option>
-                <Option value="canada">Em espera</Option>
-                <Option value="uk">Férias</Option>
-                <Option value="germany">Negado</Option>
+            <Select size="sm" placeholder="Todos" sx={{ width: '10rem' }}>
+                <Option value="Todos">Todos</Option>
+                <Option value={"Em espera"}>Em espera</Option>
+                <Option value={"Ativo"}>Ativo</Option>
             </Select>
         </FormControl>
     );
