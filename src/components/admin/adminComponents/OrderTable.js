@@ -209,7 +209,7 @@ const rows = [
 
 export default function OrderTable({ entity, entityName }) {
   const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState('');
 
   return (
     <>
@@ -290,7 +290,7 @@ export default function OrderTable({ entity, entityName }) {
           minHeight: 0
         }}
       >
-        <GenericTable entity={entity} search={search}/>
+        <GenericTable entity={entity} search={search} />
       </Sheet>
       <Box
         className="Pagination-laptopUp"

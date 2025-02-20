@@ -11,8 +11,8 @@ export const RatingFilter = () => {
     };
 
     return (
-        <FormControl size="sm" sx={{ minWidth: '10rem', marginBottom: '0.4rem'}}>
-            <FormLabel>Avaliação</FormLabel>
+        <FormControl size="sm" sx={{ minWidth: '10rem' }}>
+            <FormLabel sx={{marginBottom: '-0.05rem'}}>Avaliação</FormLabel>
             <Slider
                 sx={{
                     "--Slider-trackSize": "2rem",

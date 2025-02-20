@@ -29,6 +29,8 @@ import axios from "axios"
 import { useNavigate } from "react-router-dom"
 
 import { normalizeString } from "../utils"
+import { useAdminData } from "contexts/AdminDataContext"
+import { EntityFilter } from "../filterComponents/EntityFilters/EntityFilter"
 
 function RowMenu() {
   return (
@@ -67,6 +69,8 @@ function descendingComparator(a, b, orderBy) {
   }
 
 const GenericTable = ({ entity, search }) => {
+    const { getAdminData } = useAdminData();
+
     const [order, setOrder] = useState("desc");
     const [data, setData] = useState([]);
     const [columns, setColumns] = useState([]);
@@ -82,27 +86,25 @@ const GenericTable = ({ entity, search }) => {
 
     const dataToExcelRef = useRef(null);
     let COLUMNS;
+    
     useEffect(() => {
-      const getData = async () => {
-        try {
-          const DATA = (await (axios.get(`http://localhost:5000/${entity}/admin`))).data;
-          if (search === '') {
-            dataToExcelRef.current = DATA;
-            setData(DATA);
-          } else {
-            const FILTERED_DATA = DATA.filter(record => {
-              return Object.values(record).some(value => {
-                return normalizeString(String(value).toLowerCase()).includes(normalizeString(search.toLowerCase()));
-              });
-            });
-            dataToExcelRef.current = FILTERED_DATA;
-            setData(FILTERED_DATA);
-          };
-          COLUMNS = Object.keys(DATA[0]);
-          setColumns(COLUMNS);
-        } catch (error) {
-          console.error(error);
-        };
+        const getData = async () => {
+            const DATA = getAdminData(entity);
+            console.log(DATA);
+            if (search === '') {
+                dataToExcelRef.current = DATA;
+                setData(DATA);
+            } else {
+                const FILTERED_DATA = DATA.filter(record => {
+                    return Object.values(record).some(value => {
+                        return normalizeString(String(value).toLowerCase()).includes(normalizeString(search.toLowerCase()));
+                    });
+                });
+                dataToExcelRef.current = FILTERED_DATA;
+                setData(FILTERED_DATA);
+            };
+            COLUMNS = Object.keys(DATA[0]);
+            setColumns(COLUMNS);
       };
       getData();
       setSelectedIDsToDelete([]);
