@@ -7,6 +7,7 @@ const AdminDataContext = createContext();
 export const AdminDataProvider = ({ children }) => {
     const [adminEntity, setAdminEntity] = useState('beaches');
     const [adminData, setAdminData] = useState([]);
+    const [selectedFilters, setSelectedFilters] = useState({});
 
     useEffect(() => {
         const getAdminData = async () => {
@@ -21,7 +22,7 @@ export const AdminDataProvider = ({ children }) => {
     }, [adminEntity]);
 
     return (
-        <AdminDataContext.Provider value={{ adminEntity, setAdminEntity, adminData }}>
+        <AdminDataContext.Provider value={{ adminEntity, setAdminEntity, adminData, selectedFilters, setSelectedFilters }}>
             {children}
         </AdminDataContext.Provider>
     );
