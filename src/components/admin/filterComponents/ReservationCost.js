@@ -1,14 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Slider from '@mui/joy/Slider'
+import { useAdminData } from 'contexts/AdminDataContext';
 
 export const ReservationCostFilter = () => {
+    const { setSelectedFilters } = useAdminData();
     const [value, setValue] = useState([50, 950]);
-
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
 
     return (
         <FormControl size="sm" sx={{ minWidth: '10rem' }}>
@@ -31,7 +29,10 @@ export const ReservationCostFilter = () => {
                 }}
                 defaultValue={0}
                 value={value}
-                onChange={handleChange}
+                onChange={(e, newValue) => setValue(newValue)}
+                onChangeCommitted={(e, newValue) => 
+                    setSelectedFilters((prevFilters) => ({...prevFilters, 'Custo de Reserva': newValue}))
+                }
                 min={0}
                 max={1000}
                 step={1}

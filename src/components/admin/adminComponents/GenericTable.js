@@ -69,7 +69,7 @@ function descendingComparator(a, b, orderBy) {
   }
 
 const GenericTable = ({ entity, search }) => {
-    const { setAdminEntity, adminData, selectedFilters } = useAdminData();
+    const { setAdminEntity, adminData, selectedFilters, adminEntity, setSelectedFilters } = useAdminData();
 
     const [order, setOrder] = useState("desc");
     const [data, setData] = useState([]);
@@ -85,15 +85,25 @@ const GenericTable = ({ entity, search }) => {
     const [excelMessageModal, setExcelMessageModal] = useState(false);
 
     const dataToExcelRef = useRef(null);
-    let COLUMNS;
+
+    useEffect(() => {
+        setSelectedFilters({});
+    }, [adminEntity])
     
     useEffect(() => {
         setAdminEntity(entity);
         const DATA = adminData.filter(record => {
-            return Object.entries(selectedFilters).every(([key, value]) => 
-                value === 'all' || record[key] === value
-            );
+            return Object.entries(selectedFilters).every(([key, value]) => {
+                if (['Custo de Reserva', 'Avaliação (Média)'].includes(key)) {
+                    const LAST_CHARACTER = record[key].slice(-1);
+                    console.log(record);
+                    const KEY_VALUE = Number(record[key].replace(LAST_CHARACTER, '').replace(',', '.'));
+                    return KEY_VALUE >= value[0] && KEY_VALUE <= value[1];
+                } return value === 'all' || record[key] === value;
+            });
         });
+
+        setColumns(Object.keys(DATA[0] || []));
         const getData = async () => {
             if (search === '') {
                 dataToExcelRef.current = DATA;
@@ -107,8 +117,7 @@ const GenericTable = ({ entity, search }) => {
                 dataToExcelRef.current = FILTERED_DATA;
                 setData(FILTERED_DATA);
             };
-            COLUMNS = Object.keys(DATA[0]);
-            setColumns(COLUMNS);
+
       };
       getData();
       setSelectedIDsToDelete([]);
