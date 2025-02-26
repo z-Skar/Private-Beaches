@@ -6,7 +6,7 @@ import { useAdminData } from 'contexts/AdminDataContext';
 
 export const ReservationCostFilter = () => {
     const { setSelectedFilters } = useAdminData();
-    const [value, setValue] = useState([50, 950]);
+    const [value, setValue] = useState([0, 1000]);
 
     return (
         <FormControl size="sm" sx={{ minWidth: '10rem' }}>

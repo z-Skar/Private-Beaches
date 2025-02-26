@@ -2,13 +2,11 @@ import { useState } from 'react';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Slider from '@mui/joy/Slider'
+import { useAdminData } from 'contexts/AdminDataContext';
 
 export const Salary = () => {
+    const { setSelectedFilters } = useAdminData();
     const [value, setValue] = useState([900, 2800]);
-
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
 
     return (
         <FormControl size="sm">
@@ -32,10 +30,13 @@ export const Salary = () => {
                 }}
                 defaultValue={0}
                 value={value}
-                onChange={handleChange}
+                onChange={(e, newValue) => setValue(newValue)}
+                onChangeCommitted={(e, newValue) => 
+                    setSelectedFilters((prevFilters) => ({...prevFilters, 'Salário': newValue}))
+                }
                 min={800}
                 max={3000}
-                step={100}
+                step={10}
                 valueLabelFormat={(value) => `${value}€`}
                 valueLabelDisplay='auto'
                 variant='outlined'

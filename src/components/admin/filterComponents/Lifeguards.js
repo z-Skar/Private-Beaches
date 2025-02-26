@@ -23,7 +23,7 @@ export const LifeguardsFilter = () => {
                 }}  
             >
                 <Option value="all">Todos</Option>
-                {LIFEGUARDS.map(lifeguards => (<Option value={lifeguards} key={lifeguards}>{lifeguards}</Option>))}
+                {LIFEGUARDS.map(lifeguard => (<Option value={lifeguard} key={lifeguard}>{lifeguard}</Option>))}
             </Select>
         </FormControl>
     );

@@ -41,7 +41,13 @@ ROUTER.get('/admin', (req, res) => {
     DATABASE.query(SQL, queryParams, (err, data) => {
         if(err) {
             return res.status(500).json(err);
-        } return res.status(200).json(data);
+        } else {
+            data = data.map(record => ({
+                ...record,
+                'Avaliação': record['Avaliação'] + '★'
+            }));
+            return res.status(200).json(data);
+        };
     });
 });
 

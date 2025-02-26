@@ -142,9 +142,12 @@ ROUTER.get('/admin', (req, res) => {
             return res.status(500).json(err);
         } else {
             const RESERVATION_COST = 'Custo de Reserva';
+            const AVERAGE_RATING = 'Avaliação (Média)';
+
             data = data.map(record => ({
                 ...record,
                 [RESERVATION_COST]: record[RESERVATION_COST] + '€',
+                [AVERAGE_RATING]: record[AVERAGE_RATING] + '★'
             }));
             return res.status(200).json(data);
         };

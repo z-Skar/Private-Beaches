@@ -88,15 +88,14 @@ const GenericTable = ({ entity, search }) => {
 
     useEffect(() => {
         setSelectedFilters({});
-    }, [adminEntity])
+    }, [adminEntity]);
     
     useEffect(() => {
         setAdminEntity(entity);
         const DATA = adminData.filter(record => {
             return Object.entries(selectedFilters).every(([key, value]) => {
-                if (['Custo de Reserva', 'Avaliação (Média)'].includes(key)) {
+                if (['Custo de Reserva', 'Avaliação (Média)', 'Salário', 'Pagamento Total', 'Avaliação'].includes(key)) {
                     const LAST_CHARACTER = record[key].slice(-1);
-                    console.log(record);
                     const KEY_VALUE = Number(record[key].replace(LAST_CHARACTER, '').replace(',', '.'));
                     return KEY_VALUE >= value[0] && KEY_VALUE <= value[1];
                 } return value === 'all' || record[key] === value;
@@ -270,7 +269,7 @@ const GenericTable = ({ entity, search }) => {
                     {Object.keys(columns).slice(1).map(index => (
                         <th key={index + columns[index]}
                             style={{ padding: "12px 6px" , textAlign: 'center', 
-                                ...(columns[index] === 'Descrição' ? {width: '140px'} : {})
+                                ...(columns[index] === 'Descrição' ? {width: '140px'} : {}),
                             }}
                             title={columns[index]}
                         >

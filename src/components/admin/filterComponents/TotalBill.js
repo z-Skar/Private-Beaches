@@ -2,13 +2,11 @@ import { useState } from 'react';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Slider from '@mui/joy/Slider'
+import { useAdminData } from 'contexts/AdminDataContext';
 
 export const TotalBillFilter = () => {
     const [value, setValue] = useState([0, 50000]);
-
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
+    const { setSelectedFilters } = useAdminData();
 
     return (
         <FormControl size="sm" sx={{ marginBottom: '-0.6rem', width: '100%'}}>
@@ -31,7 +29,10 @@ export const TotalBillFilter = () => {
                 }}
                 defaultValue={0}
                 value={value}
-                onChange={handleChange}
+                onChange={(e, newValue) => setValue(newValue)}
+                onChangeCommitted={(e, newValue) => 
+                    setSelectedFilters((prevFilters) => ({...prevFilters, 'Pagamento Total': newValue}))
+                }
                 min={0}
                 max={50000}
                 step={100}

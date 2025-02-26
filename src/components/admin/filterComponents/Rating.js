@@ -6,7 +6,7 @@ import { useAdminData } from 'contexts/AdminDataContext';
 
 export const RatingFilter = () => {
     const { setSelectedFilters } = useAdminData();
-    const [value, setValue] = useState([0.5, 4.5]);
+    const [value, setValue] = useState([0, 5]);
     return (
         <FormControl size="sm" sx={{ minWidth: '10rem' }}>
             <FormLabel sx={{marginBottom: '-0.05rem'}}>Avaliação</FormLabel>
@@ -30,7 +30,7 @@ export const RatingFilter = () => {
                 value={value}
                 onChange={(e, newValue) => setValue(newValue)}
                 onChangeCommitted={(e, newValue) => 
-                    setSelectedFilters((prevFilters) => ({...prevFilters, 'Avaliação (Média)': newValue}))
+                    setSelectedFilters((prevFilters) => ({...prevFilters, 'Avaliação': newValue}))
                 }
                 min={0}
                 max={5}
