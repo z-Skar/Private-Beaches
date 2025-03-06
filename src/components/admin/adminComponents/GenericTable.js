@@ -98,6 +98,25 @@ const GenericTable = ({ entity, search }) => {
                     const LAST_CHARACTER = record[key].slice(-1);
                     const KEY_VALUE = Number(record[key].replace(LAST_CHARACTER, '').replace(',', '.'));
                     return KEY_VALUE >= value[0] && KEY_VALUE <= value[1];
+                };
+                if (['Período'].includes(key)) {
+                    const [StartDate, EndDate] = value;
+                    if (adminEntity === 'reservas') { 
+                        const RESERVA_START_DATE = record['Data de Início'];
+                        const RESERVA_END_DATE = record['Data de Fim'];
+
+                        if (!StartDate && !EndDate) return true;
+                        if (!StartDate) return RESERVA_END_DATE<= EndDate;
+                        if (!EndDate) return RESERVA_START_DATE>= StartDate;
+                        return RESERVA_START_DATE>= StartDate && RESERVA_END_DATE<= EndDate;
+                    } else {
+                        const YEAR_OF_BIRTH = new Date(record['Data de Nascimento']);
+
+                        if (!StartDate && !EndDate) return true;
+                        if (!StartDate) return YEAR_OF_BIRTH<= EndDate;
+                        if (!EndDate) return YEAR_OF_BIRTH>= StartDate;
+                        return YEAR_OF_BIRTH>= StartDate && YEAR_OF_BIRTH<= EndDate;
+                    };
                 } return value === 'all' || record[key] === value;
             });
         });

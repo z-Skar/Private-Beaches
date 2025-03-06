@@ -3,31 +3,31 @@ import Input from '@mui/joy/Input';
 import FormControl from '@mui/joy/FormControl'
 import FormLabel from '@mui/joy/FormLabel';
 import { useAdminData } from 'contexts/AdminDataContext';
-import { dateCalendarClasses } from '@mui/x-date-pickers';
 
 export const DateFilter = () => {
-    const DATE = new Date();
-    const CURRENT_DATE = `${DATE.getFullYear()}-${DATE.getMonth()}-${DATE.getDay()}`;
-
-    const [startDate, setStartDate] = useState();
-    const [endDate, setEndDate] = useState(CURRENT_DATE || '1970-01-01');
+    const { setSelectedFilters } = useAdminData();
+    const [dateRange, setDateRange] = useState([null, null]);
 
     useEffect(() => {
-        console.log('endDate', endDate);
-    }, [startDate, endDate]);
+        setSelectedFilters((prevFilters) => ({ ...prevFilters, Período: dateRange }));
+    }, [dateRange]);
 
     return (
         <div style={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}>
             <FormControl size='sm'>
-                <FormLabel>Data de nascimento</FormLabel>
-                <Input type='date' size='sm' />
+                <FormLabel>Data de Início</FormLabel>
+                <Input type='date'
+                       size='sm'
+                       value={dateRange[0] || ''}
+                       onChange={(e) => setDateRange([e.target.value, dateRange[1]])}
+                />
             </FormControl>
             <FormControl size='sm'>
             <FormLabel>Data de Fim</FormLabel>
                 <Input type='date'
                        size='sm'
-                       value={endDate || CURRENT_DATE} 
-                       onChange={(e, newValue) => setEndDate(newValue)}
+                       value={dateRange[1] || ''} 
+                       onChange={(e) => setDateRange([dateRange[0], e.target.value])}
                 />
             </FormControl>
         </div>
