@@ -292,6 +292,7 @@ export default function OrderTable({ entity, entityName }) {
       >
         <GenericTable entity={entity} search={search} />
       </Sheet>
+      {/*
       <Box
         className="Pagination-laptopUp"
         sx={{
@@ -334,6 +335,7 @@ export default function OrderTable({ entity, entityName }) {
           Próximo
         </Button>
       </Box>
+      */}
     </>
   )
 };

@@ -101,16 +101,16 @@ const GenericTable = ({ entity, search }) => {
                 };
                 if (['Período'].includes(key)) {
                     const [StartDate, EndDate] = value;
-                    if (adminEntity === 'reservas') { 
+                    if (adminEntity === 'reservations') { 
                         const RESERVA_START_DATE = record['Data de Início'];
                         const RESERVA_END_DATE = record['Data de Fim'];
-
+                        
                         if (!StartDate && !EndDate) return true;
                         if (!StartDate) return RESERVA_END_DATE<= EndDate;
                         if (!EndDate) return RESERVA_START_DATE>= StartDate;
                         return RESERVA_START_DATE>= StartDate && RESERVA_END_DATE<= EndDate;
                     } else {
-                        const YEAR_OF_BIRTH = new Date(record['Data de Nascimento']);
+                        const YEAR_OF_BIRTH = record['Data de Nascimento'];
 
                         if (!StartDate && !EndDate) return true;
                         if (!StartDate) return YEAR_OF_BIRTH<= EndDate;
@@ -127,15 +127,18 @@ const GenericTable = ({ entity, search }) => {
                 dataToExcelRef.current = DATA;
                 setData(DATA);
             } else {
+                const ALLOWED_COLUMNS_TO_FILTER = ['Nome', 'Descrição', 'Cliente', 'Praia', 'Email', 'Contacto'];
                 const FILTERED_DATA = DATA.filter(record => {
-                    return Object.values(record).some(value => {
-                        return normalizeString(String(value).toLowerCase()).includes(normalizeString(search.toLowerCase()));
+                    return Object.entries(record).some(([key, value]) => {
+                        if (ALLOWED_COLUMNS_TO_FILTER.includes(key)) {
+                            return normalizeString(String(value).toLowerCase()).includes(normalizeString(search.toLowerCase()));
+                        } return false;
+                        
                     });
                 });
                 dataToExcelRef.current = FILTERED_DATA;
                 setData(FILTERED_DATA);
             };
-
       };
       getData();
       setSelectedIDsToDelete([]);
