@@ -1,6 +1,7 @@
 import React from "react";
 import OrderTable from "./OrderTable";
 import OrderList from "./OrderList";
+import Home from "./Home";
 import { entitiesAndNames } from "../utils";
 
 export default function Content({ entity }) {
@@ -8,7 +9,7 @@ export default function Content({ entity }) {
     const renderContent = () => {
         switch(entity) {
             case 'home':
-                return <div>EM BREVE</div>
+                return <Home />;
             case 'beaches':
                 return (
                     <>
