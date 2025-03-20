@@ -5,7 +5,7 @@ import axios from "axios"
 const AdminDataContext = createContext();
 
 export const AdminDataProvider = ({ children }) => {
-    const [adminEntity, setAdminEntity] = useState('beaches');
+    const [adminEntity, setAdminEntity] = useState('home');
     const [adminData, setAdminData] = useState([]);
     const [selectedFilters, setSelectedFilters] = useState({});
 

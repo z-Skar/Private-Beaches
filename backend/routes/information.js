@@ -16,4 +16,3 @@ ROUTER.get('/', (req, res) => {
 });
 
 module.exports = ROUTER;
-

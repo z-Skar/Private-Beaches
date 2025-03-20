@@ -36,6 +36,7 @@ export function toggleSidebar() {
 
 export function entitiesAndNames() {
   return {
+    home: 'Home',
     beaches: 'Praias',
     lifeguards: 'Salva-vidas',
     bills: 'Pagamentos',

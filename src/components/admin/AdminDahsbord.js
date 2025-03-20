@@ -81,8 +81,8 @@ export default function AdminDashbord({ entity='home' }) {
             }}
           >
             <Typography level="h2" component="h1">
-              {ENTITIES_NAMES[selectedEntity]}
-            </Typography>
+              {selectedEntity !== 'home' && ENTITIES_NAMES[selectedEntity]}
+            </Typography> 
             { selectedEntity !== 'home' && 
               <Button
                 sx={{
