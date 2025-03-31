@@ -18,8 +18,8 @@ export default function Home() {
 
     const CARD_STYLE = {
         backgroundColor: '#F0F4F8',
-        width: '18rem',
         height: '10rem',
+        marginBottom: '1rem'
     };
     
     const DATA_STYLE = {
@@ -29,7 +29,7 @@ export default function Home() {
     };
 
     return (
-        <Box sx={{ padding: '10px', borderRadius: '10px', display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+        <Box sx={{ padding: '10px', borderRadius: '10px' }}>
             <Card sx={CARD_STYLE}>
             <Typography variant="h2" sx={DATA_STYLE}>{NUMBER_OF_CLIENTS} mil</Typography>
                 Número Total de Clientes
