@@ -82,7 +82,7 @@ ROUTER.get('/columns' , (req, res) => {
                RESERVATION_COST AS 'Custo de Reserva', 
                COALESCE(Lifeguards.FULL_NAME, 'Indisponível') AS 'Salva-Vidas', 
                SERVICE_TYPE AS Serviço, 
-               COALESCE(AVG(Evaluations.SCORE), 0) AS 'Avaliação (Média)' 
+               COALESCE(AVG(Evaluations.SCORE), 0) AS 'Avaliação' 
         FROM BEACHES 
         LEFT JOIN Evaluations ON Beaches.BEACH_ID = Evaluations.BEACH_ID 
         LEFT JOIN Lifeguards ON Beaches.LIFEGUARD_ID = Lifeguards.LIFEGUARD_ID 
@@ -106,7 +106,7 @@ ROUTER.get('/admin', (req, res) => {
                RESERVATION_COST AS 'Custo de Reserva', 
                COALESCE(Lifeguards.FULL_NAME, 'Indisponível') AS 'Salva-Vidas', 
                SERVICE_TYPE AS Serviço, 
-               COALESCE(AVG(Evaluations.SCORE), 0) AS 'Avaliação (Média)' 
+               COALESCE(AVG(Evaluations.SCORE), 0) AS 'Avaliação' 
         FROM BEACHES 
         LEFT JOIN Evaluations ON Beaches.BEACH_ID = Evaluations.BEACH_ID 
         LEFT JOIN Lifeguards ON Beaches.LIFEGUARD_ID = Lifeguards.LIFEGUARD_ID 
@@ -142,7 +142,7 @@ ROUTER.get('/admin', (req, res) => {
             return res.status(500).json(err);
         } else {
             const RESERVATION_COST = 'Custo de Reserva';
-            const AVERAGE_RATING = 'Avaliação (Média)';
+            const AVERAGE_RATING = 'Avaliação';
 
             data = data.map(record => ({
                 ...record,

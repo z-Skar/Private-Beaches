@@ -94,14 +94,14 @@ const GenericTable = ({ entity, search }) => {
         setAdminEntity(entity);
         const DATA = adminData.filter(record => {
             return Object.entries(selectedFilters).every(([key, value]) => {
-                if (['Custo de Reserva', 'Avaliação (Média)', 'Salário', 'Pagamento Total', 'Avaliação'].includes(key)) {
+                if (['Custo de Reserva', 'Avaliação', 'Salário', 'Pagamento Total'].includes(key)) {
                     const LAST_CHARACTER = record[key].slice(-1);
                     const KEY_VALUE = Number(record[key].replace(LAST_CHARACTER, '').replace(',', '.'));
                     return KEY_VALUE >= value[0] && KEY_VALUE <= value[1];
                 };
                 if (['Período'].includes(key)) {
                     const [StartDate, EndDate] = value;
-                    if (adminEntity === 'reservations') { 
+                    if (adminEntity === 'reservations') {
                         const RESERVA_START_DATE = record['Data de Início'];
                         const RESERVA_END_DATE = record['Data de Fim'];
                         

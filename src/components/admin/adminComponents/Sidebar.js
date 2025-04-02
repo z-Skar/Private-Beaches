@@ -161,7 +161,7 @@ export default function Sidebar({ selectedEntity, onSelectEntity }) {
           <List size="sm" sx={{ gap: 1, "--List-nestedInsetStart": "30px", "--ListItem-radius": theme => theme.vars.radius.sm }}>
             <ListItem key='home'>
               <ListItemButton
-                selected={selectedEntity === 'home' && true}
+                selected={selectedEntity === 'home'}
                 onClick={() => onSelectEntity('home')}
               >
                 <HomeRoundedIcon style={selectedEntity === 'home' ? {color: '#ff5a00'} : {}}/>
