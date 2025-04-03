@@ -3,6 +3,7 @@ import Card from '@mui/joy/Card';
 import { useAdminData } from "contexts/AdminDataContext";
 import { Typography } from '@mui/joy';
 import { useEffect } from 'react';
+import { LineChart } from '@mui/x-charts/LineChart';
 
 export default function Home() {
     const { adminData, setAdminEntity } = useAdminData();
@@ -45,7 +46,7 @@ export default function Home() {
             <Card sx={CARD_STYLE}>
                 <Typography variant="h2" sx={DATA_STYLE}>10</Typography>
                 Praias
-            </Card>
+            </Card> 
         </Box>
     );
 };
