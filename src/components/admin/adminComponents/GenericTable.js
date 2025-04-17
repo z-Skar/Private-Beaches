@@ -21,6 +21,7 @@ import { entitiesAndNames } from "../utils"
 import { BeachForm } from "./Modals/BeachForm"
 import { ExcelMessageModal } from "./Modals/ExcelMessageModal"
 import { DeleteConfirmation } from "./Modals/DeleteConfirmation"
+import { LifeguardEditionModal } from "./Modals/LifeguardEditionModal"
 
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
@@ -78,11 +79,13 @@ const GenericTable = ({ entity, search }) => {
     // Estados para facilmente acessar os registos pelo ID selecionado.
     const [selectedIDsToDelete, setSelectedIDsToDelete] = useState([]);
     const [selectedIDToEdit, setSelectedIDToEdit] = useState(null);
+    const [selectedIDToEditLifeguard, setSelectedIDToEditLifeguard] = useState(null);
 
     // Estados que controlagem a abertura dos Modals.
     const [deletetionModalOpen, setDeletetionModalOpen] = useState(false);
     const [editionModalOpen, setEditionModalOpen] = useState(false);
     const [excelMessageModal, setExcelMessageModal] = useState(false);
+    const [lifeguardEditionModalOpen, setLifeguardEditionModalOpen] = useState(false);
 
     const dataToExcelRef = useRef(null);
 
@@ -201,6 +204,17 @@ const GenericTable = ({ entity, search }) => {
     };
 
     const handleEdition = () => {
+        setEditionModalOpen(false);
+        setSelectedIDToEdit(null);
+    };
+
+    const handleClickForEditLifeguard = (id) => {
+        setSelectedIDToEditLifeguard(id);
+        setLifeguardEditionModalOpen(true);
+    };
+
+    
+    const handleEditionForLifeguard = () => {
         setEditionModalOpen(false);
         setSelectedIDToEdit(null);
     };
@@ -384,7 +398,13 @@ const GenericTable = ({ entity, search }) => {
                         <Box sx={{ display: "flex", gap: 2, alignItems: "center", justifyContent: 'center'}}>
                             <AllowedActions entity={entity} 
                                 deletionModalOpen={() => handleClickForDelete(row[columns[0]])}
-                                editionModalOpen={() => handleClickForEdit(row[columns[0]])}
+                                editionModalOpen={() => {
+                                    if (entity === 'beaches') {
+                                        handleClickForEdit(row[columns[0]]);
+                                    } else if (entity === 'lifeguards') {
+                                        setLifeguardEditionModalOpen(true);
+                                    };
+                                }}
                             />
                         </Box>
                     </td>
@@ -392,6 +412,7 @@ const GenericTable = ({ entity, search }) => {
                 ))}
                 </tbody>
             </Table>
+            
             <Modal
                 open={deletetionModalOpen}
                 onClose={() => {
@@ -410,6 +431,7 @@ const GenericTable = ({ entity, search }) => {
                     />
                 </div>
             </Modal>
+
             <Modal
                 open={editionModalOpen}
                 onClose={() => setEditionModalOpen(false)}
@@ -425,6 +447,7 @@ const GenericTable = ({ entity, search }) => {
                     />
                 </div>
             </Modal>
+
             <Modal
                 open={excelMessageModal}
                 onClose={() => setExcelMessageModal(false)}
@@ -432,7 +455,18 @@ const GenericTable = ({ entity, search }) => {
                 aria-describedby="modal-modal-description"
             >
                 <div>
-                    <ExcelMessageModal setExcelMessageModal={setExcelMessageModal} />,
+                    <ExcelMessageModal setExcelMessageModal={setExcelMessageModal} />
+                </div>
+            </Modal>
+
+            <Modal
+                open={lifeguardEditionModalOpen}
+                onClose={() => setLifeguardEditionModalOpen(false)}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <div>
+                    <LifeguardEditionModal lifeguardId={selectedIDToEditLifeguard} setModalOpen={setLifeguardEditionModalOpen} />
                 </div>
             </Modal>
         </>

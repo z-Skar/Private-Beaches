@@ -4,7 +4,7 @@ import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 
 const AllowedActions = ({ entity, deletionModalOpen, editionModalOpen }) => {
-  if ([ 'beaches' ].includes(entity)) {
+  if ([ 'beaches', 'lifeguards' ].includes(entity)) {
       return (
       <>
         <IconButton>
@@ -20,7 +20,7 @@ const AllowedActions = ({ entity, deletionModalOpen, editionModalOpen }) => {
         </IconButton>
       </>
     );
-  } else if (['reservations', 'bills', 'evaluations', 'lifeguards', 'clients'].includes(entity)) {
+  } else if (['reservations', 'bills', 'evaluations', 'clients'].includes(entity)) {
     return (
       <>
         <IconButton disabled>
