@@ -269,7 +269,7 @@ export default function OrderTable({ entity, entityName }) {
               size="sm"
               placeholder={searchText(entity)}
               onChange={(e) => {
-                setSearch(e.target.value);
+                setSearch((e.target.value).trim());
               }}
               startDecorator={<SearchIcon />}
               sx={entity !== 'evaluations' ? { minWidth: '25rem', marginBottom: '1rem' } : { minWidth: '25rem' }}
