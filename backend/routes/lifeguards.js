@@ -5,6 +5,9 @@ const UPLOAD = require('../middlewares/imageUploader');
 const PATH = require('path');
 const FS = require('fs');
 
+const multer = require('multer');
+const upload = multer();
+
 const { CensorField } = require('../util/CensorField')
 
 ROUTER.get('/', (req, res) => {
@@ -109,6 +112,35 @@ ROUTER.get('/admin', (req, res) => {
             }));
             return res.status(200).json(data);
         };
+    });
+});
+
+ROUTER.put('/edit/:id', async (req, res) => {
+    const { id } = req.params;
+
+    if (!id || isNaN(id)) {
+        return res.status(400).send('ID inválido.');
+    }
+
+    const { Nome, Salário, Estado } = req.body;
+
+    if (!Nome || !Salário || !Estado) {
+        return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
+    }
+
+    const SQL = `
+        UPDATE Lifeguards 
+        SET FULL_NAME = ?, SALARY = ?, STATUS = ? 
+        WHERE LIFEGUARD_ID = ?
+    `;
+    const VALUES = [Nome, Salário, Estado, id];
+
+    DATABASE.query(SQL, VALUES, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Erro ao atualizar os dados do salva-vidas.' });
+        }
+        return res.status(200).json({ success: 'Dados do salva-vidas atualizados com sucesso.' });
     });
 });
 

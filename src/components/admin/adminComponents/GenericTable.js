@@ -79,7 +79,7 @@ const GenericTable = ({ entity, search }) => {
     // Estados para facilmente acessar os registos pelo ID selecionado.
     const [selectedIDsToDelete, setSelectedIDsToDelete] = useState([]);
     const [selectedIDToEdit, setSelectedIDToEdit] = useState(null);
-    const [selectedIDToEditLifeguard, setSelectedIDToEditLifeguard] = useState(null);
+    const [selectedLifeguardData, setSelectedLifeguardData] = useState(null);
 
     // Estados que controlagem a abertura dos Modals.
     const [deletetionModalOpen, setDeletetionModalOpen] = useState(false);
@@ -208,8 +208,8 @@ const GenericTable = ({ entity, search }) => {
         setSelectedIDToEdit(null);
     };
 
-    const handleClickForEditLifeguard = (id) => {
-        setSelectedIDToEditLifeguard(id);
+    const handleClickForEditLifeguard = (data) => {
+        setSelectedLifeguardData(data);
         setLifeguardEditionModalOpen(true);
     };
 
@@ -402,7 +402,8 @@ const GenericTable = ({ entity, search }) => {
                                     if (entity === 'beaches') {
                                         handleClickForEdit(row[columns[0]]);
                                     } else if (entity === 'lifeguards') {
-                                        setLifeguardEditionModalOpen(true);
+                                        handleClickForEditLifeguard(row);
+                                        console.log(row);
                                     };
                                 }}
                             />
@@ -466,7 +467,7 @@ const GenericTable = ({ entity, search }) => {
                 aria-describedby="modal-modal-description"
             >
                 <div>
-                    <LifeguardEditionModal lifeguardId={selectedIDToEditLifeguard} setModalOpen={setLifeguardEditionModalOpen} />
+                    <LifeguardEditionModal lifeguardData={selectedLifeguardData} setModalOpen={setLifeguardEditionModalOpen} />
                 </div>
             </Modal>
         </>

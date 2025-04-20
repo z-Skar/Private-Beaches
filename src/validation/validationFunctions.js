@@ -126,7 +126,6 @@ export const validateLifeguardFields = (data) => {
     return errors;
 };
 
-
 export const validateReservationCostFields = (minCost, maxCost) => {
     const errors = {
         minCostMessage: '',
@@ -180,5 +179,27 @@ export const validateBeachFormFields = (data) => {
     if (!(data.PICTURE)) {
         errors.PICTURE = MANDATORY_FIELDS.PICTURE;
     };
+    return errors;
+};
+
+export const validateAdminLifeguardFields = (data) => {
+    const errors = {
+        Nome: '',
+        Salário: '',
+        Estado: '',
+    };
+
+    if (data.Nome.length < 5) {
+        errors.Nome = 'O nome completo é necessário.';
+    }
+
+    if (!checkOnlyNumbers(data.Salário) && data.Salário !== '') {
+        errors.Salário = 'O salário só pode conter números.';
+    };
+
+    if (!data.Estado) {
+        errors.Estado = 'O estado do Salva-vidas é obrigatório.';
+    };
+
     return errors;
 };

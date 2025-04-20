@@ -158,7 +158,7 @@ export const BeachForm = ({ entity, id, setEditionModalOpen }) => {
         spacing={4}
         sx={{
           display: "flex",
-          maxWidth: "800px",
+          maxWidth: { xs: "90%", md: "800px" },
           mx: "auto",
           px: { xs: 2, md: 6 },
           py: { xs: 2, md: 3 },
@@ -167,8 +167,8 @@ export const BeachForm = ({ entity, id, setEditionModalOpen }) => {
         <Card
           sx={{
             overflowY: "auto",
-            maxHeight: "70vh",
-            minWidth: "80vh",
+            maxHeight: { xs: "80vh", md: "70vh" },
+            minWidth: { xs: "100%", md: "80vh" },
           }}
           onScroll={() => {
             setServiceTypeAutocomplete(false);
@@ -183,9 +183,9 @@ export const BeachForm = ({ entity, id, setEditionModalOpen }) => {
             </Box>
             <Divider />
             <Stack
-              direction="row"
+              direction={{ xs: "column", md: "row" }}
               spacing={3}
-              sx={{ display: { md: "flex" }, my: 1 }}
+              sx={{ my: 1 }}
             >
             <Stack spacing={2} sx={{ flexGrow: 1 }}>
               <Stack spacing={1} direction={{ xs: "column", md: "row" }}>
@@ -233,7 +233,7 @@ export const BeachForm = ({ entity, id, setEditionModalOpen }) => {
                 {errors.SERVICE_TYPE && (<Typography level="body-xs" color="danger" sx={{ pl: '0.1rem', pt: 0.5, fontWeight: 'lighter' }}>{errors.SERVICE_TYPE}</Typography>)}
               </FormControl>
               </Stack>
-              <Stack direction="row" spacing={2}>
+              <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
               <FormControl sx={{ flex: 1 }}>
                 <FormLabel>País</FormLabel>
                 <Input
@@ -283,7 +283,7 @@ export const BeachForm = ({ entity, id, setEditionModalOpen }) => {
                   {errors.DESCRIPTION && (<Typography level="body-xs" color="danger" sx={{ pl: '0.1rem', pt: 0.5, fontWeight: 'lighter' }}>{errors.DESCRIPTION}</Typography>)}
                 </FormControl>
               </Stack>
-              <Stack direction="row" spacing={2}>
+              <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
                 <FormControl sx={{ flex: 1 }}>
                   <FormLabel>Custo da reserva</FormLabel>
                   <Input
@@ -302,7 +302,7 @@ export const BeachForm = ({ entity, id, setEditionModalOpen }) => {
                   />
                   {errors.RESERVATION_COST && (<Typography level="body-xs" color="danger" sx={{ pl: '0.1rem', pt: 0.5, fontWeight: 'lighter' }}>{errors.RESERVATION_COST}</Typography>)}
                 </FormControl>
-                <FormControl sx={{ flex: 2 }}>
+                <FormControl sx={{ flex: 2 }}> {/* Ajuste para evitar overflow */}
                   <FormLabel>Salva-vidas</FormLabel>
                   <Autocomplete
                     size="sm"
@@ -328,10 +328,19 @@ export const BeachForm = ({ entity, id, setEditionModalOpen }) => {
                     onClose={() => setLifeguardAutocomplete(false)}
                     placeholder={"António Manuel"}
                     noOptionsText={"Sem opções"}
-                    slotProps={slotProps}
+                    slotProps={{
+                      ...slotProps,
+                      listbox: {
+                        sx: {
+                          ...slotProps.listbox.sx,
+                          maxHeight: "200px", // Limitar altura para evitar overflow
+                          overflowY: "auto",
+                        },
+                      },
+                    }}
                     error={errors.LIFEGUARD_ID ? true : false}
                   />
-                  {errors.LIFEGUARD_ID && (<Typography level="body-xs" color="danger" sx={{ pl: '0.1rem', pt: 0.5,  fontWeight: 'lighter' }}>{errors.LIFEGUARD_ID}</Typography>)}
+                  {errors.LIFEGUARD_ID && (<Typography level="body-xs" color="danger" sx={{ pl: '0.1rem', pt: 0.5, fontWeight: 'lighter' }}>{errors.LIFEGUARD_ID}</Typography>)}
                 </FormControl>
               </Stack>
             </Stack>

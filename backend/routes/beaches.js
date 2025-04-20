@@ -5,7 +5,6 @@ const UPLOAD = require('../middlewares/imageUploader');
 const PATH = require('path');
 const FS = require('fs');
 
-
 ROUTER.get('/', (req, res) => {
     const ORDER_PARAMETER = req.query.orderBy || 'Evaluations.SCORE';
     const ORDER_DIRECTION = req.query.orderDirection || 'DESC';
