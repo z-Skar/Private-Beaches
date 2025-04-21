@@ -10,6 +10,8 @@ import CardOverflow from "@mui/joy/CardOverflow";
 import { Autocomplete, FormControl, FormLabel, Input } from "@mui/joy";
 import { validateAdminLifeguardFields } from "validation/validationFunctions";
 import { useNavigate } from "react-router-dom";
+import AspectRatio from "@mui/joy/AspectRatio";
+import Avatar from "@mui/joy/Avatar";
 
 const slotProps = {
     listbox: {
@@ -26,6 +28,8 @@ const slotProps = {
 export const LifeguardEditionModal = ({ lifeguardData, setModalOpen }) => {
     const [updatedLifeguardData, setUpdatedLifeguardData] = useState({ ...lifeguardData, Salário: lifeguardData.Salário.replace("€", "") });
     const [errors, setErrors] = useState({});
+    const [profilePicture, setProfilePicture] = useState(lifeguardData.Perfil ? `http://localhost:5000${lifeguardData.Perfil}` : null);
+    const [selectedFile, setSelectedFile] = useState(null);
 
     const navigate = useNavigate();
 
@@ -34,6 +38,18 @@ export const LifeguardEditionModal = ({ lifeguardData, setModalOpen }) => {
         { label: "Em Espera", value: "Em Espera" },
         { label: "Férias", value: "Férias" },
     ];
+
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            setSelectedFile(file);
+            const reader = new FileReader();
+            reader.onload = () => {
+                setProfilePicture(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
     const handleSubmit = async () => {
         const DATA = updatedLifeguardData;
@@ -48,24 +64,20 @@ export const LifeguardEditionModal = ({ lifeguardData, setModalOpen }) => {
         formData.append("Nome", DATA.Nome);
         formData.append("Salário", DATA['Salário']);
         formData.append("Estado", DATA.Estado);
+        if (selectedFile) {
+            formData.append("Perfil", selectedFile); // Altere para "PICTURE"
+        };
 
         try {
             await fetch(`http://localhost:5000/lifeguards/edit/${DATA['Salva-Vidas-ID']}`, {
                 method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    Nome: DATA.Nome,
-                    Salário: DATA["Salário"],
-                    Estado: DATA.Estado,
-                }),
+                body: formData,
             });
-            navigate(0);
-            window.scrollTo(0, 0);
         } catch (error) {
             console.error(error);
         };
+        navigate(0);
+        window.scroll(0, 0);
     };
 
     return (
@@ -90,6 +102,32 @@ export const LifeguardEditionModal = ({ lifeguardData, setModalOpen }) => {
                         <Typography level="body-sm">
                             Preencha os campos abaixo para editar a informação do salva-vidas.
                         </Typography>
+                    </Box>
+                    <Divider />
+                    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", my: 2 }}>
+                        <Typography level="body-sm" sx={{ mb: 1 }}>
+                            Foto de perfil
+                        </Typography> 
+                        <AspectRatio ratio="1" sx={{ width: 120, mb: 2 }}>
+                            <Avatar
+                                src={profilePicture} // Exibe a imagem do backend ou a nova imagem selecionada
+                                alt="Foto de perfil"
+                                sx={{ width: "100%", height: "100%" }}
+                            />
+                        </AspectRatio>
+                        <Button
+                            size="sm"
+                            variant="outlined"
+                            component="label"
+                        >
+                            Editar Foto
+                            <input
+                                type="file"
+                                accept="image/*"
+                                hidden
+                                onChange={handleFileChange}
+                            />
+                        </Button>
                     </Box>
                     <Divider />
                     <Stack

@@ -26,12 +26,10 @@ import { LifeguardEditionModal } from "./Modals/LifeguardEditionModal"
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 
-import axios from "axios"
 import { useNavigate } from "react-router-dom"
 
 import { normalizeString } from "../utils"
 import { useAdminData } from "contexts/AdminDataContext"
-import { EntityFilter } from "../filterComponents/EntityFilters/EntityFilter"
 
 function RowMenu() {
   return (
@@ -124,7 +122,10 @@ const GenericTable = ({ entity, search }) => {
             });
         });
 
-        setColumns(Object.keys(DATA[0] || []));
+        // Excluir a última coluna (foto de perfil) caso a entidade seja 'lifeguards'
+        const filteredColumns = entity === 'lifeguards' ? Object.keys(DATA[0] || []).slice(0, -1) : Object.keys(DATA[0] || []);
+        setColumns(filteredColumns);
+
         const getData = async () => {
             if (search === '') {
                 dataToExcelRef.current = DATA;

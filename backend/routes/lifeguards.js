@@ -5,9 +5,6 @@ const UPLOAD = require('../middlewares/imageUploader');
 const PATH = require('path');
 const FS = require('fs');
 
-const multer = require('multer');
-const upload = multer();
-
 const { CensorField } = require('../util/CensorField')
 
 ROUTER.get('/', (req, res) => {
@@ -80,7 +77,8 @@ ROUTER.get('/admin', (req, res) => {
                EMAIL AS Email, 
                CONTACT AS Contacto, 
                SALARY AS Salário, 
-               STATUS AS Estado 
+               STATUS AS Estado,
+               PROFILE_PICTURE AS 'Perfil'
         FROM Lifeguards
     `;
 
@@ -115,32 +113,49 @@ ROUTER.get('/admin', (req, res) => {
     });
 });
 
-ROUTER.put('/edit/:id', async (req, res) => {
-    const { id } = req.params;
+ROUTER.put('/edit/:id', UPLOAD.LIFEGUARD_IMAGE.single('Perfil'), (req, res) => {
+    let { Nome, Salário, Estado } = req.body;
+    const LIFEGUARD_ID = req.params.id;
 
-    if (!id || isNaN(id)) {
-        return res.status(400).send('ID inválido.');
-    }
+    const SQL = `UPDATE Lifeguards SET FULL_NAME = ?, SALARY = ?, STATUS = ? WHERE LIFEGUARD_ID = ?`;
+    const VALUES = [Nome, Salário, Estado, LIFEGUARD_ID];
+    const PICTURE = req.file ? req.file.filename : null;
 
-    const { Nome, Salário, Estado } = req.body;
-
-    if (!Nome || !Salário || !Estado) {
-        return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
-    }
-
-    const SQL = `
-        UPDATE Lifeguards 
-        SET FULL_NAME = ?, SALARY = ?, STATUS = ? 
-        WHERE LIFEGUARD_ID = ?
-    `;
-    const VALUES = [Nome, Salário, Estado, id];
-
-    DATABASE.query(SQL, VALUES, (err, result) => {
+    DATABASE.query(SQL, VALUES, (err, DBres) => {
+        const TMP_FILE_PATH = PICTURE ? PATH.join(__dirname, '../images/tmp', PICTURE) : null;
         if (err) {
             console.error(err);
-            return res.status(500).json({ error: 'Erro ao atualizar os dados do salva-vidas.' });
-        }
-        return res.status(200).json({ success: 'Dados do salva-vidas atualizados com sucesso.' });
+            if (PICTURE) {
+                FS.unlinkSync(TMP_FILE_PATH);
+            };
+            return res.status(500).json({ error: 'Erro ao atualizar os dados principais.', details: err });
+        };
+        if (DBres.affectedRows === 0) {
+            if (PICTURE) {
+                FS.unlinkSync(TMP_FILE_PATH);
+            };
+            return res.status(400).json({ error: 'Nenhum salva-vidas encontrado com esse ID para atualizar.' });
+        };
+        if (PICTURE) {
+            const FINAL_FILE_PATH = PATH.join(__dirname, '../images', PICTURE);
+            const IMAGE_PATH = `/images/${PICTURE}`;
+            const SQL_UPDATE_IMAGE = `UPDATE Lifeguards SET PROFILE_PICTURE = ? WHERE LIFEGUARD_ID = ?`;
+            try {
+                FS.renameSync(TMP_FILE_PATH, FINAL_FILE_PATH);
+                DATABASE.query(SQL_UPDATE_IMAGE, [IMAGE_PATH, LIFEGUARD_ID], (err, DBres) => {
+                    if (err) {
+                        return res.status(500).json({ error: 'Erro ao renomear a imagem.' });
+                    };
+                    return res.status(200).json({ success: 'Registo e imagem atualizados com sucesso.' });
+                });
+            } catch (renameError) {
+                FS.unlinkSync(TMP_FILE_PATH);
+                console.error(renameError);
+                return res.status(500).json({ error: 'Erro ao mover a imagem para o destino final.', details: renameError });
+            };
+        } else {
+            return res.status(200).json({ success: 'Registo atualizado com sucesso.' });
+        };
     });
 });
 
