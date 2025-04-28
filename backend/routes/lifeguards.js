@@ -114,11 +114,11 @@ ROUTER.get('/admin', (req, res) => {
 });
 
 ROUTER.put('/edit/:id', UPLOAD.LIFEGUARD_IMAGE.single('Perfil'), (req, res) => {
-    let { Nome, Salário, Estado } = req.body;
+    let { Nome, Salary, Estado } = req.body;
     const LIFEGUARD_ID = req.params.id;
 
     const SQL = `UPDATE Lifeguards SET FULL_NAME = ?, SALARY = ?, STATUS = ? WHERE LIFEGUARD_ID = ?`;
-    const VALUES = [Nome, Salário, Estado, LIFEGUARD_ID];
+    const VALUES = [Nome, Salary, Estado, LIFEGUARD_ID];
     const PICTURE = req.file ? req.file.filename : null;
 
     DATABASE.query(SQL, VALUES, (err, DBres) => {

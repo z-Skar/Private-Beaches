@@ -25,8 +25,8 @@ const slotProps = {
     },
 };
 
-export const LifeguardEditionModal = ({ lifeguardData, setModalOpen }) => {
-    const [updatedLifeguardData, setUpdatedLifeguardData] = useState({ ...lifeguardData, Salário: lifeguardData.Salário.replace("€", "") });
+export const LifeguardEditionModal = ({ lifeguardData, handleEditionForLifeguard }) => {
+    const [updatedLifeguardData, setUpdatedLifeguardData] = useState({ ...lifeguardData, Salário: lifeguardData.Salário.replace("€", "").slice(0, -3) });
     const [errors, setErrors] = useState({});
     const [profilePicture, setProfilePicture] = useState(lifeguardData.Perfil ? `http://localhost:5000${lifeguardData.Perfil}` : null);
     const [selectedFile, setSelectedFile] = useState(null);
@@ -62,12 +62,13 @@ export const LifeguardEditionModal = ({ lifeguardData, setModalOpen }) => {
     
         const formData = new FormData();
         formData.append("Nome", DATA.Nome);
-        formData.append("Salário", DATA['Salário']);
+        formData.append("Salary", DATA.Salário);
         formData.append("Estado", DATA.Estado);
         if (selectedFile) {
-            formData.append("Perfil", selectedFile); // Altere para "PICTURE"
+            formData.append("Perfil", selectedFile);
         };
 
+        
         try {
             await fetch(`http://localhost:5000/lifeguards/edit/${DATA['Salva-Vidas-ID']}`, {
                 method: "PUT",
@@ -209,15 +210,15 @@ export const LifeguardEditionModal = ({ lifeguardData, setModalOpen }) => {
                             <Input
                                 size="sm"
                                 placeholder="1400"
-                                value={updatedLifeguardData.Salário || ""}
+                                value={updatedLifeguardData['Salário'] || ""}
                                 onChange={(e) => {
                                     setUpdatedLifeguardData((prevData) => ({
                                         ...prevData,
-                                        Salário: e.target.value,
+                                        'Salário': e.target.value,
                                     }));
                                     setErrors((prevErrors) => ({
                                         ...prevErrors,
-                                        Salário: '',
+                                        'Salário': '',
                                     }));
                                 }
                                 }
@@ -260,7 +261,7 @@ export const LifeguardEditionModal = ({ lifeguardData, setModalOpen }) => {
                                 size="sm"
                                 variant="outlined"
                                 color="neutral"
-                                onClick={() => setModalOpen(false)}
+                                onClick={() => handleEditionForLifeguard()}
                             >
                                 Cancelar
                             </Button>

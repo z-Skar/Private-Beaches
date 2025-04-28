@@ -216,7 +216,7 @@ const GenericTable = ({ entity, search }) => {
 
     
     const handleEditionForLifeguard = () => {
-        setEditionModalOpen(false);
+        setLifeguardEditionModalOpen(false);
         setSelectedIDToEdit(null);
     };
 
@@ -468,7 +468,7 @@ const GenericTable = ({ entity, search }) => {
                 aria-describedby="modal-modal-description"
             >
                 <div>
-                    <LifeguardEditionModal lifeguardData={selectedLifeguardData} setModalOpen={setLifeguardEditionModalOpen} />
+                    <LifeguardEditionModal lifeguardData={selectedLifeguardData} handleEditionForLifeguard={handleEditionForLifeguard} />
                 </div>
             </Modal>
         </>
