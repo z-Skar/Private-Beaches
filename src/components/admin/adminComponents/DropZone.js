@@ -4,13 +4,13 @@ import Card from "@mui/joy/Card";
 import Link from "@mui/joy/Link";
 import Typography from "@mui/joy/Typography";
 import AspectRatio from "@mui/joy/AspectRatio";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 import FileUploadRoundedIcon from "@mui/icons-material/FileUploadRounded";
 import Button from "@mui/joy/Button";
 
 export default function DropZone(props) {
-  const { icon, sx, imgSrc, handleFileChange, imagePreview, setImagePreview, ...other } = props;
+  const { icon, sx, imgSrc, handleFileChange, imagePreview, setImagePreview, isCircular, setUsingDefaultImage, ...other } = props;
 
   useEffect(() => {
     if (imgSrc) {
@@ -47,39 +47,42 @@ export default function DropZone(props) {
         </AspectRatio>
         <Typography level="body-sm" sx={{ textAlign: "center" }}>
           <Link component="label" sx={{ cursor: "pointer" }}>
-            Clica para carregar uma imagem
+            Clica para carregar uma imagem {isCircular && " de perfil" }
             <input
               type="file"
               name="PICTURE"
               accept="image/*"
               onChange={handleFileChange}
-              style={{ display: "none" }}
+              style={{ display: "none" }} 
             />
           </Link>{" "}
-          <br /> SVG, PNG, JPG ou GIF (max. 400px de altura)
+          <br /> SVG, PNG, JPG ou GIF (max. {isCircular ? "150" : "400"}px de altura)
         </Typography>
         {imagePreview && (
-          <div style={{ marginTop: "20px" }}>
+          <div style={{ marginTop: "20px", display: "flex", flexDirection: "column", alignItems: "center" }}>
             <img
               src={imagePreview}
               alt="Preview"
-              style={{ maxWidth: "100%", maxHeight: "400px", border: "1px solid #ccc", display: 'block', margin: '0 auto'}}
+              style={{
+                width: isCircular ? "150px" : "100%",
+                height: isCircular ? "150px" : "auto",
+                maxHeight: "400px",
+                border: "1px solid #ccc",
+                borderRadius: isCircular ? "50%" : "0",
+                objectFit: "cover",
+              }}
             />
-            {imgSrc && (
+            {isCircular && (
               <Button
-                size="sm"
                 variant="outlined"
-                color="neutral"
-                onClick={() => setImagePreview(imgSrc)}
-                sx={{
-                  marginTop: 2,
-                  '&:hover': {
-                    backgroundColor: '#e2e8f0 !important',
-                    transition: 'background-color 300ms !important',
-                  },
+                color="primary"
+                sx={{ marginTop: "10px" }}
+                onClick={() => {
+                  setImagePreview("http://localhost:5000/images/default-profile-picture.png");
+                  setUsingDefaultImage(true);
                 }}
               >
-                Repor imagem
+                Usar Imagem Padrão
               </Button>
             )}
           </div>

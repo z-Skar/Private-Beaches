@@ -10,8 +10,7 @@ import CardOverflow from "@mui/joy/CardOverflow";
 import { Autocomplete, FormControl, FormLabel, Input } from "@mui/joy";
 import { validateAdminLifeguardFields } from "validation/validationFunctions";
 import { useNavigate } from "react-router-dom";
-import AspectRatio from "@mui/joy/AspectRatio";
-import Avatar from "@mui/joy/Avatar";
+import DropZone from "../DropZone";
 
 const slotProps = {
     listbox: {
@@ -30,7 +29,7 @@ export const LifeguardEditionModal = ({ lifeguardData, handleEditionForLifeguard
     const [errors, setErrors] = useState({});
     const [profilePicture, setProfilePicture] = useState(lifeguardData.Perfil ? `http://localhost:5000${lifeguardData.Perfil}` : null);
     const [selectedFile, setSelectedFile] = useState(null);
-
+    const [usingDefaultImage, setUsingDefaultImage] = useState(false);
     const navigate = useNavigate();
 
     const statusOptions = [
@@ -64,11 +63,13 @@ export const LifeguardEditionModal = ({ lifeguardData, handleEditionForLifeguard
         formData.append("Nome", DATA.Nome);
         formData.append("Salary", DATA.Salário);
         formData.append("Estado", DATA.Estado);
-        if (selectedFile) {
-            formData.append("Perfil", selectedFile);
-        };
 
-        
+        if (usingDefaultImage) {
+            formData.append("Perfil", null);
+        } else if (selectedFile) {
+            formData.append("Perfil", selectedFile);
+        }
+
         try {
             await fetch(`http://localhost:5000/lifeguards/edit/${DATA['Salva-Vidas-ID']}`, {
                 method: "PUT",
@@ -105,30 +106,17 @@ export const LifeguardEditionModal = ({ lifeguardData, handleEditionForLifeguard
                         </Typography>
                     </Box>
                     <Divider />
+                    <Typography level="title-md">Foto de Perfil do Salva-vidas</Typography>
                     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", my: 2 }}>
-                        <Typography level="body-sm" sx={{ mb: 1 }}>
-                            Foto de perfil
-                        </Typography> 
-                        <AspectRatio ratio="1" sx={{ width: 120, mb: 2 }}>
-                            <Avatar
-                                src={profilePicture} // Exibe a imagem do backend ou a nova imagem selecionada
-                                alt="Foto de perfil"
-                                sx={{ width: "100%", height: "100%" }}
-                            />
-                        </AspectRatio>
-                        <Button
-                            size="sm"
-                            variant="outlined"
-                            component="label"
-                        >
-                            Editar Foto
-                            <input
-                                type="file"
-                                accept="image/*"
-                                hidden
-                                onChange={handleFileChange}
-                            />
-                        </Button>
+                        <DropZone
+                            imgSrc={lifeguardData.Perfil ? `http://localhost:5000${lifeguardData.Perfil}` : null}
+                            onChange={handleFileChange}
+                            imagePreview={profilePicture}
+                            setImagePreview={setProfilePicture}
+                            isCircular={true}
+                            setUsingDefaultImage={setUsingDefaultImage}
+                        />
+                        {errors.Perfil && (<Typography level="body-xs" color="danger" sx={{ pl: '0.1rem', fontWeight: 'lighter' }}>{errors.Perfil}</Typography>)}
                     </Box>
                     <Divider />
                     <Stack

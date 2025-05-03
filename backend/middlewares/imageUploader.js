@@ -42,10 +42,32 @@ const lifeguardStorage = MULTER.diskStorage({
     },
 });
 
+const clientStorage = MULTER.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, PATH.join(__dirname, '../images/tmp'));
+    },
+    filename: (req, file, cb) => {
+        DATABASE.query('SELECT MAX(CLIENT_ID) AS MAX_ID FROM Clients', (err, data) => {
+            if (err) {
+                console.error(err);
+                return cb(new Error('Erro ao obter o último ID de Cliente.'));
+            };
+
+            const NEW_ID = data[0].MAX_ID + 1;
+            const FILE_EXTENSION = PATH.extname(file.originalname);
+            const ENTITY = 'client';
+            const FILE_NAME = `${ENTITY}_${NEW_ID}${FILE_EXTENSION}`;
+            cb(null, FILE_NAME);
+        });
+    },
+});
+
 const BEACH_IMAGE = MULTER({ storage: beachStorage });
 const LIFEGUARD_IMAGE = MULTER({ storage: lifeguardStorage });
+const CLIENT_IMAGE = MULTER({ storage: clientStorage });
 
 module.exports = {
     BEACH_IMAGE,
     LIFEGUARD_IMAGE,
+    CLIENT_IMAGE,
 };

@@ -154,7 +154,13 @@ ROUTER.put('/edit/:id', UPLOAD.LIFEGUARD_IMAGE.single('Perfil'), (req, res) => {
                 return res.status(500).json({ error: 'Erro ao mover a imagem para o destino final.', details: renameError });
             };
         } else {
-            return res.status(200).json({ success: 'Registo atualizado com sucesso.' });
+            const SQL_SET_DEFAULT_IMAGE = `UPDATE Lifeguards SET PROFILE_PICTURE = '/images/default-profile-picture.png' WHERE LIFEGUARD_ID = ?`;
+            DATABASE.query(SQL_SET_DEFAULT_IMAGE, [LIFEGUARD_ID], (err, DBres) => {
+                if (err) {
+                    return res.status(500).json({ error: 'Erro ao definir a imagem padrão.', details: err });
+                };
+                return res.status(200).json({ success: 'Registo atualizado com a imagem padrão.' });
+            });
         };
     });
 });

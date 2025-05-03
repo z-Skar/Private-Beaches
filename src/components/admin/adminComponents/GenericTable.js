@@ -15,7 +15,7 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded"
 import AllowedActions from "./AllowedActions"
 import { Modal } from '@material-ui/core';
-
+import { ClientEditionModal } from "./Modals/ClientEditionModal";
 
 import { entitiesAndNames } from "../utils"
 import { BeachForm } from "./Modals/BeachForm"
@@ -78,12 +78,14 @@ const GenericTable = ({ entity, search }) => {
     const [selectedIDsToDelete, setSelectedIDsToDelete] = useState([]);
     const [selectedIDToEdit, setSelectedIDToEdit] = useState(null);
     const [selectedLifeguardData, setSelectedLifeguardData] = useState(null);
+    const [selectedClientData, setSelectedClientData] = useState(null);
 
     // Estados que controlagem a abertura dos Modals.
     const [deletetionModalOpen, setDeletetionModalOpen] = useState(false);
     const [editionModalOpen, setEditionModalOpen] = useState(false);
     const [excelMessageModal, setExcelMessageModal] = useState(false);
     const [lifeguardEditionModalOpen, setLifeguardEditionModalOpen] = useState(false);
+    const [clientEditionModalOpen, setClientEditionModalOpen] = useState(false);
 
     const dataToExcelRef = useRef(null);
 
@@ -122,8 +124,8 @@ const GenericTable = ({ entity, search }) => {
             });
         });
 
-        // Excluir a última coluna (foto de perfil) caso a entidade seja 'lifeguards'
-        const filteredColumns = entity === 'lifeguards' ? Object.keys(DATA[0] || []).slice(0, -1) : Object.keys(DATA[0] || []);
+        // Excluir a última coluna (foto de perfil) caso a entidade seja 'lifeguards' ou 'clients'.
+        const filteredColumns = ['lifeguards', 'clients'].includes(entity) ? Object.keys(DATA[0] || []).slice(0, -1) : Object.keys(DATA[0] || []);
         setColumns(filteredColumns);
 
         const getData = async () => {
@@ -217,6 +219,16 @@ const GenericTable = ({ entity, search }) => {
     
     const handleEditionForLifeguard = () => {
         setLifeguardEditionModalOpen(false);
+        setSelectedIDToEdit(null);
+    };
+
+    const handleClickForEditClient = (data) => {
+        setSelectedClientData(data);
+        setClientEditionModalOpen(true);
+    };
+
+    const handleEditionForClient = () => {
+        setClientEditionModalOpen(false);
         setSelectedIDToEdit(null);
     };
 
@@ -405,6 +417,8 @@ const GenericTable = ({ entity, search }) => {
                                     } else if (entity === 'lifeguards') {
                                         handleClickForEditLifeguard(row);
                                         console.log(row);
+                                    } else if (entity === 'clients') {
+                                        handleClickForEditClient(row);
                                     };
                                 }}
                             />
@@ -469,6 +483,17 @@ const GenericTable = ({ entity, search }) => {
             >
                 <div>
                     <LifeguardEditionModal lifeguardData={selectedLifeguardData} handleEditionForLifeguard={handleEditionForLifeguard} />
+                </div>
+            </Modal>
+
+            <Modal
+                open={clientEditionModalOpen}
+                onClose={() => setClientEditionModalOpen(false)}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <div>
+                    <ClientEditionModal clientData={selectedClientData} handleEditionForClient={handleEditionForClient} />
                 </div>
             </Modal>
         </>

@@ -1,7 +1,10 @@
 const EXPRESS = require('express');
 const ROUTER = EXPRESS.Router();
 const DATABASE = require('../database/db-connection');
+const UPLOAD = require('../middlewares/imageUploader');
 const BCRYPT = require('bcrypt');
+const PATH = require('path');
+const FS = require('fs');
 
 ROUTER.get('/', (req, res) => {
     const SQL = 'SELECT * FROM clients;'
@@ -118,7 +121,8 @@ ROUTER.get('/admin', (req, res) => {
                FULL_NAME AS 'Nome', 
                EMAIL AS 'Email', 
                YEAR_OF_BIRTH AS 'Data de Nascimento', 
-               CONTACT AS 'Contacto'
+               CONTACT AS 'Contacto',
+               PROFILE_PICTURE AS 'Perfil'
         FROM clients
     `;
 
@@ -146,9 +150,9 @@ ROUTER.get('/admin', (req, res) => {
             const YEAR_OF_BIRTH = 'Data de Nascimento';
             data = data.map(record => ({
                 ...record,
-                [FULL_NAME]: record[FULL_NAME] ? record[FULL_NAME] : 'NÃO DEFINIDO',
-                [CONTACT]: record[CONTACT] ? record[CONTACT] : 'NÃO DEFINIDO',
-                [YEAR_OF_BIRTH]: record[YEAR_OF_BIRTH] ? record[YEAR_OF_BIRTH].toISOString().split('T')[0] : 'NÃO DEFINIDO'
+                [FULL_NAME]: record[FULL_NAME] ? record[FULL_NAME] : 'Não Definido',
+                [CONTACT]: record[CONTACT] ? record[CONTACT] : 'Não Definido',
+                [YEAR_OF_BIRTH]: record[YEAR_OF_BIRTH] ? record[YEAR_OF_BIRTH].toISOString().split('T')[0] : 'Não Definido'
             }));
             return res.status(200).json(data);
         };
@@ -163,6 +167,63 @@ ROUTER.get('/profile/:id', (req, res) => {
         if (err) {
             return res.status(500).json(err);
         } return res.status(200).json(data);
+    });
+});
+
+ROUTER.put('/edit/:id', UPLOAD.CLIENT_IMAGE.single('Perfil'), (req, res) => {
+    let { Nome, Nascimento } = req.body;
+    const CLIENT_ID = req.params.id;
+    
+    console.log(Nascimento);
+    if (Nascimento === '' || Nascimento === '0000-00-00' || Nascimento === 'Não Definido') {
+        Nascimento = null;
+    };
+    
+    const SQL = `UPDATE Clients SET FULL_NAME = ?, YEAR_OF_BIRTH = ? WHERE CLIENT_ID = ?`;
+    const VALUES = [Nome, Nascimento, CLIENT_ID];
+    const PICTURE = req.file ? req.file.filename : null;
+
+    DATABASE.query(SQL, VALUES, (err, DBres) => {
+        const TMP_FILE_PATH = PICTURE ? PATH.join(__dirname, '../images/tmp', PICTURE) : null;
+        if (err) {
+            console.error(err);
+            if (PICTURE) {
+                FS.unlinkSync(TMP_FILE_PATH);
+            };
+            return res.status(500).json({ error: 'Erro ao atualizar os dados principais.', details: err });
+        };
+        if (DBres.affectedRows === 0) {
+            if (PICTURE) {
+                FS.unlinkSync(TMP_FILE_PATH);
+            };
+            return res.status(400).json({ error: 'Nenhum cliente encontrado com esse ID para atualizar.' });
+        };
+        if (PICTURE) {
+            const FINAL_FILE_PATH = PATH.join(__dirname, '../images', PICTURE);
+            const IMAGE_PATH = `/images/${PICTURE}`;
+            const SQL_UPDATE_IMAGE = `UPDATE Clients SET PROFILE_PICTURE = ? WHERE CLIENT_ID = ?`;
+            try {
+                FS.renameSync(TMP_FILE_PATH, FINAL_FILE_PATH);
+                DATABASE.query(SQL_UPDATE_IMAGE, [IMAGE_PATH, CLIENT_ID], (err, DBres) => {
+                    if (err) {
+                        return res.status(500).json({ error: 'Erro ao renomear a imagem.' });
+                    };
+                    return res.status(200).json({ success: 'Registo e imagem atualizados com sucesso.' });
+                });
+            } catch (renameError) {
+                FS.unlinkSync(TMP_FILE_PATH);
+                console.error(renameError);
+                return res.status(500).json({ error: 'Erro ao mover a imagem para o destino final.', details: renameError });
+            };
+        } else {
+            const SQL_SET_DEFAULT_IMAGE = `UPDATE Clients SET PROFILE_PICTURE = '/images/default-profile-picture.png' WHERE CLIENT_ID = ?`;
+            DATABASE.query(SQL_SET_DEFAULT_IMAGE, [CLIENT_ID], (err, DBres) => {
+                if (err) {
+                    return res.status(500).json({ error: 'Erro ao definir a imagem padrão.', details: err });
+                };
+                return res.status(200).json({ success: 'Registo atualizado com a imagem padrão.' });
+            });
+        };
     });
 });
 
