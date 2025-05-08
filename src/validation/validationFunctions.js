@@ -12,7 +12,11 @@ const MANDATORY_FIELDS = {
     CITY_LOCATION: 'A cidade em que a praia pertence é obrigatória.',
     DESCRIPTION: 'A descrição é obrigatória.',
     PICTURE: 'A imagem é obrigatória.',
-    RESERVATION_COST: 'O custo da reserva é obrigatório.'
+    RESERVATION_COST: 'O custo da reserva é obrigatório.',
+    RESERVATION_START: 'A data de início da reserva inserida é inválida.',
+    RESERVATION_END: 'A data de fim da reserva inserida é inválida.',
+    CREDIT_CARD_NUMBER: 'O número de cartão de crédito é obrigatório.',
+    NUMBER_OF_PEOPLE: 'O número de pessoas é obrigatório.',
 };
 
 const setMandatoryMessageErrors = (fields, data) => {
@@ -201,5 +205,41 @@ export const validateAdminLifeguardFields = (data) => {
         errors.Estado = 'O estado do Salva-vidas é obrigatório.';
     };
 
+    return errors;
+};
+
+export const validateReservationFields = (data) => {
+    const errors = {
+        RESERVATION_START: "",
+        RESERVATION_END: "",
+        CREDIT_CARD_NUMBER: "",
+        NUMBER_OF_PEOPLE: "",
+    };
+
+    const startDate = new Date(data.RESERVATION_START);
+    const endDate = new Date(data.RESERVATION_END);
+
+    if (startDate > endDate) {
+        errors.RESERVATION_START = 'A data de início da reserva deve ser anterior à data de fim.';
+        errors.RESERVATION_END = 'A data de fim da reserva deve ser posterior à data de início.';
+    };
+            
+    if (data.CREDIT_CARD_NUMBER.length !== 16 && data.CREDIT_CARD_NUMBER.length !== 15) {
+        errors.CREDIT_CARD_NUMBER = 'O número de cartão de crédito tem de ter 16 ou 15 dígitos.';
+    };
+
+    if (!checkOnlyNumbers(data.CREDIT_CARD_NUMBER)) {
+        errors.CREDIT_CARD_NUMBER = 'O número de cartão só pode conter números.';
+    };
+
+    if (!validPositiveIntegerNumber(data.NUMBER_OF_PEOPLE)) {
+        errors.NUMBER_OF_PEOPLE = 'O número de pessoas só pode conter números.';
+    };
+
+    if (Number(data.NUMBER_OF_PEOPLE) > 100) {
+        errors.NUMBER_OF_PEOPLE = 'O número de pessoas não pode ser superior a 100.';
+    };
+
+    setMandatoryMessageErrors(errors, data);
     return errors;
 };

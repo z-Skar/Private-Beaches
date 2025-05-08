@@ -56,6 +56,67 @@ ROUTER.get('/admin', (req, res) => {
     });
 });
 
+ROUTER.post('/create', (req, res) => {
+    const { CLIENT_ID, BEACH_ID, RESERVATION_START, RESERVATION_END, CREDIT_CARD_NUMBER, BILL_COST } = req.body;
+    if (!CLIENT_ID || !BEACH_ID || !RESERVATION_START || !RESERVATION_END || !BILL_COST) {
+        return res.status(400).send('Preencha todos os campos obrigatórios.');
+    };
+
+    DATABASE.getConnection((err, connection) => {
+        if (err) {
+            return res.status(500).json({ error: 'Erro ao obter conexão com o banco de dados.', details: err });
+        }
+
+        connection.beginTransaction((err) => {
+            if (err) {
+                connection.release();
+                return res.status(500).json({ error: 'Erro ao iniciar transação.', details: err });
+            }
+
+            const SQL_INSERT_RESERVATION = `
+                INSERT INTO Reservations (CLIENT_ID, BEACH_ID, RESERVATION_START, RESERVATION_END)
+                VALUES (?, ?, ?, ?)
+            `;
+
+            connection.query(SQL_INSERT_RESERVATION, [CLIENT_ID, BEACH_ID, RESERVATION_START, RESERVATION_END], (err, result) => {
+                if (err) {
+                    return connection.rollback(() => {
+                        connection.release();
+                        res.status(500).json({ error: 'Erro ao criar reserva.', details: err });
+                    });
+                }
+
+                const RESERVATION_ID = result.insertId;
+                const SQL_INSERT_BILL = `
+                    INSERT INTO Bills (RESERVATION_ID, CREDIT_CARD_NUMBER, BILL_COST) 
+                    VALUES (?, ?, ?)
+                `;
+
+                connection.query(SQL_INSERT_BILL, [RESERVATION_ID, CREDIT_CARD_NUMBER, BILL_COST], (err) => {
+                    if (err) {
+                        return connection.rollback(() => {
+                            connection.release();
+                            res.status(500).json({ error: 'Erro ao criar a fatura.', details: err });
+                        });
+                    }
+
+                    connection.commit((err) => {
+                        if (err) {
+                            return connection.rollback(() => {
+                                connection.release();
+                                res.status(500).json({ error: 'Erro ao confirmar transação.', details: err });
+                            });
+                        }
+
+                        connection.release();
+                        res.status(200).json({ success: 'Reserva e fatura criadas com sucesso.' });
+                    });
+                });
+            });
+        });
+    });
+});
+
 ROUTER.delete('/delete/:id', (req, res) => {
     const { id } = req.params;
 

@@ -109,8 +109,8 @@ export default (props) => {
         return;
       };
 
-      const { token, payload: {EMAIL, FULL_NAME, PICTURE}} = data;
-      login(token, FULL_NAME, EMAIL, PICTURE);
+      const { token, payload: {CLIENT_ID, EMAIL, FULL_NAME, PICTURE}} = data;
+      login(token, CLIENT_ID, FULL_NAME, EMAIL, PICTURE);
       NAVIGATE('/');
       window.scrollTo(0, 0);
     } catch (error) {

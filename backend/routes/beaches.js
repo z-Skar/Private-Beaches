@@ -40,7 +40,7 @@ ROUTER.get('/', (req, res) => {
     });
 });
 
-ROUTER.get('/luxury', (req, res) => {
+ROUTER.get('/luxury', (req, res) => { // OBTER AS PRAIAS MAIS CARAS
     const SQL = 'SELECT BEACH_NAME, RESERVATION_COST, SERVICE_TYPE, COUNTRY_LOCATION, PICTURE FROM BEACHES '
               + 'ORDER BY RESERVATION_COST DESC LIMIT 2';
     DATABASE.query(SQL, (err, data) => {
@@ -50,7 +50,7 @@ ROUTER.get('/luxury', (req, res) => {
     });
 });
 
-ROUTER.get('/location', (req, res) => {
+ROUTER.get('/location', (req, res) => { // OBTER CIDADES E PAÍSES DAS PRAIAS
     const SQL = `SELECT COUNTRY_LOCATION, 
                  GROUP_CONCAT(DISTINCT CITY_LOCATION ORDER BY CITY_LOCATION SEPARATOR ", ") AS CITIES 
                  FROM BEACHES 
@@ -62,7 +62,7 @@ ROUTER.get('/location', (req, res) => {
     });
 });
 
-ROUTER.get('/services', (req, res) => {
+ROUTER.get('/services', (req, res) => { // OBTER TIPOS DE SERVIÇOS DISPONÍVEIS
     const SQL = `SELECT DISTINCT SERVICE_TYPE FROM BEACHES`;
     DATABASE.query(SQL, (err, data) => {
         if(err) {
@@ -71,7 +71,7 @@ ROUTER.get('/services', (req, res) => {
     });
 });
 
-ROUTER.get('/columns' , (req, res) => {
+ROUTER.get('/columns' , (req, res) => { // OBTER NOME DAS COLUNAS DA TABELA BEACHES
     const SQL = `
         SELECT Beaches.BEACH_ID AS 'Praia-ID', 
                BEACH_NAME AS Nome, 
@@ -95,7 +95,7 @@ ROUTER.get('/columns' , (req, res) => {
     });
 });
 
-ROUTER.get('/admin', (req, res) => {
+ROUTER.get('/admin', (req, res) => { // OBTER TODAS AS PRAIAS PARA O ADMINISTRADOR
     let SQL = `
         SELECT Beaches.BEACH_ID AS 'Praia-ID', 
                BEACH_NAME AS Nome, 
@@ -153,9 +153,14 @@ ROUTER.get('/admin', (req, res) => {
     });
 });
 
-ROUTER.get('/read/:id', (req, res) => {
+ROUTER.get('/read/:id', (req, res) => { // OBTER INFORMAÇÃO DE UMA PRAIA PELO SEU ID, JUNTO DA IMAGEM, AVALIAÇÃO E NOME DO SALVA-VIDAS
     const { id } = req.params;
-    const SQL = `SELECT * FROM Beaches WHERE BEACH_ID = ?`;
+    const SQL = `SELECT Beaches.*, AVG(Evaluations.SCORE) as SCORE, COALESCE(Lifeguards.FULL_NAME, 'Indisponível') as LIFEGUARD_NAME 
+                 FROM Beaches 
+                 LEFT JOIN Evaluations ON Beaches.BEACH_ID = Evaluations.BEACH_ID 
+                 LEFT JOIN Lifeguards ON Beaches.LIFEGUARD_ID = Lifeguards.LIFEGUARD_ID 
+                 WHERE Beaches.BEACH_ID = ?
+                 GROUP BY Beaches.BEACH_ID`;
 
     DATABASE.query(SQL, [id], (err, data) => {
         if (err) {
@@ -170,7 +175,7 @@ ROUTER.get('/read/:id', (req, res) => {
     });
 });
 
-ROUTER.post('/add', UPLOAD.BEACH_IMAGE.single('PICTURE'), (req, res) => {
+ROUTER.post('/add', UPLOAD.BEACH_IMAGE.single('PICTURE'), (req, res) => { // ADICIONAR UMA PRAIA
     let { BEACH_NAME, COUNTRY_LOCATION, CITY_LOCATION, DESCRIPTION,
         SERVICE_TYPE, RESERVATION_COST, LIFEGUARD_ID } = req.body;
     const SQL = `INSERT INTO Beaches (BEACH_NAME, COUNTRY_LOCATION, CITY_LOCATION, DESCRIPTION, 
@@ -216,7 +221,7 @@ ROUTER.post('/add', UPLOAD.BEACH_IMAGE.single('PICTURE'), (req, res) => {
     });
 });
 
-ROUTER.put('/edit/:id', UPLOAD.BEACH_IMAGE.single('PICTURE'), (req, res) => {
+ROUTER.put('/edit/:id', UPLOAD.BEACH_IMAGE.single('PICTURE'), (req, res) => { // EDITAR UMA PRAIA
     let { BEACH_NAME, COUNTRY_LOCATION, CITY_LOCATION, DESCRIPTION,
             SERVICE_TYPE, RESERVATION_COST, LIFEGUARD_ID } = req.body;
     
@@ -270,7 +275,7 @@ ROUTER.put('/edit/:id', UPLOAD.BEACH_IMAGE.single('PICTURE'), (req, res) => {
     });
 });
 
-ROUTER.delete('/delete/:id', (req, res) => {
+ROUTER.delete('/delete/:id', (req, res) => { // ELIMINAR UMA PRAIA
     const { id } = req.params;
     if (!id || isNaN(id)) {
         return res.status(400).send('ID inválido.')

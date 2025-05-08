@@ -85,17 +85,17 @@ export default ({
   const [error, setError] = useState({});
 
   const handleDateChange = (inputDate) => {
-    if(error.YEAR_OF_BIRTH) setError({...error, YEAR_OF_BIRTH: undefined});
+    if (error.YEAR_OF_BIRTH) setError({ ...error, YEAR_OF_BIRTH: undefined });
     try {
-      inputDate = inputDate.format('YYYY-MM-DD')
+        inputDate = inputDate.format('YYYY-MM-DD');
     } catch (error) {
-      inputDate = ''
-    };
+        inputDate = '';
+    }
     setLifeguardData({
-      ...lifeguardData,
-      YEAR_OF_BIRTH: inputDate === 'Invalid Date' ? '' : inputDate
+        ...lifeguardData,
+        YEAR_OF_BIRTH: inputDate === 'Invalid Date' ? '' : inputDate,
     });
-  };
+};
 
   const handleInputChange = (e) => {
     if(error[e.target.name]) {

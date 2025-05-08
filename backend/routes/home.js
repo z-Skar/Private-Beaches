@@ -6,7 +6,7 @@ ROUTER.get('/admin', (req, res) => {
     const SQL = `SELECT 
                     (SELECT COUNT(Client_ID) FROM Clients) AS 'Número de Clientes',
                     (SELECT SUM(BILL_COST) FROM BILLS) AS 'Lucro Total',
-                    (SELECT COUNT(Lifeguard_ID) FROM Lifeguards WHERE Status = 'EM ESPERA') AS 'Salva-vidas pendentes',
+                    (SELECT COUNT(Lifeguard_ID) FROM Lifeguards WHERE Status = 'Em Espera') AS 'Salva-vidas pendentes',
                     (SELECT COUNT(Beach_ID) FROM Beaches) AS 'Número de Praias',
                     (SELECT COUNT(Lifeguard_ID) FROM Lifeguards WHERE Status = 'Aceite') AS 'Número de Salva-vidas',
                     (SELECT COUNT(Beach_ID) FROM Beaches WHERE Lifeguard_ID IS NULL) AS 'Praias sem Salva-vidas',

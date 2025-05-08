@@ -21,6 +21,7 @@ import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import { validateReservationCostFields } from "validation/validationFunctions";
 import Footer from "components/footers/MiniCenteredFooter.js";
+import { useNavigate } from "react-router-dom";
 
 const HeaderRow = tw.div`flex justify-between items-center flex-col xl:flex-row w-full`;
 const Heading = tw(SectionHeading)`text-gray-700 mb-3`
@@ -54,7 +55,7 @@ const Actions = styled.div`
 
 const TabContent = tw(motion.div)`mt-6 flex flex-wrap sm:-mr-10 md:-mr-6 lg:-mr-12`;
 const CardContainer = tw.div`mt-10 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 sm:pr-10 md:pr-6 lg:pr-12`;
-const Card = tw(motion.a)`bg-gray-200 rounded-b block max-w-xs mx-auto sm:max-w-none sm:mx-0`;
+const Card = tw(motion.a)`bg-gray-200 rounded-b block max-w-xs mx-auto sm:max-w-none sm:mx-0 cursor-pointer`;
 const CardImageContainer = styled.div`
   ${props => css`background-image: url("${props.imageSrc}");`}
   ${tw`h-56 xl:h-64 bg-center bg-cover relative rounded-t`}
@@ -323,6 +324,7 @@ export default ({
   console.log(beaches);
   const tabs = beaches.length > 0 ? {
     Starters: beaches.map(beach => ({
+      id: beach.BEACH_ID,
       imageSrc: beach.PICTURE || 'Imagem indisponível',
       title: beach.BEACH_NAME || 'Título indisponível',
       content: beach.DESCRIPTION || 'Descrição indisponível',
@@ -335,7 +337,7 @@ export default ({
 
   const tabsKeys = Object.keys(tabs);
   const [activeTab, setActiveTab] = useState(tabsKeys[0]);
-
+  const NAVIGATE = useNavigate();
   return (
     <AnimationRevealPage>
       <Container>
@@ -496,7 +498,7 @@ export default ({
               >
                 {tabs[tabKey].map((card, index) => (
                   <CardContainer key={index}>
-                    <Card className="group" href={card.url} initial="rest" whileHover="hover" animate="rest">
+                    <Card className="group" onClick={() => NAVIGATE(`/Praia/${card.id}`)} initial="rest" whileHover="hover" animate="rest">
                       <CardImageContainer imageSrc={card.imageSrc}>
                         <CardRatingContainer>
                           <CardRating>

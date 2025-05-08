@@ -59,6 +59,7 @@ ROUTER.post('/register', async (req, res) => {
                 const PICTURE = data[0].PROFILE_PICTURE;
                 const JWT = require('jsonwebtoken');
                 const PAYLOAD = {
+                    CLIENT_ID: data[0].CLIENT_ID,
                     EMAIL: EMAIL,
                     FULL_NAME: FULL_NAME,
                     PICTURE: PICTURE

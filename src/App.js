@@ -112,6 +112,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { StyledEngineProvider } from '@mui/joy/styles';
 import AdminDashbord from "components/admin/AdminDahsbord";
 import { useAuth } from "contexts/AuthContext";
+import ProtectedRoute from "ProtectedRoute";
+import BeachReservation from "pages/BeachReservation";
 
 export default function App() {
   // If you want to disable the animation just use the disabled `prop` like below on your page's component
@@ -135,6 +137,7 @@ export default function App() {
                 <Route path="/Beaches.js" element={<TabGrid />} />
                 <Route path="/Lifeguards.js" element={<TwoColContactUsWithIllustrationFullForm />} />
                 {token && <Route path="/Admin.js" element={<AdminDashbord />} />}
+                <Route path="/Praia/:id" element={<ProtectedRoute> <BeachReservation /> </ProtectedRoute>} />
               </Routes>
             </Router>
         </StyledEngineProvider>
