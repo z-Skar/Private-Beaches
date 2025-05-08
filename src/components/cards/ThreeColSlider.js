@@ -153,6 +153,7 @@ export default () => {
 
   const NUMBER_OF_CARDS = 4;
   const cards = beaches.length > 0 ? beaches.slice(0, NUMBER_OF_CARDS).map(beach => ({
+    beach_id: beach.BEACH_ID,
     imageSrc: beach.PICTURE || 'Imagem indisponível',
     title: beach.BEACH_NAME || 'Nome indisponível',
     description: beach.DESCRIPTION || 'Descrição indisponível',
@@ -203,7 +204,7 @@ export default () => {
               </TextInfo>
               <PrimaryButton
                 onClick={() => {
-                  NAVIGATE('/Beaches.js')
+                  NAVIGATE(`/Praia/${card.beach_id}`);
                   window.scrollTo(0, 0);
               }}>
                 Reserve Agora
