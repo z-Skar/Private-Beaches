@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import AnimationRevealPage from "helpers/AnimationRevealPage.js"
 
 import EventLandingPage from "demos/EventLandingPage.js";
-import HotelTravelLandingPage from "demos/HotelTravelLandingPage.js";
+import HotelTravelLandingPage from "demos/Home";
 import AgencyLandingPage from "demos/AgencyLandingPage.js";
 import SaaSProductLandingPage from "demos/SaaSProductLandingPage.js";
 import RestaurantLandingPage from "demos/RestaurantLandingPage.js";
@@ -65,7 +65,7 @@ import VerticalWithAlternateImageAndTextFeatures from "components/features/Verti
 import SliderCards from "components/cards/ThreeColSlider.js";
 import TrendingCards from "components/cards/TwoTrendingPreviewCardsWithImage.js";
 import PortfolioCards from "components/cards/PortfolioTwoCardsWithImage.js";
-import TabGridCards from "components/cards/TabCardGrid.js";
+import TabGridCards from "components/cards/Beaches.js";
 import ProfileThreeColGridCards from "components/cards/ProfileThreeColGrid.js"
 import ThreeColContactDetailsCards from "components/cards/ThreeColContactDetails.js"
 
@@ -87,7 +87,7 @@ import TwoColumnPrimaryBackgroundFAQS from "components/faqs/TwoColumnPrimaryBack
 import SimpleContactUsForm from "components/forms/SimpleContactUs.js";
 import SimpleSubscribeNewsletterForm from "components/forms/SimpleSubscribeNewsletter.js";
 import TwoColContactUsForm from "components/forms/TwoColContactUsWithIllustration.js";
-import TwoColContactUsFullForm from "components/forms/TwoColContactUsWithIllustrationFullForm.js";
+import TwoColContactUsFullForm from "components/forms/LifeguardForm.js";
 
 import GetStartedCTA from "components/cta/GetStarted.js";
 import GetStartedLightCTA from "components/cta/GetStartedLight.js";
