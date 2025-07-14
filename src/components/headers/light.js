@@ -9,7 +9,7 @@ import useAnimatedNavToggler from "../../helpers/useAnimatedNavToggler.js";
 import logo from "../../images/logo192.png";
 import { ReactComponent as MenuIcon } from "feather-icons/dist/icons/menu.svg";
 import { ReactComponent as CloseIcon } from "feather-icons/dist/icons/x.svg";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "contexts/AuthContext.js";
 
 const Header = tw.header`
@@ -73,27 +73,47 @@ export default ({ roundedHeaderButton = false, logoLink, links, className, colla
    * If you manipulate links here, all the styling on the links is already done for you. If you pass links yourself though, you are responsible for styling the links or use the helper styled components that are defined here (NavLink)
    */
 
-  const { token } = useAuth();
+  const { token, role, clientID } = useAuth();
+  const location = useLocation();
+  const currentPath = location.pathname;
+  
   const NAVIGATE = useNavigate();
   const navigateTo = (destination) => {
     NAVIGATE(destination);
     window.scrollTo(0, 0);
   };
 
+  const isOn = (path) => currentPath === path;
+  const isOnPerfil = currentPath.startsWith(`/Perfil/`);
+
   const defaultLinks = [
     <NavLinks key={1}>
-      <NavLink onClick={() => navigateTo("/#")}>Sobre</NavLink>
-      {token && <NavLink onClick={() => navigateTo("/Admin.js")}>Admin</NavLink>}
-      {lifeguardLink && <NavLink onClick={() => navigateTo("/Lifeguards.js")}>Salva-vidas</NavLink>}
-      <NavLink onClick={() => navigateTo("/#")}>Contacte-nos</NavLink>
+      {token && role === "Administrador" && !isOn("/Admin.js") && (
+        <NavLink onClick={() => navigateTo("/Admin.js")}>Admin</NavLink>
+      )}
+      {token && !isOnPerfil && (
+        <NavLink onClick={() => navigateTo(`/Perfil/${clientID}`)}>Perfil</NavLink>
+      )}
+      {!isOn("/Sobre") && <NavLink onClick={() => navigateTo(`/Sobre`)}>Sobre</NavLink>}
+      {!isOn("/Beaches.js") && <NavLink onClick={() => navigateTo(`/Beaches.js`)}>Praias</NavLink>}
       {!token && (
-          <>
-            <NavLink onClick={() => navigateTo('/Login.js')} tw="lg:ml-12!">Login</NavLink>
-            <PrimaryLink onClick={() => navigateTo('/Signup.js')} css={roundedHeaderButton && tw`rounded-full`} >Regista-te</PrimaryLink>
-          </>
-        )
-      }
-    </NavLinks>
+        <>
+          {!isOn("/Login.js") && (
+            <NavLink onClick={() => navigateTo("/Login.js")} tw="lg:ml-12!">
+              Login
+            </NavLink>
+          )}
+          {!isOn("/Signup.js") && (
+            <PrimaryLink
+              onClick={() => navigateTo("/Signup.js")}
+              css={roundedHeaderButton && tw`rounded-full`}
+            >
+              Regista-te
+            </PrimaryLink>
+          )}
+        </>
+      )}
+    </NavLinks>,
   ];
 
   const { showNavLinks, animation, toggleNavbar } = useAnimatedNavToggler();

@@ -8,7 +8,7 @@ import { ReactComponent as TwitterIcon } from "../../images/twitter-icon.svg";
 import { ReactComponent as YoutubeIcon } from "../../images/youtube-icon.svg";
 
 
-const Container = tw(ContainerBase)`bg-gray-900 text-gray-100 -mx-8 -mb-8`
+const Container = tw(ContainerBase)`bg-gray-900 text-gray-100 -mx-8 -mb-8 h-[23rem]`
 const Content = tw.div`max-w-screen-xl mx-auto py-20 lg:py-24`;
 
 const Row = tw.div`flex items-center justify-center flex-col px-8`
@@ -38,13 +38,6 @@ export default () => {
             <LogoImg src={logo} />
             <LogoText>Tropical Dreams</LogoText>
           </LogoContainer>
-          <LinksContainer>
-            <Link href="#">Home</Link>
-            <Link href="#">Sobre</Link>
-            <Link href="#">Contacte-nos</Link>
-            <Link href="#">Blog</Link>
-            <Link href="#">Avaliações</Link>
-          </LinksContainer>
           <SocialLinksContainer>
             <SocialLink href="https://facebook.com">
               <FacebookIcon />
@@ -57,7 +50,7 @@ export default () => {
             </SocialLink>
           </SocialLinksContainer>
           <CopyrightText>
-            &copy; Copyright 2020, Tropical Dreams Inc. All Rights Reserved.
+            &copy; Copyright 2025, Tropical Dreams Inc. All Rights Reserved.
           </CopyrightText>
         </Row>
       </Content>

@@ -36,6 +36,7 @@ export const LifeguardEditionModal = ({ lifeguardData, handleEditionForLifeguard
         { label: "Ativo", value: "Ativo" },
         { label: "Em Espera", value: "Em Espera" },
         { label: "Férias", value: "Férias" },
+        { label: 'Negado', value: 'Negado' }
     ];
 
     const handleFileChange = (event) => {

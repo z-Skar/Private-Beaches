@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import tw from "twin.macro";
 import styled from "styled-components";
 import { css } from "styled-components/macro"; //eslint-disable-line
@@ -16,6 +16,8 @@ import Modal from "../my_components/Modal";
 import ProfilePicture from '../../images/default-profile-picture.webp'
 import Footer from "components/footers/MiniCenteredFooter.js";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useAuth } from "contexts/AuthContext";
 
 const Container = tw.div`relative`;
 const TwoColumn = tw.div`flex flex-col md:flex-row justify-between max-w-screen-xl mx-auto py-20 md:py-24`;
@@ -74,14 +76,57 @@ export default ({
   textOnLeft = true,
 }) => {
   // The textOnLeft boolean prop can be used to display either the text on left or right side of the image.
-  const NAVIGATE = useNavigate();
+  const { clientID } = useAuth();
+  
+  let disables = {
+    CONTACT: false,
+    YEAR_OF_BIRTH: false,
+  };
+
   const [lifeguardData, setLifeguardData] = useState({
     NIF: '',
     FULL_NAME: '',
     YEAR_OF_BIRTH: '',
     EMAIL: '',
     CONTACT: '',
+    PROFILE_PICTURE: ''
   });
+
+  useEffect(() => {
+    const GET_ACTUAL_USER_DATA = async () => {
+      try {
+        const RESPONSE  = await axios.get(`http://localhost:5000/clients/profile/${clientID}`);
+        setLifeguardData({
+          NIF: RESPONSE.data[0].NIF,
+          FULL_NAME: RESPONSE.data[0].FULL_NAME,
+          YEAR_OF_BIRTH: RESPONSE.data[0].YEAR_OF_BIRTH,
+          EMAIL: RESPONSE.data[0].EMAIL,
+          CONTACT: RESPONSE.data[0].CONTACT,
+          PROFILE_PICTURE: RESPONSE.data[0].PROFILE_PICTURE
+        });
+        
+        if (RESPONSE.data[0].CONTACT) disables.CONTACT = true;
+        if (RESPONSE.data[0].YEAR_OF_BIRTH) disables.YEAR_OF_BIRTH = true;
+
+        console.log(RESPONSE.data[0]);
+      } catch (error) {
+        console.error("Erro ao obter dados do utilizador atual: ", error);
+      };
+    };
+    GET_ACTUAL_USER_DATA();
+  }, [clientID]);
+
+  const CLIENTE = {
+    PROFILE_PICTURE: lifeguardData.PROFILE_PICTURE,
+    NIF: lifeguardData.NIF,
+    FULL_NAME: lifeguardData.FULL_NAME,
+    YEAR_OF_BIRTH: lifeguardData.YEAR_OF_BIRTH,
+    EMAIL: lifeguardData.EMAIL,
+    CONTACT: lifeguardData.CONTACT
+  };
+  console.log("Dados do cliente:", CLIENTE);
+
+  const NAVIGATE = useNavigate();
   const [error, setError] = useState({});
 
   const handleDateChange = (inputDate) => {
@@ -95,7 +140,7 @@ export default ({
         ...lifeguardData,
         YEAR_OF_BIRTH: inputDate === 'Invalid Date' ? '' : inputDate,
     });
-};
+  };
 
   const handleInputChange = (e) => {
     if(error[e.target.name]) {
@@ -128,7 +173,7 @@ export default ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const ERRORS = validateLifeguardFields(lifeguardData);
+    const ERRORS = null // validateLifeguardFields(lifeguardData);
     setError(ERRORS);
 
     const HAS_ERRORS = Object.values(ERRORS).some((error) => error !== "");
@@ -142,7 +187,7 @@ export default ({
       };
 
       if (selectedFile) {
-        formData.append("PICTURE", selectedFile);
+        formData.append("PROFILE_PICTURE", selectedFile);
       };
       await addLifeguard(formData);
       NAVIGATE('/');
@@ -170,7 +215,7 @@ export default ({
       <Container>
         <Header tw="mt-4" lifeguardLink={false} />
         <TwoColumn tw="pt-10">
-          <ImageColumn>
+          <ImageColumn> 
             <Image imageSrc={EmailIllustrationSrc} />
           </ImageColumn>
           <TextColumn textOnLeft={textOnLeft}>
@@ -201,14 +246,14 @@ export default ({
                     />
                   )}
                 </ProfilePictureContainer>
-                <TextField  name='NIF' label="Número de Identificação Fiscal" onChange={handleInputChange}
+                <TextField name='NIF' label="Número de Identificação Fiscal" onChange={handleInputChange}
                 sx={{...commonStyles, '& .MuiInputLabel-root.Mui-focused': {
                       color: tw`text-primary-500`,
                   },
                 }} />
                 {error.NIF && <p tw="text-red-700 text-xs pl-1 pt-1">{error.NIF}</p>}
 
-                <TextField name='FULL_NAME' label="Nome completo" onChange={handleInputChange}
+                <TextField name='FULL_NAME' label="Nome completo" onChange={handleInputChange} value={lifeguardData.FULL_NAME ?? ''} disabled={lifeguardData.FULL_NAME !== ''}
                   sx={{...commonStyles, '& .MuiInputLabel-root.Mui-focused': {
                     color: tw`text-primary-500`,
                   },
@@ -216,7 +261,7 @@ export default ({
                 />
                 {error.FULL_NAME && <p tw="text-red-700 text-xs pl-1 pt-1">{error.FULL_NAME}</p>}
 
-                <TextField name='EMAIL' label="Endereço de email" onChange={handleInputChange}
+                <TextField name='EMAIL' label="Endereço de email" onChange={handleInputChange} value={lifeguardData.EMAIL ?? ''} disabled={lifeguardData.EMAIL !== ''}
                   sx={{...commonStyles, '& .MuiInputLabel-root.Mui-focused': {
                     color: tw`text-primary-500`,
                     },
@@ -224,7 +269,7 @@ export default ({
                 />
                 {error.EMAIL && <p tw="text-red-700 text-xs pl-1 pt-1">{error.EMAIL}</p>}
 
-                <TextField name='CONTACT' label="Número de telemóvel" onChange={handleInputChange}
+                <TextField name='CONTACT' label="Número de telemóvel" onChange={handleInputChange} value={lifeguardData.CONTACT ?? ''} disabled={disables.CONTACT}
                   sx={{...commonStyles, '& .MuiInputLabel-root.Mui-focused': {
                     color: tw`text-primary-500`,
                     },

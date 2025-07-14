@@ -97,20 +97,21 @@ ROUTER.get('/columns' , (req, res) => { // OBTER NOME DAS COLUNAS DA TABELA BEAC
 
 ROUTER.get('/admin', (req, res) => { // OBTER TODAS AS PRAIAS PARA O ADMINISTRADOR
     let SQL = `
-        SELECT Beaches.BEACH_ID AS 'Praia-ID', 
-               BEACH_NAME AS Nome, 
-               DESCRIPTION AS Descrição, 
-               CITY_LOCATION AS Cidade, 
-               COUNTRY_LOCATION AS País, 
-               RESERVATION_COST AS 'Custo de Reserva', 
-               COALESCE(Lifeguards.FULL_NAME, 'Indisponível') AS 'Salva-Vidas', 
-               SERVICE_TYPE AS Serviço, 
-               COALESCE(AVG(Evaluations.SCORE), 0) AS 'Avaliação' 
-        FROM BEACHES 
-        LEFT JOIN Evaluations ON Beaches.BEACH_ID = Evaluations.BEACH_ID 
-        LEFT JOIN Lifeguards ON Beaches.LIFEGUARD_ID = Lifeguards.LIFEGUARD_ID 
-        GROUP BY Beaches.BEACH_ID 
-        ORDER BY Beaches.BEACH_ID DESC
+        SELECT B.BEACH_ID AS 'Praia-ID', 
+               B.BEACH_NAME AS Nome, 
+               B.DESCRIPTION AS Descrição, 
+               B.CITY_LOCATION AS Cidade, 
+               B.COUNTRY_LOCATION AS País, 
+               B.RESERVATION_COST AS 'Custo de Reserva', 
+               COALESCE(C.FULL_NAME, 'Indisponível') AS 'Salva-Vidas', 
+               B.SERVICE_TYPE AS Serviço, 
+               COALESCE(AVG(E.SCORE), 0) AS 'Avaliação' 
+        FROM BEACHES B
+        LEFT JOIN Evaluations E ON B.BEACH_ID = E.BEACH_ID 
+        LEFT JOIN Lifeguards L ON B.LIFEGUARD_ID = L.LIFEGUARD_ID 
+        LEFT JOIN Clients C ON C.CLIENT_ID = L.CLIENT_ID
+        GROUP BY B.BEACH_ID 
+        ORDER BY B.BEACH_ID DESC
     `;
 
     const queryParams = [];
@@ -155,12 +156,19 @@ ROUTER.get('/admin', (req, res) => { // OBTER TODAS AS PRAIAS PARA O ADMINISTRAD
 
 ROUTER.get('/read/:id', (req, res) => { // OBTER INFORMAÇÃO DE UMA PRAIA PELO SEU ID, JUNTO DA IMAGEM, AVALIAÇÃO E NOME DO SALVA-VIDAS
     const { id } = req.params;
-    const SQL = `SELECT Beaches.*, AVG(Evaluations.SCORE) as SCORE, COALESCE(Lifeguards.FULL_NAME, 'Indisponível') as LIFEGUARD_NAME 
-                 FROM Beaches 
-                 LEFT JOIN Evaluations ON Beaches.BEACH_ID = Evaluations.BEACH_ID 
-                 LEFT JOIN Lifeguards ON Beaches.LIFEGUARD_ID = Lifeguards.LIFEGUARD_ID 
-                 WHERE Beaches.BEACH_ID = ?
-                 GROUP BY Beaches.BEACH_ID`;
+    const SQL = `
+        SELECT 
+            Beaches.*,
+            AVG(Evaluations.SCORE) AS SCORE,
+            COALESCE(Clients.FULL_NAME, 'Indisponível') AS LIFEGUARD_NAME,
+            Clients.CLIENT_ID AS LIFEGUARD_CLIENT_ID
+        FROM Beaches
+        LEFT JOIN Evaluations ON Beaches.BEACH_ID = Evaluations.BEACH_ID
+        LEFT JOIN Lifeguards ON Beaches.LIFEGUARD_ID = Lifeguards.LIFEGUARD_ID
+        LEFT JOIN Clients ON Clients.CLIENT_ID = Lifeguards.CLIENT_ID
+        WHERE Beaches.BEACH_ID = ?
+        GROUP BY Beaches.BEACH_ID
+    `;
 
     DATABASE.query(SQL, [id], (err, data) => {
         if (err) {
@@ -286,6 +294,19 @@ ROUTER.delete('/delete/:id', (req, res) => { // ELIMINAR UMA PRAIA
             return res.status(500).json(err);
         } return res.status(200).json({success: 'Registo eliminado com sucesso.'});
     });
+});
+
+ROUTER.get('/cost', (req, res) => {
+	const SQL = `SELECT MIN(RESERVATION_COST) AS MIN_VALUE,
+						MAX(RESERVATION_COST) AS MAX_VALUE
+						FROM Beaches`;
+	DATABASE.query(SQL, (err, data) => {
+		if (err) {
+			console.error("Erro ao buscar valores de custo de reserva:", err);
+			return res.status(500).json({ error: "Erro ao buscar valores de custo de reserva." });
+		}
+		res.json(data);
+	});
 });
 
 module.exports = ROUTER;

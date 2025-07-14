@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 
 const Container = tw(ContainerBase)`min-h-screen bg-primary-900 text-white font-medium flex justify-center -m-8`;
 const Content = tw.div`max-w-screen-xl m-0 sm:mx-20 sm:my-16 bg-white text-gray-900 shadow sm:rounded-lg flex justify-center flex-1`;
-const MainContainer = tw.div`lg:w-1/2 xl:w-5/12 p-6 sm:p-12`;
+const MainContainer = tw.div`lg:w-1/2 xl:w-5/12 p-6 sm:p-12 flex flex-col justify-center`;
 const LogoLink = tw.a`cursor-pointer`;
 const LogoImage = tw.img`h-12 mx-auto`;
 const MainContent = tw.div`mt-12 flex flex-col items-center`;
@@ -59,7 +59,12 @@ const IllustrationImage = styled.div`
 export default ({
   logoLinkUrl = "/",
   illustrationImageSrc = illustration,
-  headingText = "Faz Login na Tropical Dreams",
+  headingText = (
+    <>
+      Faz Login na <br />
+      Tropical Dreams
+    </>
+  ),
   socialButtons = [
     {
       iconImageSrc: googleIconImageSrc,
@@ -124,17 +129,18 @@ export default ({
         return;
       };
 
-      const { token, payload: {EMAIL, FULL_NAME, PICTURE}} = data;
-      login(token, FULL_NAME, EMAIL, PICTURE);
+      const { token, payload: {CLIENT_ID, EMAIL, FULL_NAME, PICTURE, ROLE }} = data;
+      login({
+        newToken: token,
+        newClientID: CLIENT_ID,
+        newFullName: FULL_NAME,
+        newEmail: EMAIL,
+        newProfilePicture: PICTURE,
+        newRole: ROLE
+      });
     } catch (error) {
       console.log('Fetch Error: ', error);
     };
-  };
-
-  const removeLocalStorage = (e) => {
-    localStorage.removeItem('EMAIL');
-    localStorage.removeItem('PROFILE_PICTURE');
-    localStorage.removeItem('AUTH_TOKEN');
   };
 
   const handleSubmit = async (e) => {
@@ -167,19 +173,6 @@ export default ({
             <MainContent>
               <Heading>{headingText}</Heading>
               <FormContainer>
-                <SocialButtonsContainer>
-                  {socialButtons.map((socialButton, index) => (
-                    <SocialButton key={index} href={socialButton.url}>
-                      <span className="iconContainer">
-                        <img src={socialButton.iconImageSrc} className="icon" alt=""/>
-                      </span>
-                      <span className="text">{socialButton.text}</span>
-                    </SocialButton>
-                  ))}
-                </SocialButtonsContainer>
-                <DividerTextContainer>
-                  <DividerText>Ou faz login com o teu e-mail</DividerText>
-                </DividerTextContainer>
                 <Form onSubmit={handleSubmit}>
                   <Input value={loginData.EMAIL} type="text" placeholder="Email" name='EMAIL' onChange={handleInputChange} />
                   {error.EMAIL && <p tw="text-red-700 text-xs pl-1 pt-1">{error.EMAIL}</p>}
@@ -190,11 +183,6 @@ export default ({
                     <span className="text">{submitButtonText}</span>
                   </SubmitButton>
                 </Form>
-                <p tw="mt-6 text-xs text-gray-600 text-center">
-                  <a href={forgotPasswordUrl} tw="border-b border-gray-500 border-dotted">
-                    Esqueceste da Password ?
-                  </a>
-                </p>
                 <p tw="mt-8 text-sm text-gray-600 text-center">
                   Não tens uma conta?{" "}
                   <a onClick={() => NAVIGATE('/Signup.js')} tw="border-b border-gray-500 border-dotted cursor-pointer">

@@ -14,12 +14,15 @@ import SignupPage from "pages/Signup.js";
 import TermsOfServicePage from "pages/TermsOfService.js";
 import PrivacyPolicyPage from "pages/PrivacyPolicy.js";
 import BeachReservation from "pages/BeachReservation";
+import Profile from "pages/Profile";
+import About from "pages/About";
 import ComponentRenderer from "ComponentRenderer.js";
 import AdminDashbord from "components/admin/AdminDahsbord";
 import ProtectedRoute from "ProtectedRoute";
 
 import { StyledEngineProvider } from '@mui/joy/styles';
 import { useAuth } from "contexts/AuthContext";
+
 
 export default function App() {
   const { token } = useAuth();
@@ -38,13 +41,14 @@ export default function App() {
                 <Route path="/TermsOfService.js" element={<TermsOfServicePage />} />
                 <Route path="/PrivacyPolicy.js" element={<PrivacyPolicyPage />} />
                 <Route path="/Beaches.js" element={<Beaches />} />
-                <Route path="/Lifeguards.js" element={<LifeguardForm />} />
                 {token && <Route path="/Admin.js" element={<AdminDashbord />} />}
                 <Route path="/Praia/:id" element={<ProtectedRoute> <BeachReservation /> </ProtectedRoute>} />
+                <Route path="/Perfil/:id" element={<ProtectedRoute> <Profile /></ProtectedRoute>} />
+                <Route path="/Sobre" element={ <About /> } />
               </Routes>
             </Router>
         </StyledEngineProvider>
       </LocalizationProvider>
     </>
   );
-}
+};

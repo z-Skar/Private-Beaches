@@ -47,7 +47,7 @@ export const BeachForm = ({ entity, id, setEditionModalOpen }) => {
     const getLifeguardData = async () => {
       try {
         const LIFEGUARDS_DATA_RESPONSE = (
-          await axios.get(`http://localhost:5000/lifeguards/?onlyNecessary=true`)
+          await axios.get(`http://localhost:5000/lifeguards/`)
         ).data;
         const LIFEGUARDS_OPTIONS = LIFEGUARDS_DATA_RESPONSE.map((lifeguard) => ({
           label: lifeguard.FULL_NAME,

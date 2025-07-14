@@ -62,7 +62,8 @@ ROUTER.post('/register', async (req, res) => {
                     CLIENT_ID: data[0].CLIENT_ID,
                     EMAIL: EMAIL,
                     FULL_NAME: FULL_NAME,
-                    PICTURE: PICTURE
+                    PICTURE: PICTURE,
+                    ROLE: data[0].ROLE
                 };
                 const TOKEN = JWT.sign(PAYLOAD, 'secret_key', { expiresIn: '1h' });
     
@@ -100,9 +101,11 @@ ROUTER.post('/login', (req, res) => {
 
         const JWT = require('jsonwebtoken');
         const PAYLOAD = {
+            CLIENT_ID: CLIENT.CLIENT_ID,
             EMAIL: CLIENT.EMAIL,
             FULL_NAME: CLIENT.FULL_NAME,
-            PICTURE: CLIENT.PROFILE_PICTURE
+            PICTURE: CLIENT.PROFILE_PICTURE,
+            ROLE: CLIENT.ROLE
         };
         const TOKEN = JWT.sign(PAYLOAD, 'secret_key', { expiresIn: '1h' });
 
@@ -123,6 +126,7 @@ ROUTER.get('/admin', (req, res) => {
                EMAIL AS 'Email', 
                YEAR_OF_BIRTH AS 'Data de Nascimento', 
                CONTACT AS 'Contacto',
+               ROLE AS 'Permissão',
                PROFILE_PICTURE AS 'Perfil'
         FROM clients
     `;
@@ -138,7 +142,7 @@ ROUTER.get('/admin', (req, res) => {
         const likeClauses = searchColumns.map(col => `${col} LIKE ?`).join(' OR ');
         SQL += ` WHERE ${likeClauses}`;
         searchColumns.forEach(() => queryParams.push(`%${searchTerm}%`));
-    }
+    };
 
     SQL += ` ORDER BY CLIENT_ID DESC`;
 
@@ -162,7 +166,18 @@ ROUTER.get('/admin', (req, res) => {
 
 ROUTER.get('/profile/:id', (req, res) => {
     const { id } = req.params;
-    const SQL = `SELECT * FROM Clients WHERE CLIENT_ID = ?`;
+    const SQL = `SELECT C.PROFILE_PICTURE,
+                        C.FULL_NAME,
+                        C.EMAIL,
+                        C.CONTACT,
+                        DATE_FORMAT(C.YEAR_OF_BIRTH, '%Y-%m-%d') AS YEAR_OF_BIRTH,
+
+                        L.STATUS AS LIFEGUARD_STATUS,
+                        L.SALARY,
+                        L.LIFEGUARD_NIF
+                FROM Clients C
+                LEFT JOIN Lifeguards L ON C.CLIENT_ID = L.CLIENT_ID
+                WHERE C.CLIENT_ID = ?`;
 
     DATABASE.query(SQL, [id], (err, data) => {
         if (err) {
@@ -172,7 +187,7 @@ ROUTER.get('/profile/:id', (req, res) => {
 });
 
 ROUTER.put('/edit/:id', UPLOAD.CLIENT_IMAGE.single('Perfil'), (req, res) => {
-    let { Nome, Nascimento } = req.body;
+    let { Nome, Nascimento, Permission } = req.body;
     const CLIENT_ID = req.params.id;
     
     console.log(Nascimento);
@@ -180,8 +195,8 @@ ROUTER.put('/edit/:id', UPLOAD.CLIENT_IMAGE.single('Perfil'), (req, res) => {
         Nascimento = null;
     };
     
-    const SQL = `UPDATE Clients SET FULL_NAME = ?, YEAR_OF_BIRTH = ? WHERE CLIENT_ID = ?`;
-    const VALUES = [Nome, Nascimento, CLIENT_ID];
+    const SQL = `UPDATE Clients SET FULL_NAME = ?, YEAR_OF_BIRTH = ?, ROLE = ? WHERE CLIENT_ID = ?`;
+    const VALUES = [Nome, Nascimento, Permission, CLIENT_ID];
     const PICTURE = req.file ? req.file.filename : null;
 
     DATABASE.query(SQL, VALUES, (err, DBres) => {
@@ -217,7 +232,7 @@ ROUTER.put('/edit/:id', UPLOAD.CLIENT_IMAGE.single('Perfil'), (req, res) => {
                 return res.status(500).json({ error: 'Erro ao mover a imagem para o destino final.', details: renameError });
             };
         } else {
-            const SQL_SET_DEFAULT_IMAGE = `UPDATE Clients SET PROFILE_PICTURE = '/images/default-profile-picture.png' WHERE CLIENT_ID = ?`;
+            const SQL_SET_DEFAULT_IMAGE = `UPDATE Clients SET PROFILE_PICTURE = '/images/default-profile-picture.webp' WHERE CLIENT_ID = ?`;
             DATABASE.query(SQL_SET_DEFAULT_IMAGE, [CLIENT_ID], (err, DBres) => {
                 if (err) {
                     return res.status(500).json({ error: 'Erro ao definir a imagem padrão.', details: err });
@@ -226,6 +241,112 @@ ROUTER.put('/edit/:id', UPLOAD.CLIENT_IMAGE.single('Perfil'), (req, res) => {
             });
         };
     });
+});
+
+ROUTER.put('/user/edit/:id', UPLOAD.CLIENT_IMAGE.single('Perfil'), (req, res) => {
+  let { FULL_NAME, YEAR_OF_BIRTH, CONTACT } = req.body;
+  const CLIENT_ID = req.params.id;
+
+  if (YEAR_OF_BIRTH === '' || YEAR_OF_BIRTH === '0000-00-00' || YEAR_OF_BIRTH === 'Não Definido') {
+    YEAR_OF_BIRTH = null;
+  }
+
+  const SQL = `UPDATE Clients SET FULL_NAME = ?, YEAR_OF_BIRTH = ?, CONTACT = ? WHERE CLIENT_ID = ?`;
+  const VALUES = [FULL_NAME, YEAR_OF_BIRTH, CONTACT, CLIENT_ID];
+
+  const PICTURE = req.file ? req.file.filename : null;
+  const TMP_FILE_PATH = PICTURE ? PATH.join(__dirname, '../images/tmp', PICTURE) : null;
+
+  DATABASE.query(SQL, VALUES, (err, DBres) => {
+    if (err) {
+      console.error(err);
+      if (PICTURE) FS.unlinkSync(TMP_FILE_PATH);
+      return res.status(500).json({ error: 'Erro ao atualizar os dados do cliente.', details: err });
+    }
+
+    if (DBres.affectedRows === 0) {
+      if (PICTURE) FS.unlinkSync(TMP_FILE_PATH);
+      return res.status(400).json({ error: 'Cliente não encontrado.' });
+    }
+
+    if (PICTURE) {
+      const FINAL_FILE_PATH = PATH.join(__dirname, '../images', PICTURE);
+      const IMAGE_PATH = `/images/${PICTURE}`;
+      try {
+        FS.renameSync(TMP_FILE_PATH, FINAL_FILE_PATH);
+        const SQL_UPDATE_IMAGE = `UPDATE Clients SET PROFILE_PICTURE = ? WHERE CLIENT_ID = ?`;
+        DATABASE.query(SQL_UPDATE_IMAGE, [IMAGE_PATH, CLIENT_ID], (err, DBres) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Erro ao guardar a imagem de perfil.', details: err });
+          }
+          return res.status(200).json({ success: 'Perfil atualizado com imagem.' });
+        });
+      } catch (renameError) {
+        FS.unlinkSync(TMP_FILE_PATH);
+        console.error(renameError);
+        return res.status(500).json({ error: 'Erro ao mover a imagem.', details: renameError });
+      }
+    } else {
+      return res.status(200).json({ success: 'Perfil atualizado sem imagem.' });
+    }
+  });
+});
+
+ROUTER.put('/edit-password/:id', (req, res) => {
+	const clientID = req.params.id;
+	const { OLD_PASSWORD, NEW_PASSWORD } = req.body;
+    const SALT_ROUNDS = 10;
+
+	const SQL_SELECT = `SELECT PASSWORD FROM Clients WHERE CLIENT_ID = ?`;
+	DATABASE.query(SQL_SELECT, [clientID], (err, results) => {
+		if (err) {
+			console.error(err);
+			return res.status(500).json({ error: 'Erro ao obter a password atual.', details: err });
+		}
+
+		if (results.length === 0) {
+			return res.status(404).json({ error: 'Cliente não encontrado.' });
+		}
+
+		const currentHashedPassword = results[0].PASSWORD;
+        console.log(OLD_PASSWORD, ' , ', NEW_PASSWORD);
+        console.log(currentHashedPassword, ' , ', OLD_PASSWORD);
+
+		//Verificar se a password antiga está correta
+		BCRYPT.compare(OLD_PASSWORD, currentHashedPassword, (compareErr, isMatch) => {
+			if (compareErr) {
+				console.error(compareErr);
+				return res.status(500).json({ error: 'Erro ao verificar a password.' });
+			}
+
+			if (!isMatch) {
+				return res.status(401).json({ error: 'Password atual incorreta.' });
+			}
+
+			// Encriptar a nova password
+			BCRYPT.hash(NEW_PASSWORD, SALT_ROUNDS, (hashErr, hashedPassword) => {
+				if (hashErr) {
+					console.error(hashErr);
+					return res.status(500).json({ error: 'Erro ao encriptar a nova password.' });
+				};
+
+				const SQL_UPDATE = `UPDATE Clients SET PASSWORD = ? WHERE CLIENT_ID = ?`;
+				DATABASE.query(SQL_UPDATE, [hashedPassword, clientID], (updateErr, updateResult) => {
+					if (updateErr) {
+						console.error(updateErr);
+						return res.status(500).json({ error: 'Erro ao atualizar a password.', details: updateErr });
+					};
+
+					if (updateResult.affectedRows === 0) {
+						return res.status(400).json({ error: 'Cliente não encontrado para atualização.' });
+					};
+
+					return res.status(200).json({ success: 'Password atualizada com sucesso.' });
+				});
+			});
+		});
+	});
 });
 
 module.exports = ROUTER;

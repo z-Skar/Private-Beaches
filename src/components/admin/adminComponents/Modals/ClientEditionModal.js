@@ -7,9 +7,22 @@ import Card from "@mui/joy/Card";
 import Typography from "@mui/joy/Typography";
 import CardActions from "@mui/joy/CardActions";
 import CardOverflow from "@mui/joy/CardOverflow";
+import Autocomplete  from "@mui/joy/Autocomplete";
 import { FormControl, FormLabel, Input } from "@mui/joy";
 import { useNavigate } from "react-router-dom";
 import DropZone from "../DropZone";
+
+const slotProps = {
+    listbox: {
+        sx: {
+        position: "fixed",
+        zIndex: 1300,
+        },
+    },
+    input: {
+        autoComplete: "new-password", // disable autocomplete and autofill
+    },
+};
 
 export const ClientEditionModal = ({ clientData, handleEditionForClient }) => {
     const [updatedClientData, setUpdatedClientData] = useState({ ...clientData });
@@ -17,7 +30,10 @@ export const ClientEditionModal = ({ clientData, handleEditionForClient }) => {
     const [profilePicture, setProfilePicture] = useState(clientData.Perfil ? `http://localhost:5000${clientData.Perfil}` : null);
     const [selectedFile, setSelectedFile] = useState(null);
     const [usingDefaultImage, setUsingDefaultImage] = useState(false);
-
+    const PERMISSIONS = [
+        { label: "Cliente", value: "Cliente" },
+        { label: "Administrador", value: "Administrador" },
+    ];
     const navigate = useNavigate();
 
     const handleFileChange = (event) => {
@@ -34,13 +50,16 @@ export const ClientEditionModal = ({ clientData, handleEditionForClient }) => {
 
     const handleSubmit = async () => {
         const DATA = updatedClientData;
-
+        console.log(DATA)
         // Validate required fields
         const ERRORS = {};
         if (!DATA.Nome || DATA.Nome.trim() === "") {
             ERRORS.Nome = "O nome é obrigatório.";
-        }
+        };
 
+        if (!DATA['Permissão'] || DATA['Permissão'].trim() === '') {
+            ERRORS['Permissão'] = 'A permissão é obrigatória.';
+        };
         setErrors(ERRORS);
         const HAS_ERRORS = Object.values(ERRORS).some((error) => error !== "");
         if (HAS_ERRORS) return;
@@ -48,12 +67,13 @@ export const ClientEditionModal = ({ clientData, handleEditionForClient }) => {
         const formData = new FormData();
         formData.append("Nome", DATA.Nome);
         formData.append("Nascimento", DATA['Data de Nascimento']?.trim() || '');
+        formData.append("Permission", DATA['Permissão'])
 
         if (usingDefaultImage) {
             formData.append("Perfil", null);
         } else if (selectedFile) {
             formData.append("Perfil", selectedFile);
-        }
+        };
 
         try {
             await fetch(`http://localhost:5000/clients/edit/${DATA['Cliente-ID']}`, {
@@ -66,7 +86,7 @@ export const ClientEditionModal = ({ clientData, handleEditionForClient }) => {
         navigate(0);
         window.scroll(0, 0);
     };
-    console.log(updatedClientData);
+
     return (
         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh" }}>
             <Stack
@@ -187,6 +207,38 @@ export const ClientEditionModal = ({ clientData, handleEditionForClient }) => {
                                 value={clientData.Contacto || ""}
                                 disabled
                             />
+                        </FormControl>
+                        <FormControl sx={{ flex: 1, minWidth: "200px" }}>
+                            <FormLabel>Permissão</FormLabel>
+                            <Autocomplete
+                                size="sm"
+                                placeholder="Seleciona a permissão do utilizador"
+                                autoHighlight
+                                options={PERMISSIONS}
+                                slotProps={slotProps}
+                                value={
+                                    PERMISSIONS.find((option) => option.value === updatedClientData['Permissão']) || null
+                                }
+                                onChange={(event, newValue) => {
+                                    setErrors((prevErrors) => ({
+                                        ...prevErrors,
+                                        'Data de Nascimento': "",
+                                        'Permissão': "",
+                                    }));
+                                    setUpdatedClientData((prevData) => ({
+                                        ...prevData,
+                                        'Permissão': newValue ? newValue.value : '',
+                                    }));
+                                }}
+                                isOptionEqualToValue={(option, value) => option.value === value?.value}
+                                getOptionLabel={(option) => option.label}
+                                error={errors['Permissão'] ? true : false}
+                            />
+                            {errors['Permissão'] && (
+                                <Typography level="body-xs" color="danger" sx={{ pl: "0.1rem", pt: 0.5, fontWeight: "lighter" }}>
+                                    {errors['Permissão']}
+                                </Typography>
+                            )}
                         </FormControl>
                     </Stack>
                     <CardOverflow sx={{ borderTop: "1px solid", borderColor: "divider" }}>

@@ -141,11 +141,6 @@ export default function Sidebar({ selectedEntity, onSelectEntity }) {
           />
           <Typography level="title-lg">Tropical Dreams</Typography>
         </Box>
-        <Input
-          size="sm"
-          startDecorator={<SearchRoundedIcon />}
-          placeholder="Pesquisar"
-        />
         <Box
           sx={{
             minHeight: 0,
@@ -346,12 +341,6 @@ export default function Sidebar({ selectedEntity, onSelectEntity }) {
                 Support
               </ListItemButton>
             </ListItem>*/}
-            <ListItem>
-              <ListItemButton>
-                <SettingsRoundedIcon />
-                Definições
-              </ListItemButton>
-            </ListItem>
           </List>
         </Box>
         <Divider />
@@ -359,7 +348,7 @@ export default function Sidebar({ selectedEntity, onSelectEntity }) {
           <Avatar
             variant="outlined"
             size="sm"
-            src={`http://localhost:5000/${profilePicture}`}
+            src={`http://localhost:5000${profilePicture}`}
           />
           <Box sx={{ minWidth: 0, flex: 1 }}>
             <Typography level="title-sm" title={fullName} sx={overflowStyle}>{fullName}</Typography>

@@ -8,7 +8,7 @@ ROUTER.get('/admin', (req, res) => {
                     (SELECT SUM(BILL_COST) FROM BILLS) AS 'Lucro Total',
                     (SELECT COUNT(Lifeguard_ID) FROM Lifeguards WHERE Status = 'Em Espera') AS 'Salva-vidas pendentes',
                     (SELECT COUNT(Beach_ID) FROM Beaches) AS 'Número de Praias',
-                    (SELECT COUNT(Lifeguard_ID) FROM Lifeguards WHERE Status = 'Aceite') AS 'Número de Salva-vidas',
+                    (SELECT COUNT(Lifeguard_ID) FROM Lifeguards WHERE Status = 'Ativo') AS 'Número de Salva-vidas',
                     (SELECT COUNT(Beach_ID) FROM Beaches WHERE Lifeguard_ID IS NULL) AS 'Praias sem Salva-vidas',
                     (SELECT COUNT(Reservation_ID) FROM RESERVATIONS WHERE RESERVATION_START <= LAST_DAY(CURDATE()) AND RESERVATION_END >= DATE_FORMAT(CURDATE(), '%Y-%m-01')) AS 'Reservas Mensais',
                     (SELECT BILL_COST FROM BILLS ORDER BY BILL_ID DESC LIMIT 1) AS 'Último pagamento',

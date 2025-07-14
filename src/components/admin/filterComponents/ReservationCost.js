@@ -3,10 +3,26 @@ import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Slider from '@mui/joy/Slider'
 import { useAdminData } from 'contexts/AdminDataContext';
+import axios from 'axios';
 
 export const ReservationCostFilter = () => {
     const { setSelectedFilters } = useAdminData();
-    const [value, setValue] = useState([0, 1000]);
+    const [value, setValue] = useState([0, 0]);
+    const [MIN_MAX_VALUE, setMIN_MAX_VALUE] = useState([]);
+
+    useEffect(() => {
+        const GET_MIN_AND_MAX_RESERVATION_COST = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5000/beaches/cost`);
+                const { MIN_VALUE, MAX_VALUE } = response.data[0];
+                setValue([MIN_VALUE, MAX_VALUE]);
+                setMIN_MAX_VALUE([MIN_VALUE, MAX_VALUE]);
+            } catch (error) {
+                console.log('Ocorreu um erro a buscar os valores máximos e minímos do custo de reserva: ', error);
+            };
+        };
+        GET_MIN_AND_MAX_RESERVATION_COST();
+    }, []);
 
     return (
         <FormControl size="sm" sx={{ minWidth: '10rem' }}>
@@ -27,14 +43,13 @@ export const ReservationCostFilter = () => {
                         backgroundColor: 'white',
                     },
                 }}
-                defaultValue={0}
                 value={value}
                 onChange={(e, newValue) => setValue(newValue)}
                 onChangeCommitted={(e, newValue) => 
                     setSelectedFilters((prevFilters) => ({...prevFilters, 'Custo de Reserva': newValue}))
                 }
-                min={0}
-                max={1000}
+                min={MIN_MAX_VALUE[0]}
+                max={MIN_MAX_VALUE[1]}
                 step={1}
                 valueLabelFormat={(value) => `${value}€`}
                 valueLabelDisplay='auto'

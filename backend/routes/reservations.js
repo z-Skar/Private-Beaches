@@ -57,64 +57,92 @@ ROUTER.get('/admin', (req, res) => {
 });
 
 ROUTER.post('/create', (req, res) => {
-    const { CLIENT_ID, BEACH_ID, RESERVATION_START, RESERVATION_END, CREDIT_CARD_NUMBER, BILL_COST } = req.body;
-    if (!CLIENT_ID || !BEACH_ID || !RESERVATION_START || !RESERVATION_END || !BILL_COST) {
-        return res.status(400).send('Preencha todos os campos obrigatórios.');
-    };
+	const {
+		CLIENT_ID,
+		BEACH_ID,
+		RESERVATION_START,
+		RESERVATION_END,
+		CREDIT_CARD_NUMBER,
+		BILL_COST
+	} = req.body;
 
-    DATABASE.getConnection((err, connection) => {
-        if (err) {
-            return res.status(500).json({ error: 'Erro ao obter conexão com o banco de dados.', details: err });
-        }
+	// Validação simples
+	if (!CLIENT_ID || !BEACH_ID || !RESERVATION_START || !RESERVATION_END || !BILL_COST) {
+		return res.status(400).json({ error: 'Preencha todos os campos obrigatórios.' });
+	}
 
-        connection.beginTransaction((err) => {
-            if (err) {
-                connection.release();
-                return res.status(500).json({ error: 'Erro ao iniciar transação.', details: err });
-            }
+	DATABASE.getConnection((err, connection) => {
+		if (err) {
+			return res.status(500).json({ error: 'Erro ao obter conexão com a base de dados.', details: err });
+		}
 
-            const SQL_INSERT_RESERVATION = `
-                INSERT INTO Reservations (CLIENT_ID, BEACH_ID, RESERVATION_START, RESERVATION_END)
-                VALUES (?, ?, ?, ?)
-            `;
+		const checkOverlapSQL = `
+            SELECT * FROM Reservations
+            WHERE BEACH_ID = ?
+            AND (RESERVATION_START <= ? AND RESERVATION_END >= ?)
+		`;
 
-            connection.query(SQL_INSERT_RESERVATION, [CLIENT_ID, BEACH_ID, RESERVATION_START, RESERVATION_END], (err, result) => {
-                if (err) {
-                    return connection.rollback(() => {
-                        connection.release();
-                        res.status(500).json({ error: 'Erro ao criar reserva.', details: err });
-                    });
-                }
+		connection.query(checkOverlapSQL, [BEACH_ID, RESERVATION_END, RESERVATION_START], (err, overlapResults) => {
+			if (err) {
+				connection.release();
+				return res.status(500).json({ error: 'Erro ao verificar sobreposição de datas.', details: err });
+			}
 
-                const RESERVATION_ID = result.insertId;
-                const SQL_INSERT_BILL = `
-                    INSERT INTO Bills (RESERVATION_ID, CREDIT_CARD_NUMBER, BILL_COST) 
-                    VALUES (?, ?, ?)
-                `;
+			if (overlapResults.length > 0) {
+				connection.release();
+				return res.status(409).json({ error: 'O período selecionado se sobrepõe a uma reserva existente.' });
+			};  
 
-                connection.query(SQL_INSERT_BILL, [RESERVATION_ID, CREDIT_CARD_NUMBER, BILL_COST], (err) => {
-                    if (err) {
-                        return connection.rollback(() => {
-                            connection.release();
-                            res.status(500).json({ error: 'Erro ao criar a fatura.', details: err });
-                        });
-                    }
+			connection.beginTransaction((err) => {
+				if (err) {
+					connection.release();
+					return res.status(500).json({ error: 'Erro ao iniciar transação.', details: err });
+				}
 
-                    connection.commit((err) => {
-                        if (err) {
-                            return connection.rollback(() => {
-                                connection.release();
-                                res.status(500).json({ error: 'Erro ao confirmar transação.', details: err });
-                            });
-                        }
+				const SQL_INSERT_RESERVATION = `
+					INSERT INTO Reservations (CLIENT_ID, BEACH_ID, RESERVATION_START, RESERVATION_END)
+					VALUES (?, ?, ?, ?)
+				`;
 
-                        connection.release();
-                        res.status(200).json({ success: 'Reserva e fatura criadas com sucesso.' });
-                    });
-                });
-            });
-        });
-    });
+				connection.query(SQL_INSERT_RESERVATION, [CLIENT_ID, BEACH_ID, RESERVATION_START, RESERVATION_END], (err, result) => {
+					if (err) {
+						return connection.rollback(() => {
+							connection.release();
+							res.status(500).json({ error: 'Erro ao criar reserva.', details: err });
+						});
+					}
+
+					const RESERVATION_ID = result.insertId;
+
+					const SQL_INSERT_BILL = `
+						INSERT INTO Bills (RESERVATION_ID, CREDIT_CARD_NUMBER, BILL_COST) 
+						VALUES (?, ?, ?)
+					`;
+
+					connection.query(SQL_INSERT_BILL, [RESERVATION_ID, CREDIT_CARD_NUMBER, BILL_COST], (err) => {
+						if (err) {
+							return connection.rollback(() => {
+								connection.release();
+								res.status(500).json({ error: 'Erro ao criar fatura.', details: err });
+							});
+						}
+
+						connection.commit((err) => {
+							if (err) {
+								return connection.rollback(() => {
+									connection.release();
+									res.status(500).json({ error: 'Erro ao confirmar transação.', details: err });
+								});
+							}
+
+							connection.release();
+							res.status(200).json({ success: 'Reserva e fatura criadas com sucesso.' });
+						});
+					});
+				});
+			});
+		});
+	});
 });
 
 ROUTER.delete('/delete/:id', (req, res) => {
@@ -130,6 +158,50 @@ ROUTER.delete('/delete/:id', (req, res) => {
         if (err) {
             return res.status(500).json(err);
         } return res.status(200).json({success: 'Registo eliminado com sucesso.'});
+    });
+});
+
+ROUTER.get('/blocked/:id', (req, res) => {
+    const beachID = req.params.id;
+
+	if (!beachID) {
+		return res.status(400).json({ error: "ID da praia não fornecido." });
+	};
+
+    const SQL = `SELECT RESERVATION_START, RESERVATION_END
+		         FROM Reservations
+		         WHERE BEACH_ID = ?`;
+
+    DATABASE.query(SQL, [beachID], (err, data) => {
+        if (err) {
+			console.error("Erro ao buscar reservas bloqueadas:", err);
+			return res.status(500).json({ error: "Erro ao buscar períodos bloqueados." });
+        };
+        res.json(data);
+    });
+});
+
+ROUTER.get('/client/:id', (req, res) => {
+    const clientID = req.params.id;
+
+    if (!clientID) {
+        return res.status(400).json({ error: "ID do cliente não fornecido." });
+    };
+
+    const SQL = `SELECT R.*, B.*, BL.* 
+				 FROM Reservations R
+				 INNER JOIN Beaches B ON R.BEACH_ID = B.BEACH_ID
+				 INNER JOIN Bills BL ON BL.RESERVATION_ID = R.RESERVATION_ID
+				 WHERE CLIENT_ID = ?
+				 ORDER BY RESERVATION_START ASC
+				 `;
+
+    DATABASE.query(SQL, [clientID], (err, data) => {
+        if (err) {
+            console.error("Erro ao buscar reservas do cliente:", err);
+            return res.status(500).json({ error: "Erro ao buscar reservas do cliente." });
+        };
+        res.json(data);
     });
 });
 

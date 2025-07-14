@@ -78,7 +78,7 @@ export default function DropZone(props) {
                 color="primary"
                 sx={{ marginTop: "10px" }}
                 onClick={() => {
-                  setImagePreview("http://localhost:5000/images/default-profile-picture.png");
+                  setImagePreview("http://localhost:5000/images/default-profile-picture.webp");
                   setUsingDefaultImage(true);
                 }}
               >

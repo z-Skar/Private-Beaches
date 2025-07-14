@@ -54,7 +54,9 @@ export default ({
     {
       question: "O que está incluso na reserva?",
       answer:
-        `Depende do tipo de serviço escolhido, em reservas comuns estão incluídas cadeiras, guarda-sóis, toalhas, mesas, uma quantidade limitada de petiscos e um salva-vidas de confiança. Reservas Premium costumam incluir tudo que foi mencionado e qualquer serviço condizente ao mesmo, geralmente viagens planejadas e guidas por um guia de confiança em diversos tipos de transporte.`
+        `Depende do tipo de serviço escolhido, em reservas comuns estão incluídas cadeiras, guarda-sóis, toalhas, mesas e uma quantidade limitada de petiscos.
+         Reservas Premium costumam incluir tudo que foi mencionado e qualquer serviço condizente ao mesmo,
+         tais serviços geralmente incluem viagens planejadas e guidas por um guia de confiança em diversos meios de transporte.`
     },
     {
       question: "Preciso pagar antecipadamente?",

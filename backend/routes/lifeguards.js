@@ -8,14 +8,12 @@ const FS = require('fs');
 const { CensorField } = require('../util/CensorField')
 
 ROUTER.get('/', (req, res) => {
-    const { onlyNecessary } = req.params;
-    let SQL;
-    
-    if(onlyNecessary){
-        SQL = 'SELECT * FROM lifeguards';
-    } else {
-        SQL = 'SELECT LIFEGUARD_ID, FULL_NAME FROM Lifeguards WHERE STATUS = "ATIVO"';
-    };
+    let SQL = `SELECT L.LIFEGUARD_ID,
+                      C.FULL_NAME 
+               FROM Lifeguards L
+               INNER JOIN Clients C ON L.CLIENT_ID = C.CLIENT_ID
+               WHERE L.STATUS = "ATIVO"`;
+
     DATABASE.query(SQL, (err, data) => {
         if(err) {
             return res.status(500).json(err);
@@ -26,60 +24,63 @@ ROUTER.get('/', (req, res) => {
     });
 });
 
-ROUTER.post('/register', UPLOAD.LIFEGUARD_IMAGE.single('PICTURE'), async (req, res) => {
-    const { NIF, FULL_NAME, YEAR_OF_BIRTH, EMAIL, CONTACT } = req.body
-    const SQL = 'INSERT INTO Lifeguards (LIFEGUARD_NIF, FULL_NAME, YEAR_OF_BIRTH, EMAIL, CONTACT) VALUES (?, ?, ?, ?, ?)';
-    const VALUES = [NIF, FULL_NAME, YEAR_OF_BIRTH, EMAIL, CONTACT];
-    const PICTURE = req.file ? req.file.filename : null;
+ROUTER.post('/register', (req, res) => {
+  const { clientID, NIF } = req.body;
 
-    DATABASE.query(SQL, VALUES, (err, DBres) => {
-        const TMP_FILE_PATH = PICTURE ? PATH.join(__dirname, '../images/tmp', PICTURE) : null;
+  if (!clientID || !NIF) {
+    return res.status(400).json({ error: "Dados incompletos." });
+  }
+
+  const checkNifSQL = `SELECT * FROM Lifeguards WHERE LIFEGUARD_NIF = ?`;
+  DATABASE.query(checkNifSQL, [NIF], (err, nifResult) => {
+    if (err) {
+      console.error("Erro ao verificar NIF:", err);
+      return res.status(500).json({ error: "Erro interno ao validar NIF." });
+    }
+
+    if (nifResult.length > 0) {
+      return res.status(409).json({ error: "Este NIF já está associado a outra candidatura." });
+    }
+
+    const checkClientSQL = `SELECT * FROM Lifeguards WHERE CLIENT_ID = ?`;
+    DATABASE.query(checkClientSQL, [clientID], (err, clientResult) => {
+      if (err) {
+        console.error("Erro ao verificar salva-vidas:", err);
+        return res.status(500).json({ error: "Erro ao verificar candidatura." });
+      }
+
+      if (clientResult.length > 0) {
+        return res.status(409).json({ error: "Utilizador atual já está registado como salva-vidas." });
+      }
+
+      const insertSQL = `INSERT INTO Lifeguards (CLIENT_ID, LIFEGUARD_NIF, STATUS) VALUES (?, ?, 'Em Espera')`;
+      DATABASE.query(insertSQL, [clientID, NIF], (err) => {
         if (err) {
-            console.log(err);
-            if (PICTURE) {
-                FS.unlinkSync(TMP_FILE_PATH);
-            };
-            return res.status(500).json({error: 'Falha ao adicionar salva-vidas.'});
-        };
+          console.error("Erro ao registar salva-vidas:", err);
+          return res.status(500).json({ error: "Erro ao submeter candidatura." });
+        }
 
-        const LIFEGUARD_ID = DBres.insertId;
-        if (PICTURE) {
-            const FINAL_FILE_PATH = PATH.join(__dirname, '../images', PICTURE);
-            const IMAGE_PATH = `/images/${PICTURE}`;
-            const SQL_UPDATE_IMAGE = `UPDATE Lifeguards SET PROFILE_PICTURE = ? WHERE LIFEGUARD_ID = ?`;
-            try {
-                FS.renameSync(TMP_FILE_PATH, FINAL_FILE_PATH);  // Mover a imagem para o diretório final
-                DATABASE.query(SQL_UPDATE_IMAGE, [IMAGE_PATH, LIFEGUARD_ID], (err, DBres) => {
-                    if (err) {
-                        return res.status(500).json({ error: 'Erro ao atualizar a imagem.' });
-                    };
-                    return res.status(200).json({ success: 'Registo e imagem adicionados com sucesso.' });
-                });
-            } catch (renameError) {
-                FS.unlinkSync(TMP_FILE_PATH);
-                console.error(renameError);
-                return res.status(500).json({ error: 'Erro ao mover a imagem para o destino final.', details: renameError });
-            }
-        } else {
-            return res.status(200).json({ success: 'Registo adicionado com sucesso.' });
-        };
+        return res.status(200).json({ success: "Candidatura submetida com sucesso." });
+      });
     });
+  });
 });
 
 ROUTER.get('/admin', (req, res) => {
     const searchTerm = req.query.search || '';
 
     let SQL = `
-        SELECT LIFEGUARD_ID AS 'Salva-Vidas-ID', 
-               LIFEGUARD_NIF AS NIF, 
-               FULL_NAME AS Nome, 
-               YEAR_OF_BIRTH AS 'Data de Nascimento', 
-               EMAIL AS Email, 
-               CONTACT AS Contacto, 
-               SALARY AS Salário, 
-               STATUS AS Estado,
-               PROFILE_PICTURE AS 'Perfil'
-        FROM Lifeguards
+        SELECT L.LIFEGUARD_ID AS 'Salva-Vidas-ID', 
+               L.LIFEGUARD_NIF AS NIF, 
+               C.FULL_NAME AS Nome, 
+               C.YEAR_OF_BIRTH AS 'Data de Nascimento', 
+               C.EMAIL AS Email, 
+               C.CONTACT AS Contacto, 
+               L.SALARY AS Salário, 
+               L.STATUS AS Estado,
+               C.PROFILE_PICTURE AS 'Perfil'
+        FROM Lifeguards L
+        INNER JOIN Clients C ON L.CLIENT_ID = C.CLIENT_ID
     `;
 
     const queryParams = [];
@@ -114,55 +115,65 @@ ROUTER.get('/admin', (req, res) => {
 });
 
 ROUTER.put('/edit/:id', UPLOAD.LIFEGUARD_IMAGE.single('Perfil'), (req, res) => {
-    let { Nome, Salary, Estado } = req.body;
-    const LIFEGUARD_ID = req.params.id;
+	const { Nome, Salary, Estado } = req.body;
+	const LIFEGUARD_ID = req.params.id;
+	const PICTURE = req.file ? req.file.filename : null;
+	const TMP_FILE_PATH = PICTURE ? PATH.join(__dirname, '../images/tmp', PICTURE) : null;
 
-    const SQL = `UPDATE Lifeguards SET FULL_NAME = ?, SALARY = ?, STATUS = ? WHERE LIFEGUARD_ID = ?`;
-    const VALUES = [Nome, Salary, Estado, LIFEGUARD_ID];
-    const PICTURE = req.file ? req.file.filename : null;
+	const updateClientSQL = `UPDATE Clients 
+	                         SET FULL_NAME = ? 
+	                         WHERE CLIENT_ID = (SELECT CLIENT_ID FROM Lifeguards WHERE LIFEGUARD_ID = ?)`;
+	DATABASE.query(updateClientSQL, [Nome, LIFEGUARD_ID], (err, resultClient) => {
+		if (err) {
+			console.error(err);
+			if (PICTURE) FS.unlinkSync(TMP_FILE_PATH);
+			return res.status(500).json({ error: 'Erro ao atualizar o nome do cliente.' });
+		}
 
-    DATABASE.query(SQL, VALUES, (err, DBres) => {
-        const TMP_FILE_PATH = PICTURE ? PATH.join(__dirname, '../images/tmp', PICTURE) : null;
-        if (err) {
-            console.error(err);
-            if (PICTURE) {
-                FS.unlinkSync(TMP_FILE_PATH);
-            };
-            return res.status(500).json({ error: 'Erro ao atualizar os dados principais.', details: err });
-        };
-        if (DBres.affectedRows === 0) {
-            if (PICTURE) {
-                FS.unlinkSync(TMP_FILE_PATH);
-            };
-            return res.status(400).json({ error: 'Nenhum salva-vidas encontrado com esse ID para atualizar.' });
-        };
-        if (PICTURE) {
-            const FINAL_FILE_PATH = PATH.join(__dirname, '../images', PICTURE);
-            const IMAGE_PATH = `/images/${PICTURE}`;
-            const SQL_UPDATE_IMAGE = `UPDATE Lifeguards SET PROFILE_PICTURE = ? WHERE LIFEGUARD_ID = ?`;
-            try {
-                FS.renameSync(TMP_FILE_PATH, FINAL_FILE_PATH);
-                DATABASE.query(SQL_UPDATE_IMAGE, [IMAGE_PATH, LIFEGUARD_ID], (err, DBres) => {
-                    if (err) {
-                        return res.status(500).json({ error: 'Erro ao renomear a imagem.' });
-                    };
-                    return res.status(200).json({ success: 'Registo e imagem atualizados com sucesso.' });
-                });
-            } catch (renameError) {
-                FS.unlinkSync(TMP_FILE_PATH);
-                console.error(renameError);
-                return res.status(500).json({ error: 'Erro ao mover a imagem para o destino final.', details: renameError });
-            };
-        } else {
-            const SQL_SET_DEFAULT_IMAGE = `UPDATE Lifeguards SET PROFILE_PICTURE = '/images/default-profile-picture.png' WHERE LIFEGUARD_ID = ?`;
-            DATABASE.query(SQL_SET_DEFAULT_IMAGE, [LIFEGUARD_ID], (err, DBres) => {
-                if (err) {
-                    return res.status(500).json({ error: 'Erro ao definir a imagem padrão.', details: err });
-                };
-                return res.status(200).json({ success: 'Registo atualizado com a imagem padrão.' });
-            });
-        };
-    });
+		const updateLifeguardSQL = `UPDATE Lifeguards SET SALARY = ?, STATUS = ? WHERE LIFEGUARD_ID = ?`;
+		DATABASE.query(updateLifeguardSQL, [Salary, Estado, LIFEGUARD_ID], (err, resultLifeguard) => {
+			if (err) {
+				console.error(err);
+				if (PICTURE) FS.unlinkSync(TMP_FILE_PATH);
+				return res.status(500).json({ error: 'Erro ao atualizar os dados do salva-vidas.' });
+			}
+
+			if (resultLifeguard.affectedRows === 0) {
+				if (PICTURE) FS.unlinkSync(TMP_FILE_PATH);
+				return res.status(404).json({ error: 'Nenhum salva-vidas encontrado com esse ID.' });
+			}
+
+			if (PICTURE) {
+				const FINAL_FILE_PATH = PATH.join(__dirname, '../images', PICTURE);
+				const IMAGE_PATH = `/images/${PICTURE}`;
+				const SQL_UPDATE_IMAGE = `UPDATE Clients SET PROFILE_PICTURE = ? WHERE CLIENT_ID = (SELECT CLIENT_ID FROM Lifeguards WHERE LIFEGUARD_ID = ?)`;
+
+				try {
+					FS.renameSync(TMP_FILE_PATH, FINAL_FILE_PATH);
+					DATABASE.query(SQL_UPDATE_IMAGE, [IMAGE_PATH, LIFEGUARD_ID], (err) => {
+						if (err) {
+							console.error(err);
+							return res.status(500).json({ error: 'Erro ao atualizar a imagem do salva-vidas.' });
+						}
+						return res.status(200).json({ success: 'Registo e imagem atualizados com sucesso.' });
+					});
+				} catch (renameError) {
+					FS.unlinkSync(TMP_FILE_PATH);
+					console.error(renameError);
+					return res.status(500).json({ error: 'Erro ao mover a imagem.', details: renameError });
+				}
+			} else {
+				const SQL_SET_DEFAULT_IMAGE = `UPDATE Clients SET PROFILE_PICTURE = '/images/default-profile-picture.webp' WHERE CLIENT_ID = (SELECT CLIENT_ID FROM Lifeguards WHERE LIFEGUARD_ID = ?)`;
+				DATABASE.query(SQL_SET_DEFAULT_IMAGE, [LIFEGUARD_ID], (err) => {
+					if (err) {
+						console.error(err);
+						return res.status(500).json({ error: 'Erro ao definir a imagem padrão.' });
+					}
+					return res.status(200).json({ success: 'Registo atualizado com a imagem padrão.' });
+				});
+			}
+		});
+	});
 });
 
 ROUTER.delete('/delete/:id', (req, res) => {
@@ -179,6 +190,19 @@ ROUTER.delete('/delete/:id', (req, res) => {
             return res.status(500).json(err);
         } return res.status(200).json({success: 'Registo eliminado com sucesso.'});
     });
+});
+
+ROUTER.get('/cost', (req, res) => {
+	const SQL = `SELECT MIN(SALARY) AS MIN_VALUE,
+						          MAX(SALARY) AS MAX_VALUE
+						FROM Lifeguards`;
+	DATABASE.query(SQL, (err, data) => {
+		if (err) {
+			console.error("Erro ao buscar valores de salário:", err);
+			return res.status(500).json({ error: "Erro ao buscar valores de salário." });
+		}
+		res.json(data);
+	});
 });
 
 module.exports = ROUTER;

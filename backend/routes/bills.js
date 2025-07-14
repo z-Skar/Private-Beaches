@@ -68,4 +68,17 @@ ROUTER.delete('/delete/:id', (req, res) => {
     });
 });
 
+ROUTER.get('/cost', (req, res) => {
+	const SQL = `SELECT MIN(BILL_COST) AS MIN_VALUE,
+						MAX(BILL_COST) AS MAX_VALUE
+						FROM BILLS`;
+	DATABASE.query(SQL, (err, data) => {
+		if (err) {
+			console.error("Erro ao buscar valores de pagamento:", err);
+			return res.status(500).json({ error: "Erro ao buscar valores de pagamento." });
+		}
+		res.json(data);
+	});
+});
+
 module.exports = ROUTER;

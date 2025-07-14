@@ -17,6 +17,9 @@ const MANDATORY_FIELDS = {
     RESERVATION_END: 'A data de fim da reserva inserida é inválida.',
     CREDIT_CARD_NUMBER: 'O número de cartão de crédito é obrigatório.',
     NUMBER_OF_PEOPLE: 'O número de pessoas é obrigatório.',
+    OLD_PASSWORD: 'A palavra-passe antiga é obrigatória.',
+    NEW_PASSWORD: 'A nova palavra passe é obrigatória.',
+    CONFIRM_PASSWORD: 'A confirmação da nova palavra-passe é obrigatória.'
 };
 
 const setMandatoryMessageErrors = (fields, data) => {
@@ -84,47 +87,26 @@ export const validateLoginFields = (data) => {
     return errors;
 };
 
-export const validateLifeguardFields = (data) => {
+export const validateClientFields = (data) => {
     const errors = {
-        NIF: '',
         FULL_NAME: '',
         YEAR_OF_BIRTH: '',
-        EMAIL: '',
         CONTACT: ''
     };
 
-    // NIF VALIDATION
-    if(data.NIF.length < 9) {
-        errors.NIF = MANDATORY_FIELDS.NIF;
-    };
-
-    if(!checkOnlyNumbers(data.NIF)) {
-        errors.NIF = 'O NIF inserido é inválido, só pode conter números.'
-    };
-
-
     // FULL NAME VALIDATION
-    if (data.FULL_NAME.length < 5) {
+    if (data.FULL_NAME.length < 5 && data.FULL_NAME.split(' ').length < 2) {
         errors.FULL_NAME = 'O nome completo é necessário.';
     };
 
-    // EMAIL VALIDATION
-    setEmailError(errors, (data.EMAIL || '').trim());
-    
     // CONTACT VALIDATION
-    if(data.CONTACT.length < 9 ) {
+    if ((data.CONTACT || '').trim().length < 9) {
         errors.CONTACT = 'O número de telemóvel é inválido (9 caracteres necessários).';
     };
 
-    if(!checkOnlyNumbers((data.CONTACT || '').trim())) {
+    if (!checkOnlyNumbers((data.CONTACT || '').trim())) {
         errors.CONTACT = 'O número de telemóvel é inválido (Apenas números são permitidos).'
     };
-
-    // YEAR OF BIRTH VALIDATION
-    if (getAge(data.YEAR_OF_BIRTH) < 18) {
-        errors.YEAR_OF_BIRTH = 'Apenas salva-vidas maiores de 18 anos podem se candidatar.';
-    };
-    //--
 
     setMandatoryMessageErrors(errors, data);
     return errors;
@@ -238,6 +220,21 @@ export const validateReservationFields = (data) => {
 
     if (Number(data.NUMBER_OF_PEOPLE) > 100) {
         errors.NUMBER_OF_PEOPLE = 'O número de pessoas não pode ser superior a 100.';
+    };
+
+    setMandatoryMessageErrors(errors, data);
+    return errors;
+};
+
+export const validatePasswordChangeFields = (data) => {
+    const errors = {
+        OLD_PASSWORD: '',
+        NEW_PASSWORD: '',
+        CONFIRM_PASSWORD: ''
+    };
+    
+    if (data.NEW_PASSWORD !== data.CONFIRM_PASSWORD) {
+        errors.CONFIRM_PASSWORD = 'A nova palavra-passe não coincide com a confirmação.';
     };
 
     setMandatoryMessageErrors(errors, data);

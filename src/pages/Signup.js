@@ -14,7 +14,7 @@ import { useAuth } from "contexts/AuthContext";
 
 const Container = tw(ContainerBase)`min-h-screen bg-primary-900 text-white font-medium flex justify-center -m-8`;
 const Content = tw.div`max-w-screen-xl m-0 sm:mx-20 sm:my-16 bg-white text-gray-900 shadow sm:rounded-lg flex justify-center flex-1`;
-const MainContainer = tw.div`lg:w-1/2 xl:w-5/12 p-6 sm:p-12`;
+const MainContainer = tw.div`lg:w-1/2 xl:w-5/12 p-6 sm:p-12 flex flex-col justify-center`;
 const LogoLink = tw.a`cursor-pointer`;
 const LogoImage = tw.img`h-12 mx-auto`;
 const MainContent = tw.div`mt-12 flex flex-col items-center`;
@@ -108,8 +108,15 @@ export default (props) => {
         return;
       };
 
-      const { token, payload: {CLIENT_ID, EMAIL, FULL_NAME, PICTURE}} = data;
-      login(token, CLIENT_ID, FULL_NAME, EMAIL, PICTURE);
+      const { token, payload: {CLIENT_ID, EMAIL, FULL_NAME, PICTURE, ROLE }} = data;
+      login({
+        newToken: token,
+        newClientID: CLIENT_ID,
+        newFullName: FULL_NAME,
+        newEmail: EMAIL,
+        newProfilePicture: PICTURE,
+        newRole: ROLE
+      });
       NAVIGATE('/');
       window.scrollTo(0, 0);
     } catch (error) {
@@ -159,19 +166,6 @@ export default (props) => {
             <MainContent>
               <Heading>{headingText}</Heading>
               <FormContainer>
-                <SocialButtonsContainer>
-                  {socialButtons.map((socialButton, index) => (
-                    <SocialButton key={index} href={socialButton.url}>
-                      <span className="iconContainer">
-                        <img src={socialButton.iconImageSrc} className="icon" alt="" />
-                      </span>
-                      <span className="text">{socialButton.text}</span>
-                    </SocialButton>
-                  ))}
-                </SocialButtonsContainer>
-                <DividerTextContainer>
-                  <DividerText>Ou regista-te com o teu e-mail</DividerText>
-                </DividerTextContainer>
                 <Form onSubmit={handleSubmit}>
                   <Input
                     type="text"

@@ -61,8 +61,8 @@ export default ({
   secondaryActionUrl = "/Beaches.js",
   secondaryActionText = "Pesquisa Praias",
 }) => {
-  const { token } = useAuth();
-  
+  const { token, clientID, role } = useAuth();
+
   const NAVIGATE = useNavigate();
   const navigateTo = (destination) => {
     NAVIGATE(destination);
@@ -71,10 +71,10 @@ export default ({
 
   const navLinks = [
     <NavLinks key={1}>
-      <NavLink onClick={() => navigateTo('#')}>Sobre</NavLink>
-      {token && <NavLink onClick={() => navigateTo('/Admin.js')}>Admin</NavLink>}
-      <NavLink onClick={() => navigateTo('/Lifeguards.js')}>Salva-vidas</NavLink>
-      {!token && <NavLink onClick={() => navigateTo('/Login.js')}>Login</NavLink>}
+      {token && role === "Administrador" && <NavLink onClick={() => navigateTo('/Admin.js')}>Admin</NavLink>}
+      {token && <NavLink onClick={() => navigateTo(`/Perfil/${clientID}`)}>Perfil</NavLink>}
+      {<NavLink onClick={() => navigateTo(`/Sobre`)}>Sobre</NavLink>}
+      {<NavLink onClick={() => navigateTo(`/Beaches.js`)}>Praias</NavLink>}
     </NavLinks>
   ];
 

@@ -67,4 +67,59 @@ ROUTER.delete('/delete/:id', (req, res) => {
     });
 });
 
+ROUTER.get(`/client/:clientID/beach/:beachID`, (req, res) => {
+    const { clientID, beachID } = req.params;
+
+	const SQL = `SELECT SCORE FROM EVALUATIONS WHERE CLIENT_ID = ? AND BEACH_ID = ? LIMIT 1`;
+	DATABASE.query(SQL, [clientID, beachID], (err, results) => {
+		if (err) {
+			console.error(err);
+			return res.status(500).json({ error: 'Erro ao buscar avaliação.' });
+		}
+		if (results.length === 0) {
+			return res.status(200).json({ SCORE: null });
+		}
+		return res.status(200).json(results[0]);
+	});
+});
+
+ROUTER.post('/submit', (req, res) => {
+	const { CLIENT_ID, BEACH_ID, SCORE } = req.body;
+
+	if (!CLIENT_ID || !BEACH_ID || typeof SCORE === 'undefined') {
+		return res.status(400).json({ error: 'Dados em falta ou inválidos.' });
+	}
+
+	const SELECT_SQL = `SELECT * FROM EVALUATIONS WHERE CLIENT_ID = ? AND BEACH_ID = ?`;
+
+	DATABASE.query(SELECT_SQL, [CLIENT_ID, BEACH_ID], (err, results) => {
+		if (err) {
+			console.error('Erro ao verificar avaliação existente:', err);
+			return res.status(500).json({ error: 'Erro interno ao verificar avaliação.' });
+		}
+
+		if (results.length > 0) {
+			const UPDATE_SQL = `UPDATE EVALUATIONS SET SCORE = ? WHERE CLIENT_ID = ? AND BEACH_ID = ?`;
+
+			DATABASE.query(UPDATE_SQL, [SCORE, CLIENT_ID, BEACH_ID], (err, updateResult) => {
+				if (err) {
+					console.error('Erro ao atualizar avaliação:', err);
+					return res.status(500).json({ error: 'Erro ao atualizar avaliação.' });
+				}
+				return res.status(200).json({ message: 'Avaliação atualizada com sucesso.' });
+			});
+		} else {
+			const INSERT_SQL = `INSERT INTO EVALUATIONS (CLIENT_ID, BEACH_ID, SCORE) VALUES (?, ?, ?)`;
+
+			DATABASE.query(INSERT_SQL, [CLIENT_ID, BEACH_ID, SCORE], (err, insertResult) => {
+				if (err) {
+					console.error('Erro ao inserir avaliação:', err);
+					return res.status(500).json({ error: 'Erro ao guardar nova avaliação.' });
+				}
+				return res.status(201).json({ message: 'Avaliação guardada com sucesso.' });
+			});
+		}
+	});
+});
+
 module.exports = ROUTER;
