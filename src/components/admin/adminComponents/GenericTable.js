@@ -252,12 +252,13 @@ const GenericTable = ({ entity, search }) => {
     const NAVIGATE = useNavigate();
     
     return (
-        <>
+        <>  <Box sx={{ overflowX: 'auto', width: '100%' }}>
             <Table
                 aria-labelledby="tableTitle"
                 stickyHeader
                 hoverRow
                 sx={{
+                minWidth: columns.length * 250,
                 "--TableCell-headBackground":
                     "var(--joy-palette-background-level1)",
                 "--Table-headerUnderlineThickness": "1px",
@@ -428,7 +429,7 @@ const GenericTable = ({ entity, search }) => {
                 ))}
                 </tbody>
             </Table>
-            
+            </Box>
             <Modal
                 open={deletetionModalOpen}
                 onClose={() => {

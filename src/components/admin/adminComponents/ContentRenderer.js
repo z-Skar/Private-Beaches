@@ -14,42 +14,36 @@ export default function Content({ entity }) {
                 return (
                     <>
                         <OrderTable entity={entity} entityName={ENTITIES_NAMES.beaches} />
-                        <OrderList entity={entity} entityName={ENTITIES_NAMES.beaches} />
                     </>
                 );
             case 'bills':
                 return (
                     <>
                         <OrderTable entity={entity} entityName={ENTITIES_NAMES.bills} />
-                        <OrderList entity={entity} entityName={ENTITIES_NAMES.bills} />
                     </>
                 );
             case 'lifeguards':
                 return (
                     <>
                         <OrderTable entity={entity} entityName={ENTITIES_NAMES.lifeguards} />
-                        <OrderList entity={entity} entityName={ENTITIES_NAMES.lifeguards} />
                     </>
                 );
             case 'evaluations':
                 return (
                     <>
                         <OrderTable entity={entity} entityName={ENTITIES_NAMES.evaluations} />
-                        <OrderList entity={entity} entityName={ENTITIES_NAMES.evaluations} />
                     </>
                 );
             case 'clients':
                 return (
                     <>
                         <OrderTable entity={entity} entityName={ENTITIES_NAMES.clients} />
-                        <OrderList entity={entity} entityName={ENTITIES_NAMES.clients} />
                     </>
                 );
             case 'reservations':
                 return (
                     <>
                         <OrderTable entity={entity} entityName={ENTITIES_NAMES.reservations} />
-                        <OrderList entity={entity} entityName={ENTITIES_NAMES.reservations} />
                     </>
                 );
         }

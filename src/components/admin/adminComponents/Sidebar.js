@@ -39,6 +39,7 @@ import TropicalDreamsIcon from "../../../images/logo192.png"
 import tw from "twin.macro"
 import { Modal } from "@material-ui/core"
 import { LogoutConfirmationModal } from "./Modals/LogoutConfirmationModal"
+import axios from "axios"
 
 const Logo = tw.img`w-[1.9rem] object-contain hover:cursor-pointer`
 
@@ -66,8 +67,17 @@ function Toggler({ defaultExpanded = false, renderToggle, children }) {
 }
 
 export default function Sidebar({ selectedEntity, onSelectEntity }) {
-  const { email, fullName, profilePicture } = useAuth();
+  const { clientID } = useAuth();
+  const [userData, setUserData] = useState(null);
   const [logoutModal, setLogoutModal] = useState(false);
+
+  useEffect(() => {
+    const getUserData = async () => {
+      const response = (await axios.get(`http://localhost:5000/clients/profile/${clientID}`)).data[0];
+      setUserData(response);
+    };
+    getUserData();
+  }, [clientID]);
 
   const NAVIGATE = useNavigate();
 
@@ -348,12 +358,12 @@ export default function Sidebar({ selectedEntity, onSelectEntity }) {
           <Avatar
             variant="outlined"
             size="sm"
-            src={`http://localhost:5000${profilePicture}`}
+            src={`http://localhost:5000${userData?.PROFILE_PICTURE || '/images/default-profile-picture.webp'}`}
           />
           <Box sx={{ minWidth: 0, flex: 1 }}>
-            <Typography level="title-sm" title={fullName} sx={overflowStyle}>{fullName}</Typography>
-            <Typography level="body-xs" title={email} sx={overflowStyle}>
-              {email}
+            <Typography level="title-sm" title={userData?.FULL_NAME} sx={overflowStyle}>{userData?.FULL_NAME}</Typography>
+            <Typography level="body-xs" title={userData?.EMAIL} sx={overflowStyle}>
+              {userData?.EMAIL}
             </Typography>
           </Box>
           <IconButton size="sm" variant="plain" color="neutral" onClick={() => setLogoutModal(true)}>

@@ -282,7 +282,7 @@ export default function OrderTable({ entity, entityName }) {
         className="OrderTableContainer"
         variant="outlined"
         sx={{
-          display: { xs: "none", sm: "initial" },
+          display: "block",
           width: "100%",
           borderRadius: "sm",
           flexShrink: 1,
