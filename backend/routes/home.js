@@ -12,7 +12,16 @@ ROUTER.get('/admin', (req, res) => {
                     (SELECT COUNT(Beach_ID) FROM Beaches WHERE Lifeguard_ID IS NULL) AS 'Praias sem Salva-vidas',
                     (SELECT COUNT(Reservation_ID) FROM RESERVATIONS WHERE RESERVATION_START <= LAST_DAY(CURDATE()) AND RESERVATION_END >= DATE_FORMAT(CURDATE(), '%Y-%m-01')) AS 'Reservas Mensais',
                     (SELECT BILL_COST FROM BILLS ORDER BY BILL_ID DESC LIMIT 1) AS 'Último pagamento',
-                    (SELECT SCORE FROM EVALUATIONS ORDER BY EVALUATION_ID DESC LIMIT 1) AS 'Última avaliação'`;
+                    (SELECT BILL_COST FROM BILLS ORDER BY BILL_ID DESC LIMIT 1) AS 'Último pagamento',
+                    (SELECT E.SCORE 
+                        FROM EVALUATIONS E 
+                        ORDER BY E.EVALUATION_ID DESC 
+                        LIMIT 1) AS 'Última avaliação',
+                    (SELECT B.BEACH_NAME 
+                        FROM EVALUATIONS E 
+                        JOIN BEACHES B ON B.BEACH_ID = E.BEACH_ID 
+                        ORDER BY E.EVALUATION_ID DESC 
+                        LIMIT 1) AS 'Praia da última avaliação'`;
     DATABASE.query(SQL, (err, data) => {
         if(err) {
             return res.status(500).json(err);

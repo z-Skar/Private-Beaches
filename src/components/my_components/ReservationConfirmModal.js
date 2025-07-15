@@ -14,6 +14,7 @@ const InfoRow = tw.div`flex flex-col gap-2 w-full mb-6`;
 const InfoItem = tw.div`flex flex-row gap-2 items-center`;
 const LabelContainer = tw.div`bg-white rounded px-3 py-2 shadow text-gray-700 font-semibold min-w-[170px] text-left flex-shrink-0`;
 const ValueContainer = tw.div`bg-gray-100 rounded px-3 py-2 shadow text-gray-900 flex-1 ml-2`;
+const FinalMessage = tw.div`bg-gray-100 rounded px-3 py-2 shadow text-gray-900 flex-1`;
 const Form = tw.form`w-full flex flex-col gap-4`;
 const SubmitButton = tw.button`mt-4 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-700 transition w-full font-semibold`;
 
@@ -71,6 +72,9 @@ export default function ReservationConfirmModal({
             <LabelContainer>Preço Total</LabelContainer>
             <ValueContainer>{price}€</ValueContainer>
           </InfoItem>
+          <FinalMessage>
+            Atenção, só pode cancelar a sua reserva 5 dias antes da sua data de início.
+          </FinalMessage>
         </InfoRow>
         <Form onSubmit={onSubmit}>
           <SubmitButton type="submit">Confirmar Reserva</SubmitButton>

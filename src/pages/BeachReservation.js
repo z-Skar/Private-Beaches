@@ -180,7 +180,11 @@ export default function BeachReservation() {
                         NUMBER_OF_PEOPLE: 'Erro ao confirmar reserva.',
                     });
                 };
+                setShowConfirmModal(false);
+                return;
             };
+            NAVIGATE(0);
+            window.scrollTo(0, 0);
         } catch (error) {
             console.log('Fetch Error: ', error);
         }
@@ -232,9 +236,6 @@ export default function BeachReservation() {
                 BILL_COST: GET_BILL_COST(),
             };
             await ADD_RESERVATION(DATA);
-            setShowConfirmModal(false);
-            NAVIGATE("/Beaches.js");
-            window.scrollTo(0, 0);
         } catch (error) {
             setError({error: 'Erro ao confirmar reserva.'});
         }

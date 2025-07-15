@@ -7,7 +7,7 @@ ROUTER.get('/', (req, res) => {
               + '(SELECT COUNT(CLIENT_ID) FROM Clients) AS NUMBER_OF_CLIENTS, '
               + '(SELECT COUNT(BEACH_ID) FROM Beaches) AS NUMBER_OF_BEACHES, '
               + '(SELECT COUNT(DISTINCT(COUNTRY_LOCATION)) FROM Beaches) AS NUMBER_OF_COUNTRIES, '
-              + '(SELECT COUNT(LIFEGUARD_ID) FROM Lifeguards) AS NUMBER_OF_LIFEGUARDS'
+              + '(SELECT COUNT(LIFEGUARD_ID) FROM Lifeguards WHERE STATUS NOT IN ("Em Espera", "Negado")) AS NUMBER_OF_LIFEGUARDS'
     DATABASE.query(SQL, (err, data) => {
         if(err) {
             return res.status(500).json(err);

@@ -18,7 +18,7 @@ export default function Home() {
     const NUMBER_OF_BEACHES_WITHOUT_LIFEGUARDS = adminData?.[0]?.['Praias sem Salva-vidas'] ?? DEFAULT_MESSAGE;
     const MONTHLY_RESERVATIONS = adminData?.[0]?.['Reservas Mensais'] ?? DEFAULT_MESSAGE;
     const LAST_PAYMENT = adminData?.[0]?.['Último pagamento'] ?? DEFAULT_MESSAGE;
-    const LAST_EVALUATION = adminData?.[0]?.['Última avaliação'] ?? DEFAULT_MESSAGE;
+    const LAST_EVALUATION = adminData?.[0]?.['Última avaliação'] + ' (' + adminData?.[0]?.['Praia da última avaliação']  + ')'?? DEFAULT_MESSAGE;
 
     const CONTAINER = {
         maxWidth: '1600px',
@@ -59,7 +59,7 @@ export default function Home() {
             <div style={CONTAINER}>
                 <div style={GRID}>
                     <div style={CARD}>
-                        <div style={{...VALUE, color: '#3b82f6' }}>{NUMBER_OF_CLIENTS} mil</div>
+                        <div style={{...VALUE, color: '#3b82f6' }}>{NUMBER_OF_CLIENTS}</div>
                         <div style={LABEL}>Número Total de Clientes</div>
                     </div>
                     <div style={CARD}>

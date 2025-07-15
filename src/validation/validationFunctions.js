@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 const MANDATORY_FIELDS = {
     NIF: 'O NIF inserido é inválido (9 caracteres necessários).',
     FULL_NAME: 'O nome completo é obrigatório.',
@@ -106,6 +108,17 @@ export const validateClientFields = (data) => {
 
     if (!checkOnlyNumbers((data.CONTACT || '').trim())) {
         errors.CONTACT = 'O número de telemóvel é inválido (Apenas números são permitidos).'
+    };
+
+    if (!data.YEAR_OF_BIRTH || !dayjs(data.YEAR_OF_BIRTH).isValid()) {
+        errors.YEAR_OF_BIRTH = 'A data de nascimento inserida é inválida.';
+    } else {
+        const age = getAge(data.YEAR_OF_BIRTH);
+        if (age < 18) {
+            errors.YEAR_OF_BIRTH = 'A idade mínima para registo é de 18 anos.';
+        } else if (age > 100) {
+            errors.YEAR_OF_BIRTH = 'A idade máxima para registo é de 100 anos.';
+        }
     };
 
     setMandatoryMessageErrors(errors, data);

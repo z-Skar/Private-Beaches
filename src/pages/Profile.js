@@ -665,7 +665,7 @@ export default () => {
                   const startDate = dayjs(reservation.RESERVATION_START);
                   const endDate = dayjs(reservation.RESERVATION_END);
                 const now = dayjs();
-                const canCancel = now.isBefore(startDate);
+                const canCancel = now.isBefore(startDate.subtract(5, 'days'));
 
                 return (
                   <ReservationCardContainer key={reservation.RESERVATION_ID}>
